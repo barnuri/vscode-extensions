@@ -46,6 +46,14 @@
             {
                 "language": "plaintext",
                 "path": "./snippets/shellscript.json"
+            },
+            {
+                "language": "yaml",
+                "path": "./snippets/k8s.json"
+            },
+            {
+                "language": "plaintext",
+                "path": "./snippets/k8s.json"
             }
         ]
     }

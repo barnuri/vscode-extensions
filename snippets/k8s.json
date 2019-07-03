@@ -1,0 +1,9 @@
+{
+    "k8s example": {
+        "prefix": "k8sexample",
+        "body": [
+            "apiVersion: apps/v1\r\nkind: Deployment\r\nmetadata:\r\n  name: $appName\r\n  labels:\r\n    app: $appName\r\nspec:\r\n  replicas: 1\r\n  selector:\r\n    matchLabels:\r\n      app: $appName\r\n  template:\r\n    metadata:\r\n      labels:\r\n        app: $appName\r\n    spec:\r\n      containers:\r\n        - name: $appName\r\n          image: $dockerImage\r\n      imagePullSecrets:\r\n        - name: docker-repo\r\n---\r\nkind: Service\r\napiVersion: v1\r\nmetadata:\r\n  name: $appName\r\nspec:\r\n  selector:\r\n    app: $appName\r\n  ports:\r\n    - port: $Port\r\n---\r\napiVersion: extensions/v1beta1\r\nkind: Ingress\r\nmetadata:\r\n  name: $appName\r\n  annotations:\r\n    ingress.kubernetes.io/rewrite-target: /\r\nspec:\r\n  rules:\r\n    - host: $appName.com\r\n      http:\r\n        paths:\r\n          - path: /\r\n            backend:\r\n              serviceName: $appName\r\n              servicePort: $Port\r\n \r\n \r\n\r\n"
+        ],
+        "description": "k8s example"
+    }
+}
