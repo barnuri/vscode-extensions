@@ -3,10 +3,10 @@
     "displayName": "Bar Nuri Tools",
     "publisher": "Bar",
     "description": "Bar Nuri Tools Snippets for Dockerfile ,Ignore, Json, K8s, Shellscript, Typescript",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "icon": "icon.png",
     "galleryBanner": {
-        "color": "#ffffff",
+        "color": "#343a40",
         "theme": "dark"
     },
     "scripts": {
