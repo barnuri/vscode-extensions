@@ -1,0 +1,15 @@
+{
+    "gitignore": {
+        "prefix": "gitignore",
+        "body": ["node_modules\r\ndist\r\nbuild\r\nJenkinsfile-new\r\nJenkinsfile\r\n**/bin\r\n**/obj\r\n**/.toolstarget\r\n\r\n"],
+        "description": "gitignore"
+    },
+    "dockerignore": {
+        "prefix": "dockerignore",
+        "body": ["node_modules\r\ndist\r\nbuild\r\njenkins\r\nDockerfile\r\n.git\r\n.prettierrc.json\r\nsql\r\nscripts\r\n.vscode\r\n.gitignore\r\n*.md\r\nJenkinsfile-new\r\nJenkinsfile\r\nnest-cli.json\r\nnodemon.json\r\nnodemon.old.json\r\n*.groovy\r\n.dockerignore\r\n.htpasswd\r\n**/.dockerignore\r\n**/.env\r\n**/.git\r\n**/.gitignore\r\n**/.vs\r\n**/.vscode\r\n**/bin\r\n**/obj\r\n**/.toolstarget\r\nk8s\r\n\r\n"],
+        "description": "dockerignore"
+    }
+}
+
+
+

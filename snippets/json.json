@@ -1,0 +1,43 @@
+{
+    "nodemon config": {
+        "prefix": "nodemonconf",
+        "body": [
+            "{\r\n    \"watch\": [\"src\"],\r\n    \"ext\": \"ts\",\r\n    \"ignore\": [\"src/**/*.spec.ts\"],\r\n    \"exec\": \"tsc && node --inspect=0.0.0.0 dist/main.js\"\r\n}\r\n"
+        ],
+        "description": "nodemon config"
+    },
+    "pritter setting": {
+        "prefix": "prittersetting",
+        "body": [
+            "{\r\n    \"bracketSpacing\": true,\r\n    \"jsxSingleQuote\": true,\r\n    \"tabWidth\": 4,\r\n    \"arrowParens\": \"avoid\",\r\n    \"endOfLine\": \"auto\",\r\n    \"htmlWhitespaceSensitivity\": \"css\",\r\n    \"jsxBracketSameLine\": false,\r\n    \"proseWrap\": \"preserve\",\r\n    \"semi\": true,\r\n    \"singleQuote\": true,\r\n    \"printWidth\": 160,\r\n    \"useTabs\": false,\r\n    \"trailingComma\": \"all\"\r\n}\r\n"
+        ],
+        "description": "pritter setting"
+    },
+
+    "pritter script": {
+        "prefix": "pritterscript",
+        "body": ["\"format\": \"prettier --write \\\"src/**/*.{js,jsx,ts,tsx}\\\"\""],
+        "description": "pritter script"
+    },
+    "Vscode Settings": {
+        "prefix": "vscodesettings",
+        "body": [
+            "{\r\n    \"files.autoSave\": \"afterDelay\",\r\n    \"editor.formatOnSave\": true,\r\n    \"workbench.startupEditor\": \"none\",\r\n    \"files.watcherExclude\": {\r\n        \"*/.git/objects/*\": true,\r\n        \"*/.git/subtree-cache/*\": true,\r\n        \"*/node_modules//**\": true,\r\n        \"editor.fontFamily\": \"Droid Sans Mono, Droid Sans Fallback\"\r\n    },\r\n    \"files.associations\": {\r\n        \"Dockerfile-*\": \"dockerfile\",\r\n        \"dockerfile-*\": \"dockerfile\"\r\n    },\r\n    \"typescript.preferences.importModuleSpecifier\": \"relative\",\r\n    \"git.enableSmartCommit\": true,\r\n    \"javascript.updateImportsOnFileMove.enabled\": \"never\",\r\n    \"explorer.confirmDragAndDrop\": false,\r\n    \"explorer.confirmDelete\": false,\r\n    \"typescript.updateImportsOnFileMove.enabled\": \"always\",\r\n    \"tslint.autoFixOnSave\": true,\r\n    \"eslint.autoFixOnSave\": true,\r\n    \"git.confirmSync\": false,\r\n    \"git.autofetch\": true,\r\n    \"git.fetchOnPull\": true,\r\n    \"editor.tabSize\": 4,\r\n    \"editor.insertSpaces\": true,\r\n    \"html.format.wrapLineLength\": 150,\r\n    \"html.format.wrapAttributes\": \"aligned-multiple\",\r\n    \"html.format.preserveNewLines\": true,\r\n    \"html.format.maxPreserveNewLines\": null,\r\n    \"html.format.endWithNewline\": true,\r\n    \"files.insertFinalNewline\": true,\r\n    \"prettier.bracketSpacing\": true,\r\n    \"prettier.jsxSingleQuote\": true,\r\n    \"prettier.tabWidth\": 4,\r\n    \"prettier.disableLanguages\": [\"sql\", \"SQL\"],\r\n    \"[sql]\": {\r\n        \"editor.formatOnSave\": false\r\n    },\r\n    \"prettier.arrowParens\": \"avoid\",\r\n    \"prettier.endOfLine\": \"auto\",\r\n    \"prettier.htmlWhitespaceSensitivity\": \"css\",\r\n    \"prettier.jsxBracketSameLine\": false,\r\n    \"prettier.proseWrap\": \"preserve\",\r\n    \"prettier.semi\": true,\r\n    \"prettier.singleQuote\": true,\r\n    \"prettier.printWidth\": 150,\r\n    \"prettier.useTabs\": false,\r\n    \"prettier.trailingComma\": \"all\",\r\n    \"todohighlight.isEnable\": true,\r\n    \"todohighlight.keywords\": [\r\n        {\r\n            \"text\": \"TODO\",\r\n            \"color\": \"white\",\r\n            \"backgroundColor\": \"green\"\r\n        }\r\n    ],\r\n    \"window.zoomLevel\": 0,\r\n    \"editor.minimap.enabled\": true,\r\n    \"breadcrumbs.enabled\": true,\r\n    \"workbench.iconTheme\": \"vscode-icons\",\r\n    \"vsicons.projectDetection.disableDetect\": true,\r\n    \"files.defaultLanguage\": \"js\",\r\n    \"files.encoding\": \"utf8\",\r\n    \"files.eol\": \"\n\"\r\n    // \"terminal.integrated.shell.windows\": \"wsl.exe\"\r\n    // \"terminal.integrated.shellArgs.windows\": \"\"\r\n}\r\n\r\n"
+        ],
+        "description": "Vscode Settings"
+    },
+    "tsconfig": {
+        "prefix": "tsconfig",
+        "body": [
+            "{\r\n    \"compilerOptions\": {\r\n        \"module\": \"commonjs\",\r\n        \"target\": \"esnext\",\r\n        \"moduleResolution\": \"node\",\r\n        \"types\": [\"reflect-metadata\"],\r\n        \"emitDecoratorMetadata\": true,\r\n        \"experimentalDecorators\": true,\r\n        \"sourceMap\": true,\r\n        \"outDir\": \"./dist\",\r\n        \"declaration\": true,\r\n        \"declarationMap\": true,\r\n        \"noImplicitAny\": false,\r\n        \"removeComments\": true,\r\n        \"noLib\": false,\r\n        \"allowSyntheticDefaultImports\": true,\r\n        \"esModuleInterop\": true,\r\n        \"importHelpers\": true,\r\n        \"downlevelIteration\": true,\r\n        \"strict\": true\r\n    },\r\n    \"include\": [\"src/**/*\"],\r\n    \"exclude\": [\"node_modules\"]\r\n}\r\n\r\n"
+        ],
+        "description": "tsconfig"
+    },
+    "launch config": {
+        "prefix": "launchconf",
+        "body": [
+            "{\r\n    \"version\": \"0.2.0\",\r\n    \"configurations\": [\r\n        {\r\n            \"name\": \"Debug NodeJS Typescript\",\r\n            \"type\": \"node\",\r\n            \"request\": \"launch\",\r\n            \"sourceMaps\": true,\r\n            \"protocol\": \"inspector\",\r\n            \"internalConsoleOptions\": \"openOnSessionStart\", // move to debug console when tasks done\r\n            \"console\": \"internalConsole\", // use vscode console\r\n            \"runtimeArgs\": [\"--nolazy\", \"-r\", \"ts-node/register\"], // ts-node\r\n            \"cwd\": \"${workspaceRoot}\", // root dir\r\n            \"args\": [\"${workspaceRoot}/src/main.ts\"] // main file\r\n        },\r\n        {\r\n            \"type\": \"node\",\r\n            \"request\": \"attach\",\r\n            \"name\": \"Attach NodeJS Process\",\r\n            \"address\": \"localhost\",\r\n            \"port\": 9229\r\n        }\r\n    ]\r\n}\r\n"
+        ],
+        "description": "launch config"
+    }
+}

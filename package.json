@@ -1,0 +1,52 @@
+{
+    "name": "bar-nuri-tools",
+    "displayName": "bar nuri tools",
+    "description": "",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.36.0"
+    },
+    "categories": [
+        "Snippets"
+    ],
+    "contributes": {
+        "snippets": [
+            {
+                "language": "json",
+                "path": "./snippets/json.json"
+            },
+            {
+                "language": "jsonc",
+                "path": "./snippets/json.json"
+            },
+            {
+                "language": "plaintext",
+                "path": "./snippets/json.json"
+            },
+            {
+                "language": "typescript",
+                "path": "./snippets/typescript.json"
+            },
+            {
+                "language": "plaintext",
+                "path": "./snippets/typescript.json"
+            },
+            {
+                "language": "dockerfile",
+                "path": "./snippets/dockerfile.json"
+            },
+            {
+                "language": "plaintext",
+                "path": "./snippets/dockerfile.json"
+            },
+            {
+                "language": "shellscript",
+                "path": "./snippets/shellscript.json"
+            },
+            {
+                "language": "plaintext",
+                "path": "./snippets/shellscript.json"
+            }
+        ]
+    }
+}

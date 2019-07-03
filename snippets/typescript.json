@@ -1,0 +1,9 @@
+{
+    "Env Config File": {
+        "prefix": "envconf",
+        "body": [
+            "const colors = require('color/safe');\r\n \r\nconst defaultValues = {\r\n    port: 3000,\r\n};\r\n \r\ntype configType = typeof defaultValues;\r\n \r\nconst ConfigByEnv: { [name: string]: configType } = {\r\n    development: {\r\n        ...defaultValues,\r\n    },\r\n    integration: {\r\n        ...defaultValues,\r\n    },\r\n    stage: {\r\n        ...defaultValues,\r\n    },\r\n    production: {\r\n        ...defaultValues,\r\n    },\r\n};\r\n \r\nexport const getENV = () => {\r\n    if (process.env.NODE_ENV && Object.keys(ConfigByEnv).indexOf(process.env.NODE_ENV || '') > -1) {\r\n        return process.env.NODE_ENV;\r\n    }\r\n    console.log(colors.yellow(`process.env.NODE_ENV unvalid value set development config, process.env.NODE_ENV = ${process.env.NODE_ENV}`));\r\n    return 'development';\r\n};\r\n \r\nexport default ConfigByEnv[getENV()] as typeof defaultValues;\r\n\r\n"
+        ],
+        "description": "Env Config File"
+    }
+}
