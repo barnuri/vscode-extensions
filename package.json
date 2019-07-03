@@ -4,6 +4,9 @@
     "publisher": "Bar",
     "description": "",
     "version": "0.1.2",
+    "scripts": {
+        "publish": "vsce publish"
+    },
     "repository": {
         "type": "git"
     },
