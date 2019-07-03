@@ -19,7 +19,25 @@
         "vscode": "^1.36.0"
     },
     "categories": [
-        "Snippets"
+        "Snippets",
+        "Extension Packs",
+        "Formatters",
+        "Programming Languages",
+        "SCM Providers"
+    ],
+    "keywords": [
+        "Bar",
+        "Nuri",
+        "Tools",
+        "Bar Nuri",
+        "Bar Nuri Tools",
+        "Snippets",
+        "Dockerfile Snippets",
+        "Ignore Snippets",
+        "Json Snippets",
+        "K8s Snippets",
+        "Shellscript Snippets",
+        "Typescript Snippets"
     ],
     "contributes": {
         "snippets": [
