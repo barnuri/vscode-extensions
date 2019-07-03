@@ -1,8 +1,12 @@
 {
     "name": "bar-nuri-tools",
     "displayName": "bar nuri tools",
+    "publisher": "Bar",
     "description": "",
-    "version": "0.1.0",
+    "version": "0.1.1",
+    "repository": {
+        "type": "git"
+    },
     "engines": {
         "vscode": "^1.36.0"
     },
