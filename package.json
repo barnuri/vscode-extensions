@@ -1,9 +1,14 @@
 {
     "name": "bar-nuri-tools",
-    "displayName": "bar nuri tools",
+    "displayName": "Bar Nuri Tools",
     "publisher": "Bar",
-    "description": "",
+    "description": "Bar Nuri Tools Snippets for Dockerfile ,Ignore, Json, K8s, Shellscript, Typescript",
     "version": "0.1.2",
+    "icon": "icon.png",
+    "galleryBanner": {
+        "color": "#ffffff",
+        "theme": "dark"
+    },
     "scripts": {
         "publish": "vsce publish"
     },
