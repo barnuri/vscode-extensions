@@ -1,4 +1,8 @@
-# Text To String Command
+# [Bar Nuri Tools Extension](https://marketplace.visualstudio.com/items?itemName=Bar.bar-nuri-tools)
+
+Snippets, Dockerfile Snippets, Ignore Snippets, Json Snippets, K8s Snippets, Shellscript Snippets, Typescript Snippets, Commands
+
+## Text To String Command
 
 ```
 select text :
@@ -12,7 +16,7 @@ output:
 1\n\n2\n\n3
 ```
 
-# Dockerfile Snippets
+## Dockerfile Snippets
 
 dockerfile-front
 
@@ -20,13 +24,13 @@ dockerfile-nodejs
 
 dockerfile-dotnetcore
 
-# Ignore Snippets
+## Ignore Snippets
 
 gitignore
 
 dockerignore
 
-# Json Snippets
+## Json Snippets
 
 nodemonconf
 
@@ -40,16 +44,16 @@ tsconfig
 
 launchconf
 
-# K8s Snippets
+## K8s Snippets
 
 k8sexample
 
-# Shellscript Snippets
+## Shellscript Snippets
 
 installext
 
 extexport
 
-# Typescript Snippets
+## Typescript Snippets
 
 envconf
