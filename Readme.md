@@ -1,6 +1,6 @@
 # [Bar Nuri Tools Extension](https://marketplace.visualstudio.com/items?itemName=Bar.bar-nuri-tools)
 
-Snippets, Dockerfile Snippets, Ignore Snippets, Json Snippets, K8s Snippets, Shellscript Snippets, Typescript Snippets, Commands
+# Commands
 
 ## Text To String Command
 
@@ -30,11 +30,25 @@ output:
 3
 ```
 
-## Jenkinsfile Snippets
+## Add K8s
+
+## Add Jenkinsfile
+
+## Add Dockerfile
+
+## Add Dockerfile, K8s, Jenkinsfile
+
+## Add Prettier File
+
+## Add Nodemon With Debug
+
+# Snippets
+
+## Jenkinsfile
 
 jenkinsfile
 
-## Dockerfile Snippets
+## Dockerfile
 
 dockerfile-front
 
@@ -42,13 +56,13 @@ dockerfile-nodejs
 
 dockerfile-dotnetcore
 
-## Ignore Snippets
+## Ignore
 
 gitignore
 
 dockerignore
 
-## Json Snippets
+## Json
 
 nodemonconf
 
@@ -62,16 +76,16 @@ tsconfig
 
 launchconf
 
-## K8s Snippets
+## K8s
 
 k8sexample
 
-## Shellscript Snippets
+## Shellscript
 
 installext
 
 extexport
 
-## Typescript Snippets
+## Typescript
 
 envconf

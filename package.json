@@ -14,7 +14,13 @@
     },
     "activationEvents": [
         "onCommand:extension.textToString",
-        "onCommand:extension.stringToText"
+        "onCommand:extension.stringToText",
+        "onCommand:extension.addK8s",
+        "onCommand:extension.addJenkins",
+        "onCommand:extension.addDocker",
+        "onCommand:extension.addDockerK8sAndJenkins",
+        "onCommand:extension.addPrettierFile",
+        "onCommand:extension.addNodemon"
     ],
     "contributes": {
         "commands": [
@@ -25,6 +31,30 @@
             {
                 "command": "extension.stringToText",
                 "title": "String To Text"
+            },
+            {
+                "command": "extension.addK8s",
+                "title": "Add K8s"
+            },
+            {
+                "command": "extension.addJenkins",
+                "title": "Add Jenkinsfile"
+            },
+            {
+                "command": "extension.addDocker",
+                "title": "Add Dockerfile"
+            },
+            {
+                "command": "extension.addDockerK8sAndJenkins",
+                "title": "Add Dockerfile, K8s, Jenkinsfile"
+            },
+            {
+                "command": "extension.addPrettierFile",
+                "title": "Add Prettier File"
+            },
+            {
+                "command": "extension.addNodemon",
+                "title": "Add Nodemon With Debug"
             }
         ],
         "snippets": [

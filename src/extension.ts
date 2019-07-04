@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { k8sFileBuilder, jenkinsFileBuilder, dockerfileBuilder, pritterFile, nodemonFile } from './addFiles';
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "Bar Nuri Tools" is now active !');
@@ -23,6 +24,43 @@ export function activate(context: vscode.ExtensionContext) {
                     .replace(/\\'/g, "'")
                     .replace(/\\\\\$/g, '$'),
             );
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.addK8s', async () => {
+            // const answer = await vscode.window.showQuickPick(['NodeJS', 'React/Anguler', '.Net Core']);
+            k8sFileBuilder();
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.addJenkins', async () => {
+            // const answer = await vscode.window.showQuickPick(['NodeJS', 'React/Anguler', '.Net Core']);
+            jenkinsFileBuilder();
+        }),
+    );
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.addDocker', async () => {
+            dockerfileBuilder();
+        }),
+    );
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.addDockerK8sAndJenkins', async () => {
+            dockerfileBuilder();
+            k8sFileBuilder();
+            jenkinsFileBuilder();
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.addPrettierFile', async () => {
+            pritterFile();
+        }),
+    );
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.addNodemon', async () => {
+            nodemonFile();
         }),
     );
 }
