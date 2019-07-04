@@ -6,7 +6,7 @@
         "watch": "tsc -watch -p ./",
         "pretest": "npm run compile",
         "test": "node ./out/test/runTest.js",
-        "commitChanges": "git commit -am \"version\" || true",
+        "commitChanges": "git commit -am \"version\" --allow-empty",
         "gitBeforePublish": "npm run commitChanges && git push",
         "prepublish": "npm run gitBeforePublish && npm version patch",
         "publish": "vsce publish",
