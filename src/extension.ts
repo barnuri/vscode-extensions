@@ -5,12 +5,24 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.textToString', () => {
-            editSelectedTest(text => text.replace(/\n/g, '\\n'));
+            editSelectedTest(text =>
+                text
+                    .replace(/\n/g, '\\n')
+                    .replace(/"/g, '\\"')
+                    .replace(/'/g, "\\'")
+                    .replace(/\$/g, '\\\\$'),
+            );
         }),
     );
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.stringToText', () => {
-            editSelectedTest(text => text.replace(/\\n/g, '\n'));
+            editSelectedTest(text =>
+                text
+                    .replace(/\\n/g, '\n')
+                    .replace(/\\"/g, '"')
+                    .replace(/\\'/g, "'")
+                    .replace(/\\\\\$/g, '$'),
+            );
         }),
     );
 }

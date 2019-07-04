@@ -1,0 +1,9 @@
+{
+    "Jenkins File": {
+        "prefix": "jenkinsfile",
+        "body": [
+            "@Library('jenkins-shared-lib')_\nenv.SLACK_TOKEN = ''\nenv.SLACK_CH = ''\nenv.CONTAINER_NAME = \"\"\nenv.CONFIG = \"\"\"\n{\n   \"integration\": {\n      \"DOCKER_REPO\": \"registry.codeoasis.com:8082\",\n      \"K8S_APPLY_FILES_GLOB\": \"k8s/\\${ENV}.yaml\",\n      \"KUBE_CONFIG_ID\": \"kubeconfig_codeoasis\",\n   },\n   \"qa\": {\n      \"DOCKER_REPO\": \"registry.codeoasis.com:8082\",\n      \"K8S_APPLY_FILES_GLOB\": \"k8s/\\${ENV}.yaml\",\n      \"KUBE_CONFIG_ID\": \"kubeconfig_codeoasis\",\n   },\n   \"stage\": {\n      \"DOCKER_REPO\": \"registry.codeoasis.com\",\n      \"SERVERS\": [],\n      \"CONTAINER_RUN_ARGS\": \"\",\n   },\n   \"production\": {\n      \"DOCKER_REPO\": \"registry.codeoasis.com\",\n      \"SERVERS\": [],\n      \"CONTAINER_RUN_ARGS\": \"\",\n   }\n}\n\"\"\"\npipeline {\n    agent any\n    options {\n        ansiColor('xterm')\n    }\n    stages {\n        stage('init') {\n            steps {\n                init()\n            }\n        }\n        stage('Git Clone') {\n            steps {\n                gitClone()\n            }\n        }\n        stage('Docker Image Tag & Push') {\n            steps {\n                buildContainer([ASPNETCORE_ENVIRONMENT: ENV, NODE_ENV: ENV])\n            }\n        }\n        stage('Deploying Image From Repo') {\n            steps {\n                deploy()\n            }\n        }\n   }\n   post {\n        success { slackSendHelper(true) }\n        failure { slackSendHelper(false) }\n        always { \n            chuckNorris()\n            cleanWs()\n            // printEnv()\n        }\n    }\n}\n"
+        ],
+        "description": "Jenkins File"
+    }
+}

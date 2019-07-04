@@ -1,15 +1,14 @@
 {
     "gitignore": {
         "prefix": "gitignore",
-        "body": ["node_modules\r\ndist\r\nbuild\r\nJenkinsfile-new\r\nJenkinsfile\r\n**/bin\r\n**/obj\r\n**/.toolstarget\r\n\r\n"],
+        "body": ["node_modules\ndist\nbuild\nJenkinsfile-new\nJenkinsfile\n**/bin\n**/obj\n**/.toolstarget\n\n"],
         "description": "gitignore"
     },
     "dockerignore": {
         "prefix": "dockerignore",
-        "body": ["node_modules\r\ndist\r\nbuild\r\njenkins\r\nDockerfile\r\n.git\r\n.prettierrc.json\r\nsql\r\nscripts\r\n.vscode\r\n.gitignore\r\n*.md\r\nJenkinsfile-new\r\nJenkinsfile\r\nnest-cli.json\r\nnodemon.json\r\nnodemon.old.json\r\n*.groovy\r\n.dockerignore\r\n.htpasswd\r\n**/.dockerignore\r\n**/.env\r\n**/.git\r\n**/.gitignore\r\n**/.vs\r\n**/.vscode\r\n**/bin\r\n**/obj\r\n**/.toolstarget\r\nk8s\r\n\r\n"],
+        "body": [
+            "node_modules\ndist\nbuild\njenkins\nDockerfile\n.git\n.prettierrc.json\nsql\nscripts\n.vscode\n.gitignore\n*.md\nJenkinsfile-new\nJenkinsfile\nnest-cli.json\nnodemon.json\nnodemon.old.json\n*.groovy\n.dockerignore\n.htpasswd\n**/.dockerignore\n**/.env\n**/.git\n**/.gitignore\n**/.vs\n**/.vscode\n**/bin\n**/obj\n**/.toolstarget\nk8s\n\n"
+        ],
         "description": "dockerignore"
     }
 }
-
-
-

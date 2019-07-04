@@ -2,21 +2,21 @@
     "dockerfile-front": {
         "prefix": "dockerfile-front",
         "body": [
-            "FROM node as builder\r\nWORKDIR /app\r\nCOPY package.json .\r\nCOPY package-lock.json . \r\nRUN npm i \r\nCOPY . .\r\nARG NODE_ENV\r\nENV NODE_ENV \\$NODE_ENV\r\nRUN npm run build\r\n \r\nFROM nginx:alpine\r\nARG NODE_ENV\r\nENV NODE_ENV \\$NODE_ENV\r\nRUN echo \\$'\\n\\r\nserver {      \\n\\r\n    listen 80;      \\n\\r\n    server_name _;       \\n\\r\n    root /usr/share/nginx/html;     \\n\\r\n    index index.html;       \\n\\r\n    location / {        \\n\\r\n        try_files \\$uri \\$1 \\$uri/ /index.html =404;       \\n\\r\n    }       \\n\\r\n}' > /etc/nginx/conf.d/default.conf\r\nCOPY --from=builder /app/dist /usr/share/nginx/html\r\nEXPOSE 80\r\nCMD [\"nginx\", \"-g\", \"daemon off;\"]\r\n"
+            "FROM node as builder\nWORKDIR /app\nCOPY package.json .\nCOPY package-lock.json . \nRUN npm i \nCOPY . .\nARG NODE_ENV\nENV NODE_ENV \\$NODE_ENV\nRUN npm run build\n \nFROM nginx:alpine\nARG NODE_ENV\nENV NODE_ENV \\$NODE_ENV\nRUN echo \\$'\\n\\nserver {      \\n\\n    listen 80;      \\n\\n    server_name _;       \\n\\n    root /usr/share/nginx/html;     \\n\\n    index index.html;       \\n\\n    location / {        \\n\\n        try_files \\$uri \\$1 \\$uri/ /index.html =404;       \\n\\n    }       \\n\\n}' > /etc/nginx/conf.d/default.conf\nCOPY --from=builder /app/dist /usr/share/nginx/html\nEXPOSE 80\nCMD [\"nginx\", \"-g\", \"daemon off;\"]\n"
         ],
         "description": "dockerfile-front"
     },
     "dockerfile-nodejs": {
         "prefix": "dockerfile-nodejs",
         "body": [
-            "FROM node as builder\r\n \r\nRUN mkdir -p /app/\r\nWORKDIR /app/\r\nCOPY package.json .\r\nCOPY package-lock.json .\r\nRUN npm i\r\nCOPY . .\r\nARG NODE_ENV\r\nENV NODE_ENV \\$NODE_ENV\r\nRUN npm run build\r\n \r\nFROM node:alpine\r\nARG NODE_ENV\r\nENV NODE_ENV \\$NODE_ENV\r\nRUN mkdir -p /app/\r\nWORKDIR /app/\r\nCOPY --from=builder /app/dist ./dist\r\nCOPY --from=builder /app/node_modules ./node_modules\r\nCMD [ \"node\", \"./dist/main.js\"]\r\n"
+            "FROM node as builder\n \nRUN mkdir -p /app/\nWORKDIR /app/\nCOPY package.json .\nCOPY package-lock.json .\nRUN npm i\nCOPY . .\nARG NODE_ENV\nENV NODE_ENV \\$NODE_ENV\nRUN npm run build\n \nFROM node:alpine\nARG NODE_ENV\nENV NODE_ENV \\$NODE_ENV\nRUN mkdir -p /app/\nWORKDIR /app/\nCOPY --from=builder /app/dist ./dist\nCOPY --from=builder /app/node_modules ./node_modules\nCMD [ \"node\", \"./dist/main.js\"]\n"
         ],
         "description": "dockerfile-nodejs"
     },
     "dockerfile-dotnetcore": {
         "prefix": "dockerfile-dotnetcore",
         "body": [
-            "FROM microsoft/dotnet:2.2-sdk AS build\r\nWORKDIR /src\r\nCOPY . .\r\nRUN dotnet restore\r\nRUN dotnet build -c Release \r\nRUN dotnet test\r\nRUN dotnet publish -c Release -o publish\r\n \r\nFROM microsoft/dotnet:2.2-aspnetcore-runtime\r\nWORKDIR /publish\r\nARG ASPNETCORE_ENVIRONMENT\r\nENV ASPNETCORE_ENVIRONMENT \\$ASPNETCORE_ENVIRONMENT\r\nCOPY --from=build /src/$PROJECT_NAME_REPLACE/publish .\r\nENTRYPOINT [\"dotnet\", \"$PROJECT_NAME_REPLACE.dll\"]\r\n \r\n \r\n\r\n"
+            "FROM microsoft/dotnet:2.2-sdk AS build\nWORKDIR /src\nCOPY . .\nRUN dotnet restore\nRUN dotnet build -c Release \nRUN dotnet test\nRUN dotnet publish -c Release -o publish\n \nFROM microsoft/dotnet:2.2-aspnetcore-runtime\nWORKDIR /publish\nARG ASPNETCORE_ENVIRONMENT\nENV ASPNETCORE_ENVIRONMENT \\$ASPNETCORE_ENVIRONMENT\nCOPY --from=build /src/$PROJECT_NAME_REPLACE/publish .\nENTRYPOINT [\"dotnet\", \"$PROJECT_NAME_REPLACE.dll\"]\n \n \n\n"
         ],
         "description": "dockerfile-dotnetcore"
     }

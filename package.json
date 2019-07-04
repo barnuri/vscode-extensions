@@ -70,6 +70,14 @@
             {
                 "language": "plaintext",
                 "path": "./snippets/k8s.json"
+            },
+            {
+                "language": "groovy",
+                "path": "./snippets/groovy.json"
+            },
+            {
+                "language": "plaintext",
+                "path": "./snippets/groovy.json"
             }
         ]
     },

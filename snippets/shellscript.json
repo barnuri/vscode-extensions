@@ -2,14 +2,14 @@
     "install extensions": {
         "prefix": "installext",
         "body": [
-            "code --install-extension alefragnani.Bookmarks\r\ncode --install-extension alefragnani.project-manager\r\ncode --install-extension dbaeumer.vscode-eslint\r\ncode --install-extension donjayamanne.githistory\r\ncode --install-extension eg2.tslint\r\ncode --install-extension eg2.vscode-npm-script\r\ncode --install-extension esbenp.prettier-vscode\r\ncode --install-extension jpoissonnier.vscode-styled-components\r\ncode --install-extension ms-mssql.mssql\r\ncode --install-extension ms-vscode-remote.remote-containers\r\ncode --install-extension ms-vscode-remote.remote-ssh\r\ncode --install-extension ms-vscode-remote.remote-ssh-edit\r\ncode --install-extension ms-vscode-remote.remote-ssh-explorer\r\ncode --install-extension ms-vscode-remote.remote-wsl\r\ncode --install-extension ms-vscode-remote.vscode-remote-extensionpack\r\ncode --install-extension ms-vscode.csharp\r\ncode --install-extension ms-vscode.vscode-typescript-tslint-plugin\r\ncode --install-extension msjsdiag.vscode-react-native\r\ncode --install-extension PeterJausovec.vscode-docker\r\ncode --install-extension rafaelsalguero.csharp2ts\r\ncode --install-extension vincaslt.highlight-matching-tag\r\ncode --install-extension vscode-icons-team.vscode-icons\r\ncode --install-extension waderyan.gitblame\r\ncode --install-extension wayou.vscode-todo-highlight\r\ncode --install-extension wix.vscode-import-cost\r\n"
+            "code --install-extension alefragnani.Bookmarks\ncode --install-extension alefragnani.project-manager\ncode --install-extension dbaeumer.vscode-eslint\ncode --install-extension donjayamanne.githistory\ncode --install-extension eg2.tslint\ncode --install-extension eg2.vscode-npm-script\ncode --install-extension esbenp.prettier-vscode\ncode --install-extension jpoissonnier.vscode-styled-components\ncode --install-extension ms-mssql.mssql\ncode --install-extension ms-vscode-remote.remote-containers\ncode --install-extension ms-vscode-remote.remote-ssh\ncode --install-extension ms-vscode-remote.remote-ssh-edit\ncode --install-extension ms-vscode-remote.remote-ssh-explorer\ncode --install-extension ms-vscode-remote.remote-wsl\ncode --install-extension ms-vscode-remote.vscode-remote-extensionpack\ncode --install-extension ms-vscode.csharp\ncode --install-extension ms-vscode.vscode-typescript-tslint-plugin\ncode --install-extension msjsdiag.vscode-react-native\ncode --install-extension PeterJausovec.vscode-docker\ncode --install-extension rafaelsalguero.csharp2ts\ncode --install-extension vincaslt.highlight-matching-tag\ncode --install-extension vscode-icons-team.vscode-icons\ncode --install-extension waderyan.gitblame\ncode --install-extension wayou.vscode-todo-highlight\ncode --install-extension wix.vscode-import-cost\n"
         ],
         "description": "install extensions"
     },
     "extensions export": {
         "prefix": "extexport",
         "body": [
-            "code --list-extensions | xargs -L 1 echo # linux\r\ncode --list-extensions | foreach-object -process {echo \"code --install-extension $_\"} #linux\r\n"
+            "code --list-extensions | xargs -L 1 echo # linux\ncode --list-extensions | foreach-object -process {echo \"code --install-extension $_\"} #linux\n"
         ],
         "description": "install extensions"
     }
