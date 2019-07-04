@@ -4,10 +4,7 @@
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "pretest": "npm run compile",
-        "test": "node ./out/test/runTest.js",
-        "commitChanges": "git commit -am \"version\" --allow-empty",
-        "gitBeforePublish": "npm run commitChanges && git push",
+        "gitBeforePublish": "git commit -am \"version\" --allow-empty && git push",
         "prepublish": "npm run gitBeforePublish && npm version patch",
         "publish": "vsce publish",
         "postpublish": "git push"
@@ -26,35 +23,35 @@
         "commands": [
             {
                 "command": "extension.textToString",
-                "title": "Text To String"
+                "title": "Bar Nuri Tools: Text To String"
             },
             {
                 "command": "extension.stringToText",
-                "title": "String To Text"
+                "title": "Bar Nuri Tools: String To Text"
             },
             {
                 "command": "extension.addK8s",
-                "title": "Add K8s"
+                "title": "Bar Nuri Tools: Add K8s"
             },
             {
                 "command": "extension.addJenkins",
-                "title": "Add Jenkinsfile"
+                "title": "Bar Nuri Tools: Add Jenkinsfile"
             },
             {
                 "command": "extension.addDocker",
-                "title": "Add Dockerfile"
+                "title": "Bar Nuri Tools: Add Dockerfile"
             },
             {
                 "command": "extension.addDockerK8sAndJenkins",
-                "title": "Add Dockerfile, K8s, Jenkinsfile"
+                "title": "Bar Nuri Tools: Add Dockerfile, K8s, Jenkinsfile"
             },
             {
                 "command": "extension.addPrettierFile",
-                "title": "Add Prettier File"
+                "title": "Bar Nuri Tools: Add Prettier File"
             },
             {
                 "command": "extension.addNodemon",
-                "title": "Add Nodemon With Debug"
+                "title": "Bar Nuri Tools: Add Nodemon With Debug"
             }
         ],
         "snippets": [
