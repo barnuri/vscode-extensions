@@ -6,6 +6,7 @@
         "watch": "tsc -watch -p ./",
         "pretest": "npm run compile",
         "test": "node ./out/test/runTest.js",
+        "prepublish": "npm version patch",
         "publish": "vsce publish"
     },
     "activationEvents": [
