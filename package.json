@@ -12,13 +12,18 @@
         "postpublish": "git push"
     },
     "activationEvents": [
-        "onCommand:extension.textToString"
+        "onCommand:extension.textToString",
+        "onCommand:extension.stringToText"
     ],
     "contributes": {
         "commands": [
             {
                 "command": "extension.textToString",
                 "title": "Text To String"
+            },
+            {
+                "command": "extension.stringToText",
+                "title": "String To Text"
             }
         ],
         "snippets": [
