@@ -6,8 +6,10 @@
         "watch": "tsc -watch -p ./",
         "pretest": "npm run compile",
         "test": "node ./out/test/runTest.js",
-        "prepublish": "npm version patch",
-        "publish": "vsce publish"
+        "gitBeforePublish": "git commit -am \"version\" && git push",
+        "prepublish": "npm run gitBeforePublish && npm version patch",
+        "publish": "vsce publish",
+        "postpublish": "git push"
     },
     "activationEvents": [
         "onCommand:extension.textToString"
