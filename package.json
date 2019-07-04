@@ -1,45 +1,23 @@
 {
-    "name": "bar-nuri-tools",
-    "displayName": "Bar Nuri Tools",
-    "publisher": "Bar",
-    "description": "Bar Nuri Tools Snippets for Dockerfile ,Ignore, Json, K8s, Shellscript, Typescript",
     "version": "0.1.5",
-    "icon": "icon.png",
-    "galleryBanner": {
-        "color": "#343a40",
-        "theme": "dark"
-    },
     "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile",
+        "test": "node ./out/test/runTest.js",
         "publish": "vsce publish"
     },
-    "repository": {
-        "type": "git"
-    },
-    "engines": {
-        "vscode": "^1.36.0"
-    },
-    "categories": [
-        "Snippets",
-        "Extension Packs",
-        "Formatters",
-        "Programming Languages",
-        "SCM Providers"
-    ],
-    "keywords": [
-        "Bar",
-        "Nuri",
-        "Tools",
-        "Bar Nuri",
-        "Bar Nuri Tools",
-        "Snippets",
-        "Dockerfile Snippets",
-        "Ignore Snippets",
-        "Json Snippets",
-        "K8s Snippets",
-        "Shellscript Snippets",
-        "Typescript Snippets"
+    "activationEvents": [
+        "onCommand:extension.textToString"
     ],
     "contributes": {
+        "commands": [
+            {
+                "command": "extension.textToString",
+                "title": "Text To String"
+            }
+        ],
         "snippets": [
             {
                 "language": "json",
@@ -86,5 +64,54 @@
                 "path": "./snippets/k8s.json"
             }
         ]
-    }
+    },
+    "name": "bar-nuri-tools",
+    "displayName": "Bar Nuri Tools",
+    "publisher": "Bar",
+    "description": "Bar Nuri Tools Snippets for Dockerfile ,Ignore, Json, K8s, Shellscript, Typescript",
+    "icon": "icon.png",
+    "galleryBanner": {
+        "color": "#343a40",
+        "theme": "dark"
+    },
+    "main": "./out/extension.js",
+    "devDependencies": {
+        "@types/glob": "^7.1.1",
+        "@types/mocha": "^5.2.6",
+        "@types/node": "^10.12.21",
+        "@types/vscode": "^1.36.0",
+        "glob": "^7.1.4",
+        "mocha": "^6.1.4",
+        "typescript": "^3.3.1",
+        "tslint": "^5.12.1",
+        "vscode-test": "^1.0.0-next.0"
+    },
+    "repository": {
+        "type": "git"
+    },
+    "engines": {
+        "vscode": "^1.36.0"
+    },
+    "categories": [
+        "Snippets",
+        "Extension Packs",
+        "Formatters",
+        "Programming Languages",
+        "SCM Providers",
+        "Other"
+    ],
+    "keywords": [
+        "Bar",
+        "Nuri",
+        "Tools",
+        "Bar Nuri",
+        "Bar Nuri Tools",
+        "Snippets",
+        "Dockerfile Snippets",
+        "Ignore Snippets",
+        "Json Snippets",
+        "K8s Snippets",
+        "Shellscript Snippets",
+        "Typescript Snippets"
+    ]
 }

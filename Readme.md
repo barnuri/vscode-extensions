@@ -1,3 +1,17 @@
+# Text To String Command
+
+```
+select text :
+1
+
+2
+
+3
+
+output:
+1\n\n2\n\n3
+```
+
 # Dockerfile Snippets
 
 dockerfile-front
