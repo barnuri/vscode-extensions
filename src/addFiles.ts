@@ -23,16 +23,19 @@ export async function dockerfileBuilder() {
     switch (answer) {
         case 'NodeJS':
             nodejsDockerfileBuilder();
+            break;
         case 'React/Anguler':
             frontDockerfileBuilder();
+            break;
         case '.Net Core':
             dotnetCoreDockerfileBuilder();
+            break;
     }
     writeFile('.dockerignore', getTextFromSnippet('ignore', 'dockerignore'));
 }
 
 export function jenkinsFileBuilder() {
-    writeFile('Jenkinsfile', getTextFromSnippet('groovy', 'jenkinsfile'));
+    writeFile('Jenkinsfile', getTextFromSnippet('groovy', 'Jenkins File'));
 }
 
 export function k8sFileBuilder() {

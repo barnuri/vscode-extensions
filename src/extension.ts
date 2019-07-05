@@ -9,6 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
                     .replace(/\n/g, '\\n')
                     .replace(/"/g, '\\"')
                     .replace(/'/g, "\\'")
+                    .replace(/\\/g, '\\')
                     .replace(/\$/g, '\\\\$'),
             );
         }),
@@ -35,8 +36,11 @@ export function activate(context: vscode.ExtensionContext) {
                         .replace(/"/g, '\\"')
                         .replace(/'/g, "\\'")
                         .replace(/\$/g, '\\\\$')
+                        .replace(/\\n/g, '!@#!@##@!!@##@!!@#@!@')
+                        .replace(/\\/g, '\\')
                         .split('\n')
-                        .join('","') +
+                        .join(' " , " ')
+                        .replace(/!@#!@##@!!@##@!!@#@!@/g, '\\n') +
                     '"]',
             );
         }),
