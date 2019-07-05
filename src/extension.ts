@@ -2,8 +2,6 @@ import * as vscode from 'vscode';
 import { k8sFileBuilder, jenkinsFileBuilder, dockerfileBuilder, pritterFile, nodemonFile } from './addFiles';
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('Congratulations, your extension "Bar Nuri Tools" is now active !');
-
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.textToString', () => {
             editSelectedTest(text =>
@@ -15,6 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
             );
         }),
     );
+
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.stringToText', () => {
             editSelectedTest(text =>
@@ -28,15 +27,44 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
+        vscode.commands.registerCommand('extension.textToStringArray', () => {
+            editSelectedTest(
+                text =>
+                    '["' +
+                    text
+                        .replace(/"/g, '\\"')
+                        .replace(/'/g, "\\'")
+                        .replace(/\$/g, '\\\\$')
+                        .split('\n')
+                        .join('","') +
+                    '"]',
+            );
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.stringArrayToText', () => {
+            editSelectedTest(text => {
+                const lines = JSON.parse(text) as string[];
+                for (let index = 0; index < lines.length; index++) {
+                    lines[index] = lines[index]
+                        .replace(/\\"/g, '"')
+                        .replace(/\\'/g, "'")
+                        .replace(/\\\\\$/g, '$');
+                }
+                return lines.join('\n');
+            });
+        }),
+    );
+
+    context.subscriptions.push(
         vscode.commands.registerCommand('extension.addK8s', async () => {
-            // const answer = await vscode.window.showQuickPick(['NodeJS', 'React/Anguler', '.Net Core']);
             k8sFileBuilder();
         }),
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.addJenkins', async () => {
-            // const answer = await vscode.window.showQuickPick(['NodeJS', 'React/Anguler', '.Net Core']);
             jenkinsFileBuilder();
         }),
     );

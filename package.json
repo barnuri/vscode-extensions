@@ -12,6 +12,8 @@
     "activationEvents": [
         "onCommand:extension.textToString",
         "onCommand:extension.stringToText",
+        "onCommand:extension.textToStringArray",
+        "onCommand:extension.stringArrayToText",
         "onCommand:extension.addK8s",
         "onCommand:extension.addJenkins",
         "onCommand:extension.addDocker",
@@ -24,6 +26,14 @@
             {
                 "command": "extension.textToString",
                 "title": "Bar Nuri Tools: Text To String"
+            },
+            {
+                "command": "extension.textToStringArray",
+                "title": "Bar Nuri Tools: Text To String Array"
+            },
+            {
+                "command": "extension.stringArrayToText",
+                "title": "Bar Nuri Tools: String Array To Text"
             },
             {
                 "command": "extension.stringToText",
@@ -106,6 +116,14 @@
             {
                 "language": "plaintext",
                 "path": "./snippets/groovy.json"
+            },
+            {
+                "language": "ignore",
+                "path": "./snippets/ignore.json"
+            },
+            {
+                "language": "plaintext",
+                "path": "./snippets/ignore.json"
             }
         ]
     },
