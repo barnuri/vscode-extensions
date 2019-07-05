@@ -1,19 +1,21 @@
 import * as vscode from 'vscode';
 import { writeFile } from './fileHelper';
 
+export function getTextFromSnippet(snippetName: string, key: string) {
+    const snippet = require(`../snippets/${snippetName}.json`);
+    return snippet[key].body.join('\n');
+}
+
 export function dotnetCoreDockerfileBuilder() {
-    const snippet = require('../snippets/dockerfile.json');
-    writeFile('Dockerfile', snippet['dockerfile-dotnetcore'].body[0]);
+    writeFile('Dockerfile', getTextFromSnippet('dockerfile', 'dockerfile-dotnetcore'));
 }
 
 export function frontDockerfileBuilder() {
-    const snippet = require('../snippets/dockerfile.json');
-    writeFile('Dockerfile', snippet['dockerfile-front'].body[0]);
+    writeFile('Dockerfile', getTextFromSnippet('dockerfile', 'dockerfile-front'));
 }
 
 export function nodejsDockerfileBuilder() {
-    const snippet = require('../snippets/dockerfile.json');
-    writeFile('Dockerfile', snippet['dockerfile-nodejs'].body[0]);
+    writeFile('Dockerfile', getTextFromSnippet('dockerfile', 'dockerfile-nodejs'));
 }
 
 export async function dockerfileBuilder() {
@@ -26,29 +28,24 @@ export async function dockerfileBuilder() {
         case '.Net Core':
             dotnetCoreDockerfileBuilder();
     }
-    const snippet = require('../snippets/ignore.json');
-    writeFile('.dockerignore', snippet['dockerignore'].body[0]);
+    writeFile('.dockerignore', getTextFromSnippet('ignore', 'dockerignore'));
 }
 
 export function jenkinsFileBuilder() {
-    const snippet = require('../snippets/groovy.json');
-    writeFile('Jenkinsfile', snippet['jenkinsfile'].body[0]);
+    writeFile('Jenkinsfile', getTextFromSnippet('groovy', 'jenkinsfile'));
 }
 
 export function k8sFileBuilder() {
-    const snippet = require('../snippets/k8s.json');
-    const k8sfile = snippet['k8s example'].body[0].replace(/\\\$/g, '$');
+    const k8sfile = getTextFromSnippet('k8s', 'k8s example').replace(/\\\$/g, '$');
 
     writeFile('k8s/integration.yaml', k8sfile);
     writeFile('k8s/qa.yaml', k8sfile);
 }
 
 export function pritterFile() {
-    const snippet = require('../snippets/json.json');
-    writeFile('.prettierrc.json', snippet['pritter setting'].body[0]);
+    writeFile('.prettierrc.json', getTextFromSnippet('json', 'pritter setting'));
 }
 export function nodemonFile() {
-    const snippet = require('../snippets/json.json');
-    writeFile('nodemon.json', snippet['nodemon config'].body[0]);
-    writeFile('.vscode/launch.json', snippet['launch config'].body[0]);
+    writeFile('nodemon.json', getTextFromSnippet('json', 'nodemon config'));
+    writeFile('.vscode/launch.json', getTextFromSnippet('json', 'launch config'));
 }
