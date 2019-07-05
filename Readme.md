@@ -1,6 +1,6 @@
 # [Bar Nuri Tools Extension](https://marketplace.visualstudio.com/items?itemName=Bar.bar-nuri-tools)
 
-# Commands
+![Commands](./commands.png 'Commands')
 
 ## Text To String Command
 
@@ -30,62 +30,50 @@ output:
 3
 ```
 
-## Add K8s
-
-## Add Jenkinsfile
-
-## Add Dockerfile
-
-## Add Dockerfile, K8s, Jenkinsfile
-
-## Add Prettier File
-
-## Add Nodemon With Debug
-
 # Snippets
 
 ## Jenkinsfile
 
-jenkinsfile
+-   jenkinsfile
 
 ## Dockerfile
 
-dockerfile-front
+-   dockerfile-front
 
-dockerfile-nodejs
+-   dockerfile-nodejs
 
-dockerfile-dotnetcore
+-   dockerfile-dotnetcore
 
 ## Ignore
 
-gitignore
+-   gitignore
 
-dockerignore
+-   dockerignore
 
 ## Json
 
-nodemonconf
+-   nodemonconf
 
-prittersetting
+-   prittersetting
 
-pritterscript
+-   pritterscript
 
-vscodesettings
+-   vscodesettings
 
-tsconfig
+-   tsconfig
 
-launchconf
+-   launchconf
 
 ## K8s
 
-k8sexample
+-   k8sexample
 
 ## Shellscript
 
-installext
+-   installext
 
-extexport
+-   extexport
 
 ## Typescript
 
-envconf
+-   envconf
