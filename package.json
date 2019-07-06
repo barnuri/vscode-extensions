@@ -161,7 +161,7 @@
     "displayName": "Bar Nuri Tools",
     "publisher": "Bar",
     "description": "Bar Nuri Tools Snippets for Dockerfile ,Ignore, Json, K8s, Shellscript, Typescript",
-    "icon": "https://i.imgur.com/XYgd6To.png",
+    "icon": "icon.png",
     "galleryBanner": {
         "color": "#343a40",
         "theme": "dark"
