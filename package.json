@@ -10,40 +10,60 @@
         "postpublish": "git push"
     },
     "activationEvents": [
-        "onCommand:extension.textToString",
-        "onCommand:extension.stringToText",
-        "onCommand:extension.textToStringArray",
-        "onCommand:extension.stringArrayToText",
-        "onCommand:extension.addK8s",
-        "onCommand:extension.addJenkins",
         "onCommand:extension.addDocker",
         "onCommand:extension.addDockerK8sAndJenkins",
-        "onCommand:extension.addPrettierFile",
+        "onCommand:extension.addJenkins",
+        "onCommand:extension.addK8s",
         "onCommand:extension.addNodemon",
-        "onCommand:extension.updatePackageJson",
-        "onCommand:extension.gitFirstInit",
-        "onCommand:extension.gitCleanCache",
-        "onCommand:extension.dockerStopAll",
+        "onCommand:extension.addPrettierFile",
+        "onCommand:extension.dockerDev",
         "onCommand:extension.dockerRemoveAll",
-        "onCommand:extension.dockerDev"
+        "onCommand:extension.dockerStopAll",
+        "onCommand:extension.gitCleanCache",
+        "onCommand:extension.gitFirstInit",
+        "onCommand:extension.stringArrayToText",
+        "onCommand:extension.stringToText",
+        "onCommand:extension.textToString",
+        "onCommand:extension.textToStringArray",
+        "onCommand:extension.updatePackageJson"
     ],
     "contributes": {
         "commands": [
             {
-                "command": "extension.dockerDev",
-                "title": "Bar Nuri Tools: Add Dockerfile-Dev For NodeJS/React/Anguler"
+                "command": "extension.addDocker",
+                "title": "Bar Nuri Tools: Add Dockerfile"
             },
             {
-                "command": "extension.dockerStopAll",
-                "title": "Bar Nuri Tools: Docker Stop All Containers"
+                "command": "extension.addDockerK8sAndJenkins",
+                "title": "Bar Nuri Tools: Add Dockerfile, K8s, Jenkinsfile"
+            },
+            {
+                "command": "extension.addJenkins",
+                "title": "Bar Nuri Tools: Add Jenkinsfile"
+            },
+            {
+                "command": "extension.addK8s",
+                "title": "Bar Nuri Tools: Add K8s"
+            },
+            {
+                "command": "extension.addNodemon",
+                "title": "Bar Nuri Tools: Add Nodemon With Debug"
+            },
+            {
+                "command": "extension.addPrettierFile",
+                "title": "Bar Nuri Tools: Add Prettier File"
+            },
+            {
+                "command": "extension.dockerDev",
+                "title": "Bar Nuri Tools: Add Dockerfile-Dev For NodeJS/React/Anguler"
             },
             {
                 "command": "extension.dockerRemoveAll",
                 "title": "Bar Nuri Tools: Docker Remove All Containers"
             },
             {
-                "command": "extension.updatePackageJson",
-                "title": "Bar Nuri Tools: Update package.json dependencies"
+                "command": "extension.dockerStopAll",
+                "title": "Bar Nuri Tools: Docker Stop All Containers"
             },
             {
                 "command": "extension.gitCleanCache",
@@ -54,14 +74,6 @@
                 "title": "Bar Nuri Tools: Git First Init"
             },
             {
-                "command": "extension.textToString",
-                "title": "Bar Nuri Tools: Text To String"
-            },
-            {
-                "command": "extension.textToStringArray",
-                "title": "Bar Nuri Tools: Text To String Array"
-            },
-            {
                 "command": "extension.stringArrayToText",
                 "title": "Bar Nuri Tools: String Array To Text"
             },
@@ -70,28 +82,16 @@
                 "title": "Bar Nuri Tools: String To Text"
             },
             {
-                "command": "extension.addK8s",
-                "title": "Bar Nuri Tools: Add K8s"
+                "command": "extension.textToString",
+                "title": "Bar Nuri Tools: Text To String"
             },
             {
-                "command": "extension.addJenkins",
-                "title": "Bar Nuri Tools: Add Jenkinsfile"
+                "command": "extension.textToStringArray",
+                "title": "Bar Nuri Tools: Text To String Array"
             },
             {
-                "command": "extension.addDocker",
-                "title": "Bar Nuri Tools: Add Dockerfile"
-            },
-            {
-                "command": "extension.addDockerK8sAndJenkins",
-                "title": "Bar Nuri Tools: Add Dockerfile, K8s, Jenkinsfile"
-            },
-            {
-                "command": "extension.addPrettierFile",
-                "title": "Bar Nuri Tools: Add Prettier File"
-            },
-            {
-                "command": "extension.addNodemon",
-                "title": "Bar Nuri Tools: Add Nodemon With Debug"
+                "command": "extension.updatePackageJson",
+                "title": "Bar Nuri Tools: Update package.json dependencies"
             }
         ],
         "snippets": [
@@ -161,7 +161,7 @@
     "displayName": "Bar Nuri Tools",
     "publisher": "Bar",
     "description": "Bar Nuri Tools Snippets for Dockerfile ,Ignore, Json, K8s, Shellscript, Typescript",
-    "icon": "icon.png",
+    "icon": "https://i.imgur.com/XYgd6To.png",
     "galleryBanner": {
         "color": "#343a40",
         "theme": "dark"

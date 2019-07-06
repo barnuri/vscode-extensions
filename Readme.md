@@ -1,6 +1,6 @@
 # [Bar Nuri Tools Extension](https://marketplace.visualstudio.com/items?itemName=Bar.bar-nuri-tools)
 
-![Commands](https://i.imgur.com/kaa5n90.png 'Commands')
+![Commands](https://i.imgur.com/WUxKInW.png 'Commands')
 
 ## Text To String Command
 
