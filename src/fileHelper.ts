@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, chmodSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, chmodSync, writeFileSync, readFileSync } from 'fs';
 import * as vscode from 'vscode';
 import { dirname } from 'path';
 
@@ -7,6 +7,21 @@ export function writeFile(path: string, body: string) {
     filePath = fixPath(filePath);
     makeDirIfNotExist(dirname(filePath));
     writeFileSync(filePath, body, { encoding: 'utf8' });
+}
+
+export function getPackageJson() {
+    return JSON.parse(readFile('./package.json'));
+}
+
+export function modifyPackageJson(modifyFunc: (packageJson: any) => any) {
+    const packagejson = getPackageJson();
+    writeFile('package.json', JSON.stringify(modifyFunc(packagejson), null, 4));
+}
+
+export function readFile(path: string) {
+    let filePath = vscode.workspace.rootPath + '/' + path;
+    filePath = fixPath(filePath);
+    return readFileSync(filePath, 'utf8');
 }
 
 export function fixPath(path: string): string {
