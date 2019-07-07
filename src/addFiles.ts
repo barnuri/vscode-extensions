@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { writeFile, readFile, getPackageJson, modifyPackageJson } from './fileHelper';
+import { writeFile, modifyPackageJson } from './fileHelper';
 import { getTerminal } from './extension';
 
 export function getTextFromSnippet(snippetName: string, key: string) {
