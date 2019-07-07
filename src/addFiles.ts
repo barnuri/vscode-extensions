@@ -4,7 +4,8 @@ import { getTerminal } from './extension';
 
 export function getTextFromSnippet(snippetName: string, key: string) {
     const snippet = require(`../snippets/${snippetName}.json`);
-    return snippet[key].body.join('\n');
+    const text = snippet[key].body.join('\n').replace(/\\\$/g, '$');
+    return text;
 }
 
 export function dotnetCoreDockerfileBuilder() {
