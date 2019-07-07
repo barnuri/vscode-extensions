@@ -2,7 +2,9 @@
 
 https://code.visualstudio.com/api/working-with-extensions/publishing-extension
 
-https://dev.azure.com/barnuri/
+# token all accessible organizations
+
+https://dev.azure.com/barnuri/_usersSettings/tokens
 
 ```
 vsce login Bar
