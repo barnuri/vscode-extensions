@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { k8sFileBuilder, jenkinsFileBuilder, dockerfileBuilder, pritterFile, nodemonFile, dockerDevNodeJS } from './addFiles';
+import { k8sFileBuilder, jenkinsFileBuilder, dockerfileBuilder, pritterFile, nodemonFile, dockerDevNodeJS, addColorsFile } from './addFiles';
 import { readFile } from './fileHelper';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -59,6 +59,12 @@ export function activate(context: vscode.ExtensionContext) {
                 }
                 return lines.join('\n');
             });
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.addColorsFile', async () => {
+            addColorsFile();
         }),
     );
 

@@ -2,7 +2,7 @@
     "Env Config File": {
         "prefix": "envconf",
         "body": [
-            "const colors = require('color/safe');",
+            "import colors = require('colors/safe');",
             " ",
             "const defaultValues = {",
             "    port: 3000,",
@@ -38,5 +38,10 @@
             ""
         ],
         "description": "Env Config File"
+    },
+    "colorsfile": {
+        "prefix": "colorsfile",
+        "body": ["import colors = require('colors/safe');", "", "export default colors;"],
+        "description": "Colors File"
     }
 }

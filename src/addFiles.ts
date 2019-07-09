@@ -20,6 +20,10 @@ export function nodejsDockerfileBuilder() {
     writeFile('Dockerfile', getTextFromSnippet('dockerfile', 'dockerfile-nodejs'));
 }
 
+export function addColorsFile() {
+    writeFile('src/helpers/colors.ts', getTextFromSnippet('typescript', 'colorsfile'));
+}
+
 export async function dockerfileBuilder() {
     const answer = await vscode.window.showQuickPick(['NodeJS', 'React/Anguler', '.Net Core']);
     switch (answer) {

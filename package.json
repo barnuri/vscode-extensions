@@ -10,6 +10,7 @@
         "postpublish": "git push"
     },
     "activationEvents": [
+        "onCommand:extension.addColorsFile",
         "onCommand:extension.addDocker",
         "onCommand:extension.addDockerK8sAndJenkins",
         "onCommand:extension.addJenkins",
@@ -29,6 +30,10 @@
     ],
     "contributes": {
         "commands": [
+            {
+                "command": "extension.addColorsFile",
+                "title": "Bar Nuri Tools: Add Colors Helper File"
+            },
             {
                 "command": "extension.addDocker",
                 "title": "Bar Nuri Tools: Add Dockerfile"
@@ -109,6 +114,10 @@
             },
             {
                 "language": "typescript",
+                "path": "./snippets/typescript.json"
+            },
+            {
+                "language": "javascript",
                 "path": "./snippets/typescript.json"
             },
             {
