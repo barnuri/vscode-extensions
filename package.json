@@ -22,6 +22,7 @@
         "onCommand:extension.dockerStopAll",
         "onCommand:extension.gitCleanCache",
         "onCommand:extension.gitFirstInit",
+        "onCommand:extension.gitDeleteLocalTags",
         "onCommand:extension.stringArrayToText",
         "onCommand:extension.stringToText",
         "onCommand:extension.textToString",
@@ -77,6 +78,10 @@
             {
                 "command": "extension.gitFirstInit",
                 "title": "Bar Nuri Tools: Git First Init"
+            },
+            {
+                "command": "extension.gitDeleteLocalTags",
+                "title": "Bar Nuri Tools: Git Delete Local Tags"
             },
             {
                 "command": "extension.stringArrayToText",

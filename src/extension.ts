@@ -139,6 +139,12 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
+        vscode.commands.registerCommand('extension.gitDeleteLocalTags', async () => {
+            getTerminal().sendText('git tag -d $(git tag -l)');
+        }),
+    );
+
+    context.subscriptions.push(
         vscode.commands.registerCommand('extension.dockerStopAll', async () => {
             const terminal = getTerminal();
             terminal.sendText('docker stop $(docker ps -a -q)');
