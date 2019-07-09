@@ -22,6 +22,7 @@ export function nodejsDockerfileBuilder() {
 
 export function addColorsFile() {
     writeFile('src/helpers/colors.ts', getTextFromSnippet('typescript', 'colorsfile'));
+    getTerminal().sendText('npm i colors');
 }
 
 export async function dockerfileBuilder() {
