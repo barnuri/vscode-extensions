@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { k8sFileBuilder, jenkinsFileBuilder, dockerfileBuilder, pritterFile, nodemonFile, dockerDevNodeJS, addColorsFile } from './addFiles';
 import { readFile } from './fileHelper';
+import { installMinikube, installDocker } from './installations';
 
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
@@ -162,6 +163,24 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.dockerDev', async () => {
             dockerDevNodeJS();
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.installDocker', async () => {
+            installDocker();
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.installK8s', async () => {
+            installMinikube();
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.exportK8sConfig', async () => {
+            getTerminal().sendText('kubectl config view --raw --flatten --minify');
         }),
     );
 }

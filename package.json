@@ -27,10 +27,25 @@
         "onCommand:extension.stringToText",
         "onCommand:extension.textToString",
         "onCommand:extension.textToStringArray",
-        "onCommand:extension.updatePackageJson"
+        "onCommand:extension.updatePackageJson",
+        "onCommand:extension.installDocker",
+        "onCommand:extension.installK8s",
+        "onCommand:extension.exportK8sConfig"
     ],
     "contributes": {
         "commands": [
+            {
+                "command": "extension.installDocker",
+                "title": "Bar Nuri Tools: Install Docker On Ubuntu"
+            },
+            {
+                "command": "extension.installK8s",
+                "title": "Bar Nuri Tools: Install K8s On Ubuntu"
+            },
+            {
+                "command": "extension.exportK8sConfig",
+                "title": "Bar Nuri Tools: K8s Export Config - Portable Config"
+            },
             {
                 "command": "extension.addColorsFile",
                 "title": "Bar Nuri Tools: Add Colors Helper File"
