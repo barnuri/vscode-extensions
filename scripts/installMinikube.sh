@@ -37,6 +37,8 @@ installFunc() {
 
     $sh_c 'minikube config set vm-driver none'
 	$sh_c 'swapoff -a && sed -i '/swap/d' /etc/fstab'
+	$sh_c 'systemctl enable kubelet.service'
+
 	$sh_c 'minikube start'
     $sh_c 'minikube addons enable ingress'
     $sh_c 'minikube addons enable dashboard'
