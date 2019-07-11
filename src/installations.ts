@@ -46,9 +46,9 @@ export function installDocker() {
 }
 
 export function upgradeUbuntu() {
-    return `DEBIAN_FRONTEND=noninteractive apt-get update -qy --force-yes  > /dev/null
+    return `DEBIAN_FRONTEND=noninteractive apt-get update -qy  > /dev/null
     echo ----------------------------- 1
-    DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -qy --force-yes >> /var/log/apt/scripted-upgrades.log
+    DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -qy >> /var/log/apt/scripted-upgrades.log
     echo ----------------------------- 2`;
 }
 
