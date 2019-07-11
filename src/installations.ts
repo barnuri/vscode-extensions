@@ -5,15 +5,11 @@ export function installMinikube() {
     t.sendText(
         removeEmptyLines(`
     echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" >> /etc/apt/sources.list.d/kubernetes.list
-    ${echoStep(2)}
+    ${upgradeUbuntu()}
     sh -c DEBIAN_FRONTEND=noninteractive apt-get install -y apt-transport-https curl -y  ebtables ethtool apt-transport-https
-    ${echoStep(3)}
     sh -c curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - 
-    ${echoStep(4)}
     sh -c DEBIAN_FRONTEND=noninteractive apt-get install -y kubectl
-    ${echoStep(5)}
     sh -c curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube
-    ${echoStep(6)}
     install minikube /usr/local/bin
     minikube config set vm-driver none
     minikube start
@@ -35,12 +31,9 @@ export function echoStep(num: number) {
 }
 
 export function upgradeUbuntu() {
-    // const upgrade = `
-    // DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -qy >> /var/log/apt/scripted-upgrades.log
-    // echo ----------------------------- 2`;
     return `
-    DEBIAN_FRONTEND=noninteractive apt-get update -qy  > /dev/null
-    ${echoStep(1)}
+    sh -c DEBIAN_FRONTEND=noninteractive apt-get update -qq > /dev/null
+    sh -c DEBIAN_FRONTEND=noninteractive apt-get upgrade -qq
     `;
 }
 
