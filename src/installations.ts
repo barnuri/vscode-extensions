@@ -46,12 +46,21 @@ export function installDocker() {
 }
 
 export function upgradeUbuntu() {
-    return `DEBIAN_FRONTEND=noninteractive apt-get update -qy  > /dev/null
+    // const upgrade = `
+    // DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -qy >> /var/log/apt/scripted-upgrades.log
+    // echo ----------------------------- 2`;
+    return `
+    DEBIAN_FRONTEND=noninteractive apt-get update -qy  > /dev/null
     echo ----------------------------- 1
-    DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -qy >> /var/log/apt/scripted-upgrades.log
-    echo ----------------------------- 2`;
+    `;
 }
 
 export function removeEmptyLines(s: string) {
-    return s.replace(/^\s*[\r\n]/gm, '');
+    return s
+        .replace(/^\s*[\r\n]/gm, '')
+        .trim()
+        .trimLeft()
+        .trimRight()
+        .trimLeft()
+        .trim();
 }
