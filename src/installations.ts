@@ -6,15 +6,15 @@ export function installMinikube() {
     t.sendText(
         removeEmptyLines(`${upgradeUbuntu()}
     echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" >> /etc/apt/sources.list.d/kubernetes.list
-    echo ----------------------------- 3
+    ${echoStep(2)}
     DEBIAN_FRONTEND=noninteractive apt-get install -y apt-transport-https curl -y  ebtables ethtool apt-transport-https
-    echo ----------------------------- 4
+    ${echoStep(3)}
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - 
-    echo ----------------------------- 5
+    ${echoStep(4)}
     DEBIAN_FRONTEND=noninteractive apt-get install -y kubectl
-    echo ----------------------------- 6
+    ${echoStep(5)}
     curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube
-    echo ----------------------------- 7
+    ${echoStep(6)}
     install minikube /usr/local/bin
     minikube config set vm-driver none
     minikube start
@@ -32,17 +32,21 @@ export function installDocker() {
         removeEmptyLines(
             `${upgradeUbuntu()}
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    echo ----------------------------- 3
+    ${echoStep(2)}
     DEBIAN_FRONTEND=noninteractive apt-get install apt-transport-https ca-certificates curl software-properties-common -qy
-    echo ----------------------------- 4
+    ${echoStep(3)}
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-    echo ----------------------------- 5
+    ${echoStep(4)}
     DEBIAN_FRONTEND=noninteractive apt-get install docker-ce -qy
-    echo ----------------------------- 6
+    ${echoStep(5)}
     docker -v'
     `,
         ),
     );
+}
+
+export function echoStep(num: number) {
+    return `echo ----------------------------- step ${num} ------------------------`;
 }
 
 export function upgradeUbuntu() {
@@ -51,7 +55,7 @@ export function upgradeUbuntu() {
     // echo ----------------------------- 2`;
     return `
     DEBIAN_FRONTEND=noninteractive apt-get update -qy  > /dev/null
-    echo ----------------------------- 1
+    ${echoStep(1)}
     `;
 }
 
