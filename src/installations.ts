@@ -2,7 +2,10 @@ import { getTerminal } from './extension';
 import { writeFile, readFile, setFullPermission } from './fileHelper';
 
 export function installMinikube() {
+    writeFile('/etc/docker/daemon.json', readFile(`../scripts/daemon.json`, false), true);
+
     const script = readFile(`../scripts/installMinikube.sh`, false).replace(/\r/g, '');
+
     writeFile('./installMinikube.sh', script);
     setFullPermission('./installMinikube.sh');
     getTerminal().sendText('./installMinikube.sh');

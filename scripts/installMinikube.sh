@@ -23,6 +23,11 @@ installFunc() {
 		fi
 	fi
 
+
+	$sh_c 'mkdir -p /etc/systemd/system/docker.service.d'
+	$sh_c 'systemctl daemon-reload'
+	$sh_c 'systemctl restart docker'
+
     $sh_c 'apt-get update -qq'
     $sh_c 'DEBIAN_FRONTEND=noninteractive apt-get upgrade -qq'
     $sh_c 'echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list'
