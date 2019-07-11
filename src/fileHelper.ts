@@ -18,8 +18,8 @@ export function modifyPackageJson(modifyFunc: (packageJson: any) => any) {
     writeFile('package.json', JSON.stringify(modifyFunc(packagejson), null, 4));
 }
 
-export function readFile(path: string) {
-    let filePath = vscode.workspace.rootPath + '/' + path;
+export function readFile(path: string, userFolder: boolean = true) {
+    let filePath = (userFolder ? vscode.workspace.rootPath : __dirname) + '/' + path;
     filePath = fixPath(filePath);
     return readFileSync(filePath, 'utf8');
 }
