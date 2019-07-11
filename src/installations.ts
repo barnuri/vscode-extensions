@@ -3,8 +3,8 @@ import { Terminal } from 'vscode';
 
 export function installMinikube() {
     const t = getTerminal();
-    upgradeUbuntu(t);
-    t.sendText(`
+    t.sendText(
+        removeEmptyLines(`${upgradeUbuntu()}
     echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" >> /etc/apt/sources.list.d/kubernetes.list
     echo ----------------------------- 3
     DEBIAN_FRONTEND=noninteractive apt-get install -y apt-transport-https curl -y  ebtables ethtool apt-transport-https
@@ -22,13 +22,15 @@ export function installMinikube() {
     minikube addons enable dashboard
     minikube status
     kubectl config view --raw --flatten --minify
-    `);
+    `),
+    );
 }
 
 export function installDocker() {
     const t = getTerminal();
-    upgradeUbuntu(t);
-    t.sendText(`
+    t.sendText(
+        removeEmptyLines(
+            `${upgradeUbuntu()}
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
     echo ----------------------------- 3
     DEBIAN_FRONTEND=noninteractive apt-get install apt-transport-https ca-certificates curl software-properties-common -y
@@ -38,14 +40,18 @@ export function installDocker() {
     DEBIAN_FRONTEND=noninteractive apt-get install docker-ce -y
     echo ----------------------------- 6
     docker -v'
-    `);
+    `,
+        ),
+    );
 }
 
-export function upgradeUbuntu(t: Terminal) {
-    t.sendText(`
-DEBIAN_FRONTEND=noninteractive apt-get update -qy --force-yes  > /dev/null
-echo ----------------------------- 1
-DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -qy --force-yes >> /var/log/apt/scripted-upgrades.log
-echo ----------------------------- 2
-    `);
+export function upgradeUbuntu() {
+    return `DEBIAN_FRONTEND=noninteractive apt-get update -qy --force-yes  > /dev/null
+    echo ----------------------------- 1
+    DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -qy --force-yes >> /var/log/apt/scripted-upgrades.log
+    echo ----------------------------- 2`;
+}
+
+export function removeEmptyLines(s: string) {
+    return s.replace(/^\s*[\r\n]/gm, '');
 }
