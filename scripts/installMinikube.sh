@@ -23,6 +23,9 @@ installFunc() {
 		fi
 	fi
 
+
+	$sh_c 'echo { "insecure-registries": ["registry.codeoasis.com:8082"], "exec-opts": ["native.cgroupdriver=systemd"], "log-driver": "json-file", "log-opts": { "max-size": "100m" }, "storage-driver": "overlay2" } > /etc/docker/daemon.json'
+
 	$sh_c 'mkdir -p /etc/systemd/system/docker.service.d'
 	$sh_c 'systemctl daemon-reload'
 	$sh_c 'systemctl restart docker'
@@ -36,7 +39,7 @@ installFunc() {
     $sh_c 'install minikube /usr/local/bin'
 
     $sh_c 'minikube config set vm-driver none'
-	$sh_c 'swapoff -a && sed -i '/swap/d' /etc/fstab'
+	$sh_c "swapoff -a && sed -i '/swap/d' /etc/fstab"
 	$sh_c 'systemctl enable kubelet.service'
 
 	$sh_c 'minikube start'
