@@ -2,7 +2,7 @@ import { getTerminal } from './extension';
 import { writeFile, readFile, setFullPermission } from './fileHelper';
 
 export function installMinikube() {
-    const script = readFile(`../scripts/installMinikube.sh`, false);
+    const script = readFile(`../scripts/installMinikube.sh`, false).replace(/\r/g, '');
     writeFile('./minikubeInstall.sh', script);
     setFullPermission('./minikubeInstall.sh');
     getTerminal().sendText('./minikubeInstall.sh');
