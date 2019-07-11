@@ -18,7 +18,7 @@ export function installMinikube() {
         'minikube addons enable dashboard',
         'minikube status',
         'kubectl config view --raw --flatten --minify',
-    ].join('\n');
+    ].join('; \n');
 
     t.sendText(script);
 }
@@ -33,8 +33,8 @@ export function installDocker() {
         'add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"',
         'apt-get update',
         'apt-get install docker-ce -y',
-        'docker -v # check',
-    ].join('\n');
+        'docker -v',
+    ].join('; \n');
 
     t.sendText(script);
 }
