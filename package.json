@@ -4,7 +4,7 @@
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "gitBeforePublish": "git commit -am \"version\" --allow-empty && git push",
+        "gitBeforePublish": "git add . && git commit -m \"version\" --allow-empty && git push",
         "prepublish": "npm run gitBeforePublish && npm version patch",
         "publish": "vsce publish",
         "postpublish": "git push"

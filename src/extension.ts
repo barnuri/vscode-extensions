@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import { k8sFileBuilder, jenkinsFileBuilder, dockerfileBuilder, pritterFile, nodemonFile, dockerDevNodeJS, addColorsFile } from './addFiles';
-import { readFile } from './fileHelper';
 import { installMinikube, installDocker } from './installations';
 
 export function activate(context: vscode.ExtensionContext) {
