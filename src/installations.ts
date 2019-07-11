@@ -43,9 +43,9 @@ export function installDocker() {
 
 export function upgradeUbuntu(t: Terminal) {
     t.sendText(`
-DEBIAN_FRONTEND=noninteractive apt-get update -y --force-yes;
+DEBIAN_FRONTEND=noninteractive apt-get update -y --force-yes || true;
 echo ----------------------------- 1
-DEBIAN_FRONTEND=noninteractive apt-get upgrade -y --force-yes;
+DEBIAN_FRONTEND=noninteractive apt-get upgrade -y --force-yes || true;
 echo ----------------------------- 2
     `);
 }
