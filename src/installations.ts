@@ -5,14 +5,14 @@ export function installMinikube() {
     const script = readFile(`../scripts/installMinikube.sh`, false).replace(/\r/g, '');
     writeFile('./installMinikube.sh', script);
     setFullPermission('./installMinikube.sh');
-    getTerminal().sendText('./installMinikube.sh');
+    getTerminal().sendText('sudo ./installMinikube.sh');
 }
 
 export function installDocker() {
     const script = readFile(`../scripts/installDocker.sh`, false).replace(/\r/g, '');
     writeFile('./installDocker.sh', script);
     setFullPermission('./installDocker.sh');
-    getTerminal().sendText('./installDocker.sh');
+    getTerminal().sendText('sudo ./installDocker.sh');
 }
 
 export function echoStep(num: number) {

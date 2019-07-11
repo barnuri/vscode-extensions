@@ -24,7 +24,7 @@ installFunc() {
 	fi
 
 
-	$sh_c 'echo { "insecure-registries": ["registry.codeoasis.com:8082"], "exec-opts": ["native.cgroupdriver=systemd"], "log-driver": "json-file", "log-opts": { "max-size": "100m" }, "storage-driver": "overlay2" } > /etc/docker/daemon.json'
+	$sh_c 'echo { \"insecure-registries\": [\"registry.codeoasis.com:8082\"], \"exec-opts\": [\"native.cgroupdriver=systemd\"], \"log-driver\": \"json-file\", \"log-opts\": { \"max-size\": \"100m\" }, \"storage-driver\": \"overlay2\" } > /etc/docker/daemon.json'
 
 	$sh_c 'mkdir -p /etc/systemd/system/docker.service.d'
 	$sh_c 'systemctl daemon-reload'
@@ -38,11 +38,10 @@ installFunc() {
     $sh_c 'curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube'
     $sh_c 'install minikube /usr/local/bin'
 
-    $sh_c 'minikube config set vm-driver none'
+    $sh_c 'CHANGE_MINIKUBE_NONE_USER=true minikube config set vm-driver none'
 	$sh_c "swapoff -a && sed -i '/swap/d' /etc/fstab"
-	$sh_c 'systemctl enable kubelet.service'
 
-	$sh_c 'minikube start'
+	$sh_c 'minikube start --extra-config=kubelet.cgroup-driver=systemd'
     $sh_c 'minikube addons enable ingress'
     $sh_c 'minikube addons enable dashboard'
     $sh_c 'minikube status'
@@ -51,3 +50,8 @@ installFunc() {
 }
 
 installFunc
+
+minikube addons enable ingress
+minikube addons enable dashboard
+minikube status
+kubectl config view --raw --flatten --minify
