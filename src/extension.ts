@@ -196,7 +196,7 @@ function editSelectedTest(modifyFunc: (text: string) => string) {
 }
 
 export function getTerminal() {
-    const terminal = vscode.window.createTerminal(`Bar Nuri Tools Terminal`);
+    const terminal = vscode.window.createTerminal(`Terminal`);
     terminal.show(true);
     return terminal;
 }
