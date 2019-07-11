@@ -3,19 +3,16 @@ import { writeFile, readFile, setFullPermission } from './fileHelper';
 
 export function installMinikube() {
     const script = readFile(`../scripts/installMinikube.sh`, false).replace(/\r/g, '');
-    writeFile('./minikubeInstall.sh', script);
-    setFullPermission('./minikubeInstall.sh');
-    getTerminal().sendText('./minikubeInstall.sh');
+    writeFile('./installMinikube.sh', script);
+    setFullPermission('./installMinikube.sh');
+    getTerminal().sendText('./installMinikube.sh');
 }
 
 export function installDocker() {
-    const t = getTerminal();
-    t.sendText(
-        removeEmptyLines(`
-    ${upgradeUbuntu()}
-    wget -qO- https://get.docker.com/ | sh
-    `),
-    );
+    const script = readFile(`../scripts/installDocker.sh`, false).replace(/\r/g, '');
+    writeFile('./installDocker.sh', script);
+    setFullPermission('./installDocker.sh');
+    getTerminal().sendText('./installDocker.sh');
 }
 
 export function echoStep(num: number) {
