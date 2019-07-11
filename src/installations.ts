@@ -23,7 +23,12 @@ export function installMinikube() {
 
 export function installDocker() {
     const t = getTerminal();
-    t.sendText(`wget -qO- https://get.docker.com/ | sh`);
+    t.sendText(
+        removeEmptyLines(`
+    ${upgradeUbuntu()}
+    wget -qO- https://get.docker.com/ | sh
+    `),
+    );
 }
 
 export function echoStep(num: number) {
