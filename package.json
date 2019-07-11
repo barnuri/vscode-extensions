@@ -29,7 +29,7 @@
         "onCommand:extension.textToStringArray",
         "onCommand:extension.updatePackageJson",
         "onCommand:extension.installDocker",
-        "onCommand:extension.installK8s",
+        "onCommand:extension.installMinikube",
         "onCommand:extension.exportK8sConfig"
     ],
     "contributes": {
@@ -39,8 +39,8 @@
                 "title": "Bar Nuri Tools: Install Docker On Ubuntu"
             },
             {
-                "command": "extension.installK8s",
-                "title": "Bar Nuri Tools: Install K8s On Ubuntu"
+                "command": "extension.installMinikube",
+                "title": "Bar Nuri Tools: Install Minikube On Ubuntu"
             },
             {
                 "command": "extension.exportK8sConfig",

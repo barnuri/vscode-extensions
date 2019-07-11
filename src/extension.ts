@@ -172,7 +172,7 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('extension.installK8s', async () => {
+        vscode.commands.registerCommand('extension.installMinikube', async () => {
             installMinikube();
         }),
     );
