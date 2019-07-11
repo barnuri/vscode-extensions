@@ -35,9 +35,6 @@ installFunc() {
     $sh_c 'minikube config set vm-driver none'
     $sh_c 'minikube start'
     
-    $sh_c 'cp /root/.kube /root/.minikube $HOME'
-    $sh_c 'chown -R $USER $HOME/.kube $HOME/.minikube'
-
     $sh_c 'minikube addons enable ingress'
     $sh_c 'minikube addons enable dashboard'
     $sh_c 'minikube status'
