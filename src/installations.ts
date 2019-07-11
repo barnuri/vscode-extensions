@@ -41,7 +41,7 @@ export function installDocker() {
     ${echoStep(5)}
     docker -v'
     `,
-        ),
+        ).replace(/\n/g, '&&'),
     );
 }
 
