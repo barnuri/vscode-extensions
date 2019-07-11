@@ -13,6 +13,8 @@ export function installMinikube() {
     install minikube /usr/local/bin
     minikube config set vm-driver none
     minikube start
+    mv /root/.kube /root/.minikube $HOME
+    chown -R $USER $HOME/.kube $HOME/.minikube
     minikube addons enable ingress
     minikube addons enable dashboard
     minikube status
