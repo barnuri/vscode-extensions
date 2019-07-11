@@ -23,13 +23,13 @@ installFunc() {
 		fi
 	fi
 
-    $sh_c 'apt-get update -qq >/dev/null'
+    $sh_c 'apt-get update -qq'
     $sh_c 'DEBIAN_FRONTEND=noninteractive apt-get upgrade -qq'
     $sh_c 'echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list'
     $sh_c 'DEBIAN_FRONTEND=noninteractive apt-get install -y apt-transport-https curl -y  ebtables ethtool apt-transport-https'
     $sh_c 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - '
     $sh_c 'apt-get install -y kubectl'
-    $sh_c 'apt-get update -qq >/dev/null'
+    $sh_c 'apt-get update -qq'
     $sh_c 'curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube'
     $sh_c 'install minikube /usr/local/bin'
     $sh_c 'minikube config set vm-driver none'
