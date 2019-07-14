@@ -24,26 +24,34 @@ installFunc() {
 	fi
 
 
+	$sh_c 'echo { \"insecure-registries\": [\"registry.codeoasis.com:8082\"], \"exec-opts\": [\"native.cgroupdriver=systemd\"], \"log-driver\": \"json-file\", \"log-opts\": { \"max-size\": \"100m\" }, \"storage-driver\": \"overlay2\" } > /etc/docker/daemon.json'
+
 	$sh_c 'mkdir -p /etc/systemd/system/docker.service.d'
 	$sh_c 'systemctl daemon-reload'
 	$sh_c 'systemctl restart docker'
 
-    $sh_c 'apt-get update -qq'
-    $sh_c 'DEBIAN_FRONTEND=noninteractive apt-get upgrade -qq'
-    $sh_c 'echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list'
-    $sh_c 'DEBIAN_FRONTEND=noninteractive apt-get install -y apt-transport-https curl -y  ebtables ethtool apt-transport-https'
-    $sh_c 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - '
-    $sh_c 'apt-get update -qq'
-    $sh_c 'apt-get install -y kubectl'
+	$sh_c 'rm -rf  /usr/local/bin/kubectl'
+	$sh_c 'curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl'
+	$sh_c 'chmod +x ./kubectl'
+ 	$sh_c 'mv ./kubectl /usr/local/bin/kubectl'
+
     $sh_c 'curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube'
     $sh_c 'install minikube /usr/local/bin'
-    $sh_c 'minikube config set vm-driver none'
-	$sh_c 'swapoff -a && sed -i '/swap/d' /etc/fstab'
-	$sh_c 'minikube start'
+
+    $sh_c 'CHANGE_MINIKUBE_NONE_USER=true minikube config set vm-driver none'
+	$sh_c "swapoff -a && sed -i '/swap/d' /etc/fstab"
+
+	$sh_c 'minikube start --extra-config=kubelet.cgroup-driver=systemd'
     $sh_c 'minikube addons enable ingress'
     $sh_c 'minikube addons enable dashboard'
     $sh_c 'minikube status'
     $sh_c 'kubectl config view --raw --flatten --minify'
+
 }
 
 installFunc
+
+minikube addons enable ingress
+minikube addons enable dashboard
+minikube status
+kubectl config view --raw --flatten --minify
