@@ -145,7 +145,6 @@
             "        \"strictPropertyInitialization\": false, ",
             "        \"alwaysStrict\": true, ",
             "        \"charset\": \"utf8\", ",
-            "        \"composite\": true, ",
             "        \"newLine\": \"LF\", ",
             "        \"noFallthroughCasesInSwitch\": true, ",
             "        \"noImplicitReturns\": true, ",
