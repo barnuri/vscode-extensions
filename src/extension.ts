@@ -123,6 +123,7 @@ export function activate(context: vscode.ExtensionContext) {
 
             terminal.sendText('git init');
             terminal.sendText('git remote add origin ' + gitUrl);
+            terminal.sendText('git add .');
             terminal.sendText('git commit -am "Init"');
             terminal.sendText('git push -u origin master');
         }),
