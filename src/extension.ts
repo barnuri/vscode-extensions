@@ -134,6 +134,7 @@ export function activate(context: vscode.ExtensionContext) {
             const terminal = getTerminal();
             terminal.sendText('git tag -d $(git tag -l)');
             terminal.sendText('git rm -r --cached .');
+            terminal.sendText('git add .');
             terminal.sendText('git commit -am "git cache cleared"');
             terminal.sendText('git push');
         }),
