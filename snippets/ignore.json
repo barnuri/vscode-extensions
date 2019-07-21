@@ -1,7 +1,7 @@
 {
     "gitignore": {
         "prefix": "gitignore",
-        "body": ["node_modules", "dist", "build", "Jenkinsfile-new", "Jenkinsfile", "**/bin", "**/obj", "**/.toolstarget"],
+        "body": ["node_modules", "dist", "build", "bin", "obj", "**/bin", "**/obj", "**/.toolstarget", "**/sqlite3", "**/.vs"],
         "description": "gitignore"
     },
     "dockerignore": {
