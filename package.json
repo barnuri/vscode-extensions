@@ -31,17 +31,17 @@
         "onCommand:extension.installDocker",
         "onCommand:extension.installMinikube",
         "onCommand:extension.exportK8sConfig",
-        "onCommand:extension.addNewCommand"
+        "onCommand:extension.addNewCommand",
+        "onCommand:extension.myNewCommand",
+        "onCommand:extension.convertToCR",
+        "onCommand:extension.convertToCRLF",
+        "onCommand:extension.convertToLF"
     ],
     "contributes": {
         "commands": [
             {
                 "command": "extension.addNewCommand",
                 "title": "Bar Nuri Tools: Add New Command To Your Extension Project"
-            },
-            {
-                "command": "extension.installDocker",
-                "title": "Bar Nuri Tools: Install Docker On Ubuntu"
             },
             {
                 "command": "extension.installDocker",
@@ -126,6 +126,22 @@
             {
                 "command": "extension.updatePackageJson",
                 "title": "Bar Nuri Tools: Update package.json dependencies"
+            },
+            {
+                "command": "extension.myNewCommand",
+                "title": "Bar Nuri Tools: My New Command"
+            },
+            {
+                "command": "extension.convertToCR",
+                "title": "Bar Nuri Tools: Convert To CR"
+            },
+            {
+                "command": "extension.convertToCRLF",
+                "title": "Bar Nuri Tools: Convert To CRLF"
+            },
+            {
+                "command": "extension.convertToLF",
+                "title": "Bar Nuri Tools: Convert To LF"
             }
         ],
         "snippets": [
