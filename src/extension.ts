@@ -1,7 +1,9 @@
 import * as vscode from 'vscode';
 import { k8sFileBuilder, jenkinsFileBuilder, dockerfileBuilder, pritterFile, nodemonFile, dockerDevNodeJS, addColorsFile } from './addFiles';
 import { installMinikube, installDocker } from './installations';
-import { modifyPackageJson } from './fileHelper';
+import { modifyPackageJson, getFilePaths, getFileExtension } from './fileHelper';
+import { renameSync } from 'fs';
+import { basename, dirname } from 'path';
 
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
@@ -201,6 +203,67 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.convertToCR', async () => {
             editSelectedFile(text => text.replace(/\r\n/g, '\r').replace(/\n/g, '\r'));
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.convertFilesTypes', async () => {
+            const fromType =
+                (await vscode.window.showInputBox({
+                    prompt: 'From Type',
+                    placeHolder: 'js',
+                    value: '',
+                })) || '';
+
+            const toType =
+                (await vscode.window.showInputBox({
+                    prompt: 'To Type',
+                    placeHolder: 'ts',
+                    value: '',
+                })) || '';
+
+            if (!toType || !fromType) {
+                return;
+            }
+
+            const files = getFilePaths(vscode.workspace.rootPath || '').filter(x => getFileExtension(x).toLowerCase() === fromType.toLowerCase());
+            for (const file of files) {
+                const newName = file.substring(0, file.length - getFileExtension(file).length - 1) + '.' + toType;
+                renameSync(file, newName);
+            }
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.nameTemplateForFileType', async () => {
+            const fileType =
+                (await vscode.window.showInputBox({
+                    prompt: 'Type',
+                    placeHolder: 'jpeg',
+                    value: '',
+                })) || '';
+            if (!fileType) {
+                return;
+            }
+            const template =
+                (await vscode.window.showInputBox({
+                    prompt: 'Name Template',
+                    placeHolder: `nyc_trip_{index}.${fileType} => nyc_trip_${0}.${fileType}, nyc_trip_${1}.${fileType}, ...`,
+                    value: '',
+                })) || '';
+
+            if (!template) {
+                return;
+            }
+
+            const files = getFilePaths(vscode.workspace.rootPath || '').filter(x => getFileExtension(x).toLowerCase() === fileType.toLowerCase());
+            let i = 1;
+            for (const file of files) {
+                const dir = dirname(file);
+                const newFileName = template.replace(/{index}/g, i.toString()) + '.' + fileType;
+                renameSync(file, `${dir}/${newFileName}`);
+                i++;
+            }
         }),
     );
 
