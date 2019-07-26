@@ -30,10 +30,19 @@
         "onCommand:extension.updatePackageJson",
         "onCommand:extension.installDocker",
         "onCommand:extension.installMinikube",
-        "onCommand:extension.exportK8sConfig"
+        "onCommand:extension.exportK8sConfig",
+        "onCommand:extension.addNewCommand"
     ],
     "contributes": {
         "commands": [
+            {
+                "command": "extension.addNewCommand",
+                "title": "Bar Nuri Tools: Add New Command To Your Extension Project"
+            },
+            {
+                "command": "extension.installDocker",
+                "title": "Bar Nuri Tools: Install Docker On Ubuntu"
+            },
             {
                 "command": "extension.installDocker",
                 "title": "Bar Nuri Tools: Install Docker On Ubuntu"

@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { k8sFileBuilder, jenkinsFileBuilder, dockerfileBuilder, pritterFile, nodemonFile, dockerDevNodeJS, addColorsFile } from './addFiles';
 import { installMinikube, installDocker } from './installations';
+import { modifyPackageJson } from './fileHelper';
 
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
@@ -184,6 +185,60 @@ export function activate(context: vscode.ExtensionContext) {
             getTerminal().sendText('kubectl config view --raw --flatten --minify');
         }),
     );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.convertToLF', async () => {
+            editSelectedFile(text => text.replace(/\r\n/g, '\n').replace(/\r/g, '\n'));
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.convertToCRLF', async () => {
+            editSelectedFile(text => text.replace(/\r/g, '').replace(/\n/g, '\r\n'));
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.convertToCR', async () => {
+            editSelectedFile(text => text.replace(/\r\n/g, '\r').replace(/\n/g, '\r'));
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.addNewCommand', async () => {
+            const commandName =
+                (await vscode.window.showInputBox({
+                    prompt: 'Command Name',
+                    placeHolder: 'myNewCommand',
+                    value: '',
+                })) || 'myNewCommand';
+
+            const commandDisplay = commandName
+                .replace(/([a-z])([A-Z])/g, '$1 $2')
+                .replace(/\b([A-Z]+)([A-Z])([a-z])/, '$1 $2$3')
+                .replace(/^./, str => str.toUpperCase());
+
+            modifyPackageJson(packagejson => {
+                packagejson.activationEvents.push(`onCommand:extension.${commandName}`);
+                packagejson.contributes.commands.push({
+                    command: `extension.${commandName}`,
+                    title: `${packagejson.displayName}: ${commandDisplay}`,
+                });
+                return packagejson;
+            });
+        }),
+    );
+}
+
+function editSelectedFile(modifyFunc: (text: string) => string) {
+    if (!vscode.window.activeTextEditor) {
+        return;
+    }
+    const editor: vscode.TextEditor = vscode.window.activeTextEditor;
+
+    editor.edit(editBuilder => {
+        editBuilder.replace(editor.selection, modifyFunc(editor.document.getText()));
+    });
 }
 
 function editSelectedTest(modifyFunc: (text: string) => string) {
