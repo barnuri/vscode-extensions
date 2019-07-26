@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { k8sFileBuilder, jenkinsFileBuilder, dockerfileBuilder, pritterFile, nodemonFile, dockerDevNodeJS, addColorsFile } from './addFiles';
 import { installMinikube, installDocker } from './installations';
 import { modifyPackageJson, getFilePaths, getFileExtension } from './fileHelper';
-import { renameSync } from 'fs';
+import { renameSync, readFileSync, writeFileSync } from 'fs';
 import { basename, dirname } from 'path';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -203,6 +203,48 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.convertToCR', async () => {
             editSelectedFile(text => text.replace(/\r\n/g, '\r').replace(/\n/g, '\r'));
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.convertAllFilesToLF', async () => {
+            for (const file of getFilePaths(vscode.workspace.rootPath || '')) {
+                writeFileSync(
+                    file,
+                    readFileSync(file, { encoding: 'utf8' })
+                        .replace(/\r\n/g, '\n')
+                        .replace(/\r/g, '\n'),
+                    { encoding: 'utf8' },
+                );
+            }
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.convertAllFilesToCRLF', async () => {
+            for (const file of getFilePaths(vscode.workspace.rootPath || '')) {
+                writeFileSync(
+                    file,
+                    readFileSync(file, { encoding: 'utf8' })
+                        .replace(/\r/g, '')
+                        .replace(/\n/g, '\r\n'),
+                    { encoding: 'utf8' },
+                );
+            }
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.convertAllFilesToCR', async () => {
+            for (const file of getFilePaths(vscode.workspace.rootPath || '')) {
+                writeFileSync(
+                    file,
+                    readFileSync(file, { encoding: 'utf8' })
+                        .replace(/\r\n/g, '\r')
+                        .replace(/\n/g, '\r'),
+                    { encoding: 'utf8' },
+                );
+            }
         }),
     );
 

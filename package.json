@@ -37,7 +37,10 @@
         "onCommand:extension.convertToCRLF",
         "onCommand:extension.convertToLF",
         "onCommand:extension.convertFilesTypes",
-        "onCommand:extension.nameTemplateForFileType"
+        "onCommand:extension.nameTemplateForFileType",
+        "onCommand:extension.convertAllFilesToLF",
+        "onCommand:extension.convertAllFilesToCRLF",
+        "onCommand:extension.convertAllFilesToCR"
     ],
     "contributes": {
         "commands": [
@@ -152,6 +155,18 @@
             {
                 "command": "extension.nameTemplateForFileType",
                 "title": "Bar Nuri Tools: Name Templete For File Type"
+            },
+            {
+                "command": "extension.convertAllFilesToLF",
+                "title": "Bar Nuri Tools: Convert All Files To LF"
+            },
+            {
+                "command": "extension.convertAllFilesToCRLF",
+                "title": "Bar Nuri Tools: Convert All Files To CRLF"
+            },
+            {
+                "command": "extension.convertAllFilesToCR",
+                "title": "Bar Nuri Tools: Convert All Files To CR"
             }
         ],
         "snippets": [
