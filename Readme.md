@@ -1,6 +1,8 @@
 # [Bar Nuri Tools Extension](https://marketplace.visualstudio.com/items?itemName=Bar.bar-nuri-tools)
 
-![Commands](https://i.imgur.com/YopZcKF.png 'Commands')
+## For All Commands Go To Contributions Tab In Vscode Extension Page Or Type Bar Nuri Tools In Vscode Command Prompt (F1)
+
+---
 
 ## Text To String Command
 
