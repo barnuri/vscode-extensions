@@ -1,5 +1,5 @@
 {
-    "version": "1.0.73",
+    "version": "1.0.78",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
@@ -31,10 +31,24 @@
         "onCommand:extension.installDocker",
         "onCommand:extension.installMinikube",
         "onCommand:extension.exportK8sConfig",
-        "onCommand:extension.typescriptAddRemoveUnusedImportsScript"
+        "onCommand:extension.typescriptAddRemoveUnusedImportsScript",
+        "onCommand:extension.addNewCommand",
+        "onCommand:extension.myNewCommand",
+        "onCommand:extension.convertToCR",
+        "onCommand:extension.convertToCRLF",
+        "onCommand:extension.convertToLF",
+        "onCommand:extension.convertFilesTypes",
+        "onCommand:extension.nameTemplateForFileType",
+        "onCommand:extension.convertAllFilesToLF",
+        "onCommand:extension.convertAllFilesToCRLF",
+        "onCommand:extension.convertAllFilesToCR"
     ],
     "contributes": {
         "commands": [
+            {
+                "command": "extension.addNewCommand",
+                "title": "Bar Nuri Tools: Add New Command To Your Extension Project"
+            },
             {
                 "command": "extension.installDocker",
                 "title": "Bar Nuri Tools: Install Docker On Ubuntu"
@@ -122,6 +136,42 @@
             {
                 "command": "extension.typescriptAddRemoveUnusedImportsScript",
                 "title": "Bar Nuri Tools: Typescript Add Remove Unused Imports Script"
+            },
+            {
+                "command": "extension.myNewCommand",
+                "title": "Bar Nuri Tools: My New Command"
+            },
+            {
+                "command": "extension.convertToCR",
+                "title": "Bar Nuri Tools: Convert To CR"
+            },
+            {
+                "command": "extension.convertToCRLF",
+                "title": "Bar Nuri Tools: Convert To CRLF"
+            },
+            {
+                "command": "extension.convertToLF",
+                "title": "Bar Nuri Tools: Convert To LF"
+            },
+            {
+                "command": "extension.convertFilesTypes",
+                "title": "Bar Nuri Tools: Convert Files Types"
+            },
+            {
+                "command": "extension.nameTemplateForFileType",
+                "title": "Bar Nuri Tools: Name Templete For File Type"
+            },
+            {
+                "command": "extension.convertAllFilesToLF",
+                "title": "Bar Nuri Tools: Convert All Files To LF"
+            },
+            {
+                "command": "extension.convertAllFilesToCRLF",
+                "title": "Bar Nuri Tools: Convert All Files To CRLF"
+            },
+            {
+                "command": "extension.convertAllFilesToCR",
+                "title": "Bar Nuri Tools: Convert All Files To CR"
             }
         ],
         "snippets": [

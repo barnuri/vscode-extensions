@@ -1,7 +1,9 @@
 import * as vscode from 'vscode';
 import { k8sFileBuilder, jenkinsFileBuilder, dockerfileBuilder, pritterFile, nodemonFile, dockerDevNodeJS, addColorsFile } from './addFiles';
 import { installMinikube, installDocker } from './installations';
-import { writeFile, modifyPackageJson } from './fileHelper';
+import { modifyPackageJson, getFilePaths, getFileExtension, writeFile } from './fileHelper';
+import { renameSync, readFileSync, writeFileSync } from 'fs';
+import { basename, dirname } from 'path';
 
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
@@ -201,10 +203,166 @@ export function activate(context: vscode.ExtensionContext) {
             );
             modifyPackageJson(packagejson => {
                 packagejson.scripts.removeUnusedImports = 'tslint --config tslint-imports.json --fix --project .';
+            });
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.convertToLF', async () => {
+            editSelectedFile(text => text.replace(/\r\n/g, '\n').replace(/\r/g, '\n'));
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.convertToCRLF', async () => {
+            editSelectedFile(text => text.replace(/\r/g, '').replace(/\n/g, '\r\n'));
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.convertToCR', async () => {
+            editSelectedFile(text => text.replace(/\r\n/g, '\r').replace(/\n/g, '\r'));
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.convertAllFilesToLF', async () => {
+            for (const file of getFilePaths(vscode.workspace.rootPath || '')) {
+                writeFileSync(
+                    file,
+                    readFileSync(file, { encoding: 'utf8' })
+                        .replace(/\r\n/g, '\n')
+                        .replace(/\r/g, '\n'),
+                    { encoding: 'utf8' },
+                );
+            }
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.convertAllFilesToCRLF', async () => {
+            for (const file of getFilePaths(vscode.workspace.rootPath || '')) {
+                writeFileSync(
+                    file,
+                    readFileSync(file, { encoding: 'utf8' })
+                        .replace(/\r/g, '')
+                        .replace(/\n/g, '\r\n'),
+                    { encoding: 'utf8' },
+                );
+            }
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.convertAllFilesToCR', async () => {
+            for (const file of getFilePaths(vscode.workspace.rootPath || '')) {
+                writeFileSync(
+                    file,
+                    readFileSync(file, { encoding: 'utf8' })
+                        .replace(/\r\n/g, '\r')
+                        .replace(/\n/g, '\r'),
+                    { encoding: 'utf8' },
+                );
+            }
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.convertFilesTypes', async () => {
+            const fromType =
+                (await vscode.window.showInputBox({
+                    prompt: 'From Type',
+                    placeHolder: 'js',
+                    value: '',
+                })) || '';
+
+            const toType =
+                (await vscode.window.showInputBox({
+                    prompt: 'To Type',
+                    placeHolder: 'ts',
+                    value: '',
+                })) || '';
+
+            if (!toType || !fromType) {
+                return;
+            }
+
+            const files = getFilePaths(vscode.workspace.rootPath || '').filter(x => getFileExtension(x).toLowerCase() === fromType.toLowerCase());
+            for (const file of files) {
+                const newName = file.substring(0, file.length - getFileExtension(file).length - 1) + '.' + toType;
+                renameSync(file, newName);
+            }
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.nameTemplateForFileType', async () => {
+            const fileType =
+                (await vscode.window.showInputBox({
+                    prompt: 'Type',
+                    placeHolder: 'jpeg',
+                    value: '',
+                })) || '';
+            if (!fileType) {
+                return;
+            }
+            const template =
+                (await vscode.window.showInputBox({
+                    prompt: 'Name Template',
+                    placeHolder: `nyc_trip_{index}.${fileType} => nyc_trip_${0}.${fileType}, nyc_trip_${1}.${fileType}, ...`,
+                    value: '',
+                })) || '';
+
+            if (!template) {
+                return;
+            }
+
+            const files = getFilePaths(vscode.workspace.rootPath || '').filter(x => getFileExtension(x).toLowerCase() === fileType.toLowerCase());
+            let i = 1;
+            for (const file of files) {
+                const dir = dirname(file);
+                const newFileName = template.replace(/{index}/g, i.toString()) + '.' + fileType;
+                renameSync(file, `${dir}/${newFileName}`);
+                i++;
+            }
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.addNewCommand', async () => {
+            const commandName =
+                (await vscode.window.showInputBox({
+                    prompt: 'Command Name',
+                    placeHolder: 'myNewCommand',
+                    value: '',
+                })) || 'myNewCommand';
+
+            const commandDisplay = commandName
+                .replace(/([a-z])([A-Z])/g, '$1 $2')
+                .replace(/\b([A-Z]+)([A-Z])([a-z])/, '$1 $2$3')
+                .replace(/^./, str => str.toUpperCase());
+
+            modifyPackageJson(packagejson => {
+                packagejson.activationEvents.push(`onCommand:extension.${commandName}`);
+                packagejson.contributes.commands.push({
+                    command: `extension.${commandName}`,
+                    title: `${packagejson.displayName}: ${commandDisplay}`,
+                });
                 return packagejson;
             });
         }),
     );
+}
+
+function editSelectedFile(modifyFunc: (text: string) => string) {
+    if (!vscode.window.activeTextEditor) {
+        return;
+    }
+    const editor: vscode.TextEditor = vscode.window.activeTextEditor;
+
+    editor.edit(editBuilder => {
+        editBuilder.replace(editor.selection, modifyFunc(editor.document.getText()));
+    });
 }
 
 function editSelectedTest(modifyFunc: (text: string) => string) {

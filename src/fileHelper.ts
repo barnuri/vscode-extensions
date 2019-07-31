@@ -1,6 +1,6 @@
-import { existsSync, mkdirSync, chmodSync, writeFileSync, readFileSync } from 'fs';
+import { existsSync, mkdirSync, chmodSync, writeFileSync, readFileSync, readdirSync, statSync } from 'fs';
 import * as vscode from 'vscode';
-import { dirname } from 'path';
+import { dirname, join } from 'path';
 
 export function writeFile(path: string, body: string, fullPath: boolean = false) {
     let filePath = (fullPath ? '' : vscode.workspace.rootPath + '/') + path;
@@ -50,4 +50,17 @@ export function setFullPermission(path: string) {
     } catch (e) {
         console.error(`setFullPermission error path = ${path}`, e);
     }
+}
+
+/** Retrieve file paths from a given folder and its subfolders. */
+export function getFilePaths(folderPath: string): string[] {
+    const entryPaths: string[] = readdirSync(folderPath).map(entry => join(folderPath, entry));
+    const filePaths: string[] = entryPaths.filter(entryPath => statSync(entryPath).isFile());
+    const dirPaths: string[] = entryPaths.filter(entryPath => !filePaths.includes(entryPath));
+    const dirFiles: string[] = dirPaths.reduce((prev: string[], curr: string) => prev.concat(getFilePaths(curr)), []);
+    return [...filePaths, ...dirFiles];
+}
+
+export function getFileExtension(filename: string) {
+    return filename.slice(((filename.lastIndexOf('.') - 1) >>> 0) + 2) || '';
 }
