@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { k8sFileBuilder, jenkinsFileBuilder, dockerfileBuilder, pritterFile, nodemonFile, dockerDevNodeJS, addColorsFile } from './addFiles';
 import { installMinikube, installDocker } from './installations';
+import { writeFile, modifyPackageJson } from './fileHelper';
 
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
@@ -182,6 +183,26 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.exportK8sConfig', async () => {
             getTerminal().sendText('kubectl config view --raw --flatten --minify');
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.typescriptAddRemoveUnusedImportsScript', async () => {
+            writeFile(
+                'tslint-imports.json',
+                `
+            {
+                "extends": ["tslint-etc"],
+                "rules": {
+                    "no-unused-declaration": true
+                }
+            }
+            `,
+            );
+            modifyPackageJson(packagejson => {
+                packagejson.scripts.removeUnusedImports = 'tslint --config tslint-imports.json --fix --project .';
+                return packagejson;
+            });
         }),
     );
 }

@@ -30,7 +30,8 @@
         "onCommand:extension.updatePackageJson",
         "onCommand:extension.installDocker",
         "onCommand:extension.installMinikube",
-        "onCommand:extension.exportK8sConfig"
+        "onCommand:extension.exportK8sConfig",
+        "onCommand:extension.typescriptAddRemoveUnusedImportsScript"
     ],
     "contributes": {
         "commands": [
@@ -117,6 +118,10 @@
             {
                 "command": "extension.updatePackageJson",
                 "title": "Bar Nuri Tools: Update package.json dependencies"
+            },
+            {
+                "command": "extension.typescriptAddRemoveUnusedImportsScript",
+                "title": "Bar Nuri Tools: Typescript Add Remove Unused Imports Script"
             }
         ],
         "snippets": [
