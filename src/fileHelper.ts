@@ -15,7 +15,8 @@ export function getPackageJson() {
 
 export function modifyPackageJson(modifyFunc: (packageJson: any) => any) {
     const packagejson = getPackageJson();
-    writeFile('package.json', JSON.stringify(modifyFunc(packagejson), null, 4));
+    const newPackjson = modifyFunc(packagejson);
+    writeFile('package.json', JSON.stringify(newPackjson, null, 4));
 }
 
 export function readFile(path: string, userFolder: boolean = true) {

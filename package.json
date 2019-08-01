@@ -91,7 +91,7 @@
             },
             {
                 "command": "extension.dockerDev",
-                "title": "Bar Nuri Tools: Add Dockerfile-Dev For NodeJS/React/Anguler"
+                "title": "Bar Nuri Tools: Add Docker-Compose For Dev With Hot Reload For NodeJS/React/Anguler"
             },
             {
                 "command": "extension.dockerRemoveAll",

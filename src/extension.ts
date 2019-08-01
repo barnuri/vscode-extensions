@@ -193,17 +193,20 @@ export function activate(context: vscode.ExtensionContext) {
             writeFile(
                 'tslint-imports.json',
                 `
-            {
-                "extends": ["tslint-etc"],
-                "rules": {
-                    "no-unused-declaration": true
-                }
-            }
+{
+    "extends": ["tslint-etc"],
+    "rules": {
+        "no-unused-declaration": true
+    }
+}
             `,
             );
             modifyPackageJson(packagejson => {
                 packagejson.scripts.removeUnusedImports = 'tslint --config tslint-imports.json --fix --project .';
+                return packagejson;
             });
+
+            getTerminal().sendText('npm i -D typescript tslint tslint-etc');
         }),
     );
 

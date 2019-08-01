@@ -85,6 +85,7 @@ services:
             - '/app/node_modules'
         ports:
             - '3000:3000'
+            - '4200:4200'
         environment:
             - NODE_ENV=development
             - CHOKIDAR_USEPOLLING=true
