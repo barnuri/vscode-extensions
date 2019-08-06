@@ -48,7 +48,7 @@
                 {
                     "id": "swagger-explorer",
                     "title": "Swagger Explorer",
-                    "icon": "icon.svg"
+                    "icon": "resources/Swagger.svg"
                 }
             ]
         },
@@ -89,8 +89,8 @@
                 "command": "swagger-explorer.generate",
                 "title": "Generate Client",
                 "icon": {
-                    "light": "resources/light/refresh.svg",
-                    "dark": "resources/dark/refresh.svg"
+                    "light": "resources/light/dependency.svg",
+                    "dark": "resources/dark/dependency.svg"
                 }
             },
             {

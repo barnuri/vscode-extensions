@@ -59,5 +59,9 @@ export class SwaggerTreeItem extends vscode.TreeItem {
     swaggerConfig: SwaggerConfig;
     generate = async () => {
         getTerminal().sendText('echo ' + this.swaggerConfig.swaggerPath);
+        // swaggerJson
+        // https://generator.swagger.io/api/gen/clients/html post
+        // res.link get zip file
+        // unzip to swaggerConfig.output
     }
 }
