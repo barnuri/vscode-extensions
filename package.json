@@ -5,9 +5,7 @@
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
         "gitBeforePublish": "git add . && git commit -m \"version\" --allow-empty && git push",
-        "prepublish": "npm run gitBeforePublish && npm version patch",
-        "publish": "vsce publish",
-        "postpublish": "git push"
+        "publish": "npm run gitBeforePublish && npm version patch && vsce publish && git push"
     },
     "activationEvents": [
         "onCommand:extension.addColorsFile",
@@ -41,7 +39,8 @@
         "onCommand:extension.nameTemplateForFileType",
         "onCommand:extension.convertAllFilesToLF",
         "onCommand:extension.convertAllFilesToCRLF",
-        "onCommand:extension.convertAllFilesToCR"
+        "onCommand:extension.convertAllFilesToCR",
+        "onView:swagger-explorer"
     ],
     "contributes": {
         "viewsContainers": {
@@ -56,16 +55,44 @@
         "views": {
             "swagger-explorer": [
                 {
-                    "id": "swaggerExplorer",
+                    "id": "swagger-explorer",
                     "name": "Swagger Explorer"
-                },
+                }
+            ]
+        },
+        "menus": {
+            "view/title": [
                 {
-                    "id": "taskOutline",
-                    "name": "taskOutline"
+                    "command": "swagger-explorer.refresh",
+                    "when": "view == swagger-explorer",
+                    "group": "navigation"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "command": "swagger-explorer.generate",
+                    "when": "view == swagger-explorer && viewItem == parent",
+                    "group": "inline"
                 }
             ]
         },
         "commands": [
+            {
+                "command": "swagger-explorer.refresh",
+                "title": "Refresh",
+                "icon": {
+                    "light": "resources/light/refresh.svg",
+                    "dark": "resources/dark/refresh.svg"
+                }
+            },
+            {
+                "command": "swagger-explorer.generate",
+                "title": "Generate Client",
+                "icon": {
+                    "light": "resources/light/refresh.svg",
+                    "dark": "resources/dark/refresh.svg"
+                }
+            },
             {
                 "command": "extension.addNewCommand",
                 "title": "Bar Nuri Tools: Add New Command To Your Extension Project"
@@ -272,6 +299,7 @@
         "theme": "dark"
     },
     "main": "./out/extension.js",
+    "enableProposedApi": true,
     "devDependencies": {
         "@types/glob": "^7.1.1",
         "@types/mocha": "^5.2.7",
@@ -288,7 +316,7 @@
         "type": "git"
     },
     "engines": {
-        "vscode": "^1.22.0"
+        "vscode": "^1.32.0"
     },
     "categories": [
         "Snippets",

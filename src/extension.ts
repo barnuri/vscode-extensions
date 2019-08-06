@@ -4,25 +4,13 @@ import { installMinikube, installDocker } from './installations';
 import { modifyPackageJson, getFilePaths, getFileExtension, writeFile } from './fileHelper';
 import { renameSync, readFileSync, writeFileSync } from 'fs';
 import { dirname } from 'path';
-import { SwaggerExplorerProvider } from './swaggerExplorerProvider';
-import { TaskProvider } from './TaskProvider';
+import { SwaggerExplorerProvider, SwaggerTreeItem } from './swaggerExplorerProvider';
 
 export function activate(context: vscode.ExtensionContext) {
-    vscode.window.registerTreeDataProvider('swaggerExplorer', new SwaggerExplorerProvider());
-
-    const taskProvider = new TaskProvider();
-    vscode.window.registerTreeDataProvider('taskOutline', taskProvider);
-
-    vscode.commands.registerCommand('taskOutline.executeTask', task => {
-        vscode.tasks.executeTask(task).then(
-            function(value) {
-                return value;
-            },
-            function(e) {
-                console.error('Error');
-            },
-        );
-    });
+    const swaggerExplorerProvider = new SwaggerExplorerProvider();
+    vscode.window.registerTreeDataProvider('swagger-explorer', swaggerExplorerProvider);
+    vscode.commands.registerCommand('swagger-explorer.refresh', () => swaggerExplorerProvider.refresh());
+    vscode.commands.registerCommand('swagger-explorer.generate', (item: SwaggerTreeItem) => item.generate());
 
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.textToString', () => {
