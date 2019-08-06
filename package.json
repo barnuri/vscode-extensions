@@ -44,6 +44,27 @@
         "onCommand:extension.convertAllFilesToCR"
     ],
     "contributes": {
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "swagger-explorer",
+                    "title": "Swagger Explorer",
+                    "icon": "icon.svg"
+                }
+            ]
+        },
+        "views": {
+            "swagger-explorer": [
+                {
+                    "id": "swaggerExplorer",
+                    "name": "Swagger Explorer"
+                },
+                {
+                    "id": "taskOutline",
+                    "name": "taskOutline"
+                }
+            ]
+        },
         "commands": [
             {
                 "command": "extension.addNewCommand",
@@ -267,7 +288,7 @@
         "type": "git"
     },
     "engines": {
-        "vscode": "^1.36.0"
+        "vscode": "^1.22.0"
     },
     "categories": [
         "Snippets",
