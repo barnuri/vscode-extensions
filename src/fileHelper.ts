@@ -62,6 +62,11 @@ export function getFilePaths(folderPath: string): string[] {
     return [...filePaths, ...dirFiles];
 }
 
+export function getFolders(folderPath: string): string[] {
+    const entryPaths: string[] = readdirSync(folderPath).map(entry => join(folderPath, entry));
+    return entryPaths.filter(entryPath => !statSync(entryPath).isFile());
+}
+
 export function getFileExtension(filename: string) {
     return filename.slice(((filename.lastIndexOf('.') - 1) >>> 0) + 2) || '';
 }

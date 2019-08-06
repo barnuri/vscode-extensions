@@ -1,6 +1,10 @@
 import * as vscode from 'vscode';
-import { writeFile, readFile } from './fileHelper';
-import { getTerminal } from './extension';
+import { writeFile, readFile, makeDirIfNotExist, getFolders } from './fileHelper';
+import unzip = require('extract-zip');
+import Axios from 'axios';
+import { appendFileSync, renameSync } from 'fs';
+import { resolve, dirname } from 'path';
+import rimraf = require('rimraf');
 
 export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerTreeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<SwaggerTreeItem | undefined> = new vscode.EventEmitter<SwaggerTreeItem | undefined>();
@@ -58,10 +62,31 @@ class SwaggerConfig {
 export class SwaggerTreeItem extends vscode.TreeItem {
     swaggerConfig: SwaggerConfig;
     generate = async () => {
-        getTerminal().sendText('echo ' + this.swaggerConfig.swaggerPath);
-        // swaggerJson
-        // https://generator.swagger.io/api/gen/clients/html post
-        // res.link get zip file
-        // unzip to swaggerConfig.output
+        const swaggerJson = await Axios.get(this.swaggerConfig.swaggerPath).then(res => res.data);
+        const linkToZip = await Axios.post(`https://generator.swagger.io/api/gen/clients/${this.swaggerConfig.clientLanguage}`, {
+            // swaggerUrl: this.swaggerConfig.swaggerPath,
+            spec: swaggerJson,
+        })
+            .then(x => x.data.link)
+            .catch(err => {
+                throw err;
+            });
+        const zipFileBinary = await Axios.get(linkToZip, { responseType: 'arraybuffer' }).then(x => x.data);
+        const outputFolder = resolve(vscode.workspace.rootPath || '', this.swaggerConfig.outputFolder);
+        const tmpFolder = outputFolder + 'tmp';
+        const zipFilePath = tmpFolder + '/zipFile.zip';
+        rimraf.sync(outputFolder);
+        rimraf.sync(tmpFolder);
+        makeDirIfNotExist(tmpFolder);
+        appendFileSync(zipFilePath, new Buffer(zipFileBinary));
+        unzip(zipFilePath, { dir: tmpFolder }, err => {
+            if (err) {
+                return;
+            }
+            rimraf.sync(zipFilePath);
+            const folderToMove = getFolders(tmpFolder)[0];
+            renameSync(folderToMove, outputFolder);
+            rimraf.sync(tmpFolder);
+        });
     }
 }
