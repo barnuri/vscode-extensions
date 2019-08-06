@@ -1,5 +1,5 @@
 {
-    "version": "1.0.79",
+    "version": "1.0.80",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
