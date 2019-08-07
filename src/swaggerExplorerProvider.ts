@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 import { writeFile, readFile, makeDirIfNotExist, getFolders } from './fileHelper';
-import unzip = require('extract-zip');
-import Axios from 'axios';
 import { appendFileSync, renameSync } from 'fs';
 import { resolve } from 'path';
 import rimraf = require('rimraf');
+import unzip = require('extract-zip');
+import Axios from 'axios';
 
 export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerTreeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<SwaggerTreeItem | undefined> = new vscode.EventEmitter<SwaggerTreeItem | undefined>();
