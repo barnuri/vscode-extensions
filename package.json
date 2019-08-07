@@ -40,6 +40,7 @@
         "onCommand:extension.convertAllFilesToLF",
         "onCommand:extension.convertAllFilesToCRLF",
         "onCommand:extension.convertAllFilesToCR",
+        "onCommand:swagger-explorer.refresh",
         "onView:swagger-explorer"
     ],
     "contributes": {
