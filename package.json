@@ -40,7 +40,7 @@
         "onCommand:extension.convertAllFilesToLF",
         "onCommand:extension.convertAllFilesToCRLF",
         "onCommand:extension.convertAllFilesToCR",
-        "onCommand:swagger-explorer.refresh",
+        "onCommand:extension.refresh",
         "onView:swagger-explorer"
     ],
     "contributes": {
@@ -64,26 +64,26 @@
         "menus": {
             "view/title": [
                 {
-                    "command": "swagger-explorer.refresh",
+                    "command": "extension.refresh",
                     "when": "view == swagger-explorer",
                     "group": "navigation"
                 }
             ],
             "view/item/context": [
                 {
-                    "command": "swagger-explorer.generate",
+                    "command": "extension.generate",
                     "when": "view == swagger-explorer && viewItem == parent",
                     "group": "inline"
                 },
                 {
-                    "command": "swagger-explorer.generate",
+                    "command": "extension.generate",
                     "when": "view == swagger-explorer && viewItem == parent"
                 }
             ]
         },
         "commands": [
             {
-                "command": "swagger-explorer.refresh",
+                "command": "extension.refresh",
                 "title": "Refresh",
                 "icon": {
                     "light": "resources/light/refresh.svg",
@@ -91,7 +91,7 @@
                 }
             },
             {
-                "command": "swagger-explorer.generate",
+                "command": "extension.generate",
                 "title": "Generate Client",
                 "icon": {
                     "light": "resources/light/dependency.svg",

@@ -9,8 +9,8 @@ import { SwaggerExplorerProvider, SwaggerTreeItem } from './swaggerExplorerProvi
 export function activate(context: vscode.ExtensionContext) {
     const swaggerExplorerProvider = new SwaggerExplorerProvider();
     vscode.window.registerTreeDataProvider('swagger-explorer', swaggerExplorerProvider);
-    vscode.commands.registerCommand('swagger-explorer.refresh', () => swaggerExplorerProvider.refresh());
-    vscode.commands.registerCommand('swagger-explorer.generate', (item: SwaggerTreeItem) => item.generate());
+    vscode.commands.registerCommand('extension.refresh', () => swaggerExplorerProvider.refresh());
+    vscode.commands.registerCommand('extension.generate', (item: SwaggerTreeItem) => item.generate());
 
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.textToString', () => {
