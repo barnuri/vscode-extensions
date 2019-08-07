@@ -3,7 +3,7 @@ import { writeFile, readFile, makeDirIfNotExist, getFolders } from './fileHelper
 import unzip = require('extract-zip');
 import Axios from 'axios';
 import { appendFileSync, renameSync } from 'fs';
-import { resolve, dirname } from 'path';
+import { resolve } from 'path';
 import rimraf = require('rimraf');
 
 export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerTreeItem> {
@@ -32,6 +32,7 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
         return element;
     }
     getChildren(element?: SwaggerTreeItem | undefined) {
+        const iconFolder = resolve(__filename, '../../resources/');
         if (!element) {
             this.init();
             const swaggerConfigs: SwaggerConfig[] = JSON.parse(readFile(this.configFile));
@@ -39,16 +40,28 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
             return swaggerConfigs.map(conf => {
                 const item = new SwaggerTreeItem(conf.name);
                 item.swaggerConfig = conf;
-                item.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
+                item.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
                 item.contextValue = 'parent';
+                item.iconPath = resolve(iconFolder, 'Swagger2.svg');
                 return item;
             });
         }
-        return [
-            new SwaggerTreeItem('path: ' + element.swaggerConfig.swaggerPath),
-            new SwaggerTreeItem('lang: ' + element.swaggerConfig.clientLanguage),
-            new SwaggerTreeItem('output: ' + element.swaggerConfig.outputFolder),
-        ];
+        const file = new SwaggerTreeItem(element.swaggerConfig.swaggerPath);
+        file.iconPath = {
+            dark: resolve(iconFolder, 'dark/document.svg'),
+            light: resolve(iconFolder, 'light/document.svg'),
+        };
+        const lang = new SwaggerTreeItem(element.swaggerConfig.clientLanguage);
+        lang.iconPath = {
+            dark: resolve(iconFolder, 'dark/string.svg'),
+            light: resolve(iconFolder, 'light/string.svg'),
+        };
+        const folder = new SwaggerTreeItem(element.swaggerConfig.outputFolder);
+        folder.iconPath = {
+            dark: resolve(iconFolder, 'dark/folder.svg'),
+            light: resolve(iconFolder, 'light/folder.svg'),
+        };
+        return [file, lang, folder];
     }
 }
 
@@ -62,9 +75,14 @@ class SwaggerConfig {
 export class SwaggerTreeItem extends vscode.TreeItem {
     swaggerConfig: SwaggerConfig;
     generate = async () => {
-        const swaggerJson = await Axios.get(this.swaggerConfig.swaggerPath).then(res => res.data);
+        let swaggerJson = {};
+        if (this.swaggerConfig.swaggerPath.indexOf('http') === 0) {
+            swaggerJson = await Axios.get(this.swaggerConfig.swaggerPath).then(res => res.data);
+        } else {
+            swaggerJson = JSON.parse(readFile(this.swaggerConfig.swaggerPath));
+        }
+
         const linkToZip = await Axios.post(`https://generator.swagger.io/api/gen/clients/${this.swaggerConfig.clientLanguage}`, {
-            // swaggerUrl: this.swaggerConfig.swaggerPath,
             spec: swaggerJson,
         })
             .then(x => x.data.link)
