@@ -303,7 +303,6 @@
         "theme": "dark"
     },
     "main": "./out/extension.js",
-    "enableProposedApi": true,
     "devDependencies": {
         "@types/glob": "^7.1.1",
         "@types/mocha": "^5.2.7",
