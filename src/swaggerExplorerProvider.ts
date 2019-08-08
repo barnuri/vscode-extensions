@@ -107,9 +107,16 @@ export class SwaggerTreeItem extends vscode.TreeItem {
                 return;
             }
             rimraf.sync(zipFilePath);
-            const folderToMove = getFolders(tmpFolder)[0];
-            renameSync(folderToMove, outputFolder);
-            rimraf.sync(tmpFolder);
+            if (this.swaggerConfig.clientLanguage === 'typescript-node') {
+                const fileToMove = getFolders(tmpFolder)[0] + '/api.ts';
+                makeDirIfNotExist(outputFolder);
+                renameSync(fileToMove, outputFolder + '/api.ts');
+                rimraf.sync(tmpFolder);
+            } else {
+                const folderToMove = getFolders(tmpFolder)[0];
+                renameSync(folderToMove, outputFolder);
+                rimraf.sync(tmpFolder);
+            }
         });
     }
 }
