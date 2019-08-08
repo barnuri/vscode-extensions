@@ -82,9 +82,14 @@ export class SwaggerTreeItem extends vscode.TreeItem {
             swaggerJson = JSON.parse(readFile(this.swaggerConfig.swaggerPath));
         }
 
-        const linkToZip = await Axios.post(`https://generator.swagger.io/api/gen/clients/${this.swaggerConfig.clientLanguage}`, {
-            spec: swaggerJson,
-        })
+        const body = { spec: swaggerJson } as any;
+        if (this.swaggerConfig.clientLanguage === 'typescript-node') {
+            body.options = {
+                supportsES6: 'true',
+            };
+        }
+
+        const linkToZip = await Axios.post(`https://generator.swagger.io/api/gen/clients/${this.swaggerConfig.clientLanguage}`, body)
             .then(x => x.data.link)
             .catch(err => {
                 throw err;
