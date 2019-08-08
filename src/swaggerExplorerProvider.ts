@@ -5,6 +5,7 @@ import { resolve } from 'path';
 import rimraf = require('rimraf');
 import unzip = require('extract-zip');
 import Axios from 'axios';
+import { getTerminal } from './extension';
 
 export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerTreeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<SwaggerTreeItem | undefined> = new vscode.EventEmitter<SwaggerTreeItem | undefined>();
@@ -74,49 +75,69 @@ class SwaggerConfig {
 
 export class SwaggerTreeItem extends vscode.TreeItem {
     swaggerConfig!: SwaggerConfig;
-    generate = async () => {
-        let swaggerJson = {};
-        if (this.swaggerConfig.swaggerPath.indexOf('http') === 0) {
-            swaggerJson = await Axios.get(this.swaggerConfig.swaggerPath).then(res => res.data);
-        } else {
-            swaggerJson = JSON.parse(readFile(this.swaggerConfig.swaggerPath));
-        }
+    generate = async () => generate(this);
+}
 
-        const body = { spec: swaggerJson } as any;
-        if (this.swaggerConfig.clientLanguage === 'typescript-node') {
-            body.options = {
-                supportsES6: 'true',
-            };
-        }
-
-        const linkToZip = await Axios.post(`https://generator.swagger.io/api/gen/clients/${this.swaggerConfig.clientLanguage}`, body)
-            .then(x => x.data.link)
-            .catch(err => {
-                throw err;
-            });
-        const zipFileBinary = await Axios.get(linkToZip, { responseType: 'arraybuffer' }).then(x => x.data);
-        const outputFolder = resolve(vscode.workspace.rootPath || '', this.swaggerConfig.outputFolder);
-        const tmpFolder = outputFolder + 'tmp';
-        const zipFilePath = tmpFolder + '/zipFile.zip';
-        rimraf.sync(outputFolder);
-        rimraf.sync(tmpFolder);
-        makeDirIfNotExist(tmpFolder);
-        appendFileSync(zipFilePath, new Buffer(zipFileBinary));
-        unzip(zipFilePath, { dir: tmpFolder }, (err: any) => {
-            if (err) {
-                return;
-            }
-            rimraf.sync(zipFilePath);
-            // if (this.swaggerConfig.clientLanguage === 'typescript-node') {
-            //     const fileToMove = getFolders(tmpFolder)[0] + '/api.ts';
-            //     makeDirIfNotExist(outputFolder);
-            //     renameSync(fileToMove, outputFolder + '/api.ts');
-            //     rimraf.sync(tmpFolder);
-            // } else {
-                const folderToMove = getFolders(tmpFolder)[0];
-                renameSync(folderToMove, outputFolder);
-                rimraf.sync(tmpFolder);
-            // }
-        });
+async function getSwaggerJson(item: SwaggerTreeItem) {
+    let swaggerJson = {};
+    if (item.swaggerConfig.swaggerPath.indexOf('http') === 0) {
+        swaggerJson = await Axios.get(item.swaggerConfig.swaggerPath).then(res => res.data);
+    } else {
+        swaggerJson = JSON.parse(readFile(item.swaggerConfig.swaggerPath));
     }
+    return swaggerJson;
+}
+
+async function oldGenerate(item: SwaggerTreeItem) {
+    const swaggerJson = getSwaggerJson(item);
+
+    const body = { spec: swaggerJson } as any;
+    if (item.swaggerConfig.clientLanguage === 'typescript-node') {
+        body.options = {
+            supportsES6: 'true',
+        };
+    }
+
+    const linkToZip = await Axios.post(`https://generator.swagger.io/api/gen/clients/${item.swaggerConfig.clientLanguage}`, body)
+        .then(x => x.data.link)
+        .catch(err => {
+            throw err;
+        });
+    const zipFileBinary = await Axios.get(linkToZip, { responseType: 'arraybuffer' }).then(x => x.data);
+    const outputFolder = resolve(vscode.workspace.rootPath || '', item.swaggerConfig.outputFolder);
+    const tmpFolder = outputFolder + 'tmp';
+    const zipFilePath = tmpFolder + '/zipFile.zip';
+    rimraf.sync(outputFolder);
+    rimraf.sync(tmpFolder);
+    makeDirIfNotExist(tmpFolder);
+    appendFileSync(zipFilePath, new Buffer(zipFileBinary));
+    unzip(zipFilePath, { dir: tmpFolder }, (err: any) => {
+        if (err) {
+            return;
+        }
+        rimraf.sync(zipFilePath);
+        // if (item.swaggerConfig.clientLanguage === 'typescript-node') {
+        //     const fileToMove = getFolders(tmpFolder)[0] + '/api.ts';
+        //     makeDirIfNotExist(outputFolder);
+        //     renameSync(fileToMove, outputFolder + '/api.ts');
+        //     rimraf.sync(tmpFolder);
+        // } else {
+        const folderToMove = getFolders(tmpFolder)[0];
+        renameSync(folderToMove, outputFolder);
+        rimraf.sync(tmpFolder);
+        // }
+    });
+}
+function cleanFolder(item: SwaggerTreeItem) {
+    const outputFolder = resolve(vscode.workspace.rootPath || '', item.swaggerConfig.outputFolder);
+    rimraf.sync(outputFolder);
+}
+
+async function generate(item: SwaggerTreeItem) {
+    cleanFolder(item);
+    getTerminal().sendText(
+        `npx openapi-generator generate -i ${item.swaggerConfig.swaggerPath} -g ${item.swaggerConfig.clientLanguage} -o ${
+            item.swaggerConfig.outputFolder
+        }`,
+    );
 }
