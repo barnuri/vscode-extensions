@@ -10,10 +10,22 @@ import { getTerminal } from './extension';
 export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerTreeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<SwaggerTreeItem | undefined> = new vscode.EventEmitter<SwaggerTreeItem | undefined>();
     readonly onDidChangeTreeData: vscode.Event<SwaggerTreeItem | undefined> = this._onDidChangeTreeData.event;
+    constructor() {
+        this.watchFile();
+    }
+    watchFile(): void {
+        let prev = JSON.stringify(this.readConfig());
+        setInterval(() => {
+            const current = JSON.stringify(this.readConfig());
+            if (prev !== current) {
+                this.refresh();
+            }
+        }, 500);
+    }
     refresh(): void {
         this._onDidChangeTreeData.fire();
     }
-    configFile = '/.vscode/swagger-explorer.json';
+    public configFile = './.vscode/swagger-explorer.json';
     defualtFile: SwaggerConfig[] = [
         {
             name: 'temp',
@@ -22,11 +34,13 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
             clientLanguage: 'typescript-node',
         },
     ];
-    init = () => {
+    readConfig = () => {
         try {
-            readFile(this.configFile);
+            return JSON.parse(readFile(this.configFile));
         } catch {
-            writeFile(this.configFile, JSON.stringify(this.defualtFile, undefined, 4));
+            const defualtFile = JSON.stringify(this.defualtFile, undefined, 4);
+            writeFile(this.configFile, defualtFile);
+            return defualtFile;
         }
     }
     getTreeItem(element: SwaggerTreeItem): SwaggerTreeItem | Thenable<SwaggerTreeItem> {
@@ -35,8 +49,7 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
     getChildren(element?: SwaggerTreeItem | undefined) {
         const iconFolder = resolve(__filename, '../../resources/');
         if (!element) {
-            this.init();
-            const swaggerConfigs: SwaggerConfig[] = JSON.parse(readFile(this.configFile));
+            const swaggerConfigs: SwaggerConfig[] = this.readConfig();
 
             return swaggerConfigs.map(conf => {
                 const item = new SwaggerTreeItem(conf.name);
@@ -88,7 +101,7 @@ async function getSwaggerJson(item: SwaggerTreeItem) {
     return swaggerJson;
 }
 
-async function oldGenerate(item: SwaggerTreeItem) {
+export async function oldGenerate(item: SwaggerTreeItem) {
     const swaggerJson = getSwaggerJson(item);
 
     const body = { spec: swaggerJson } as any;
@@ -128,16 +141,25 @@ async function oldGenerate(item: SwaggerTreeItem) {
         // }
     });
 }
-function cleanFolder(item: SwaggerTreeItem) {
-    const outputFolder = resolve(vscode.workspace.rootPath || '', item.swaggerConfig.outputFolder);
-    rimraf.sync(outputFolder);
-}
 
 async function generate(item: SwaggerTreeItem) {
-    cleanFolder(item);
-    getTerminal().sendText(
-        `npx openapi-generator generate -i ${item.swaggerConfig.swaggerPath} -g ${item.swaggerConfig.clientLanguage} -o ${
-            item.swaggerConfig.outputFolder
-        }`,
-    );
+    const outputFolder = resolve(vscode.workspace.rootPath || '', item.swaggerConfig.outputFolder).replace(/\\/g, '\\');
+    rimraf.sync(outputFolder);
+    makeDirIfNotExist(outputFolder);
+    const t = getTerminal();
+    t.sendText('echo "please make sure you have docker in your computer and the docker have access to the output folder"');
+    // const gene = `npx openapi-generator generate -i ${item.swaggerConfig.swaggerPath} -g ${item.swaggerConfig.clientLanguage} -o ${
+    //     item.swaggerConfig.outputFolder
+    // }`;
+    const dockerCmd = `docker run --rm -v ${outputFolder}:/local openapitools/openapi-generator-cli generate -i ${
+        item.swaggerConfig.swaggerPath
+    } -g ${item.swaggerConfig.clientLanguage} -o /local`;
+
+    t.sendText(dockerCmd);
+
+    // t.sendText(`
+    // echo "check you have java on your pc, if you dont please install it"
+    // java -v
+    // ${gene}
+    // `);
 }
