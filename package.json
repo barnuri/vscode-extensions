@@ -44,7 +44,10 @@
         "onCommand:swagger-explorer.refresh",
         "onCommand:swagger-explorer.edit",
         "onCommand:swagger-explorer.generate",
-        "onView:swagger-explorer"
+        "onCommand:swagger-explorer.createConfig",
+        "onView:swagger-explorer",
+        "onCommand:extension.installKubeadmFlannelWithHelmWithIngress",
+        "onCommand:extension.InstallKubeadm"
     ],
     "contributes": {
         "viewsContainers": {
@@ -73,6 +76,11 @@
                 },
                 {
                     "command": "swagger-explorer.edit",
+                    "when": "view == swagger-explorer",
+                    "group": "navigation"
+                },
+                {
+                    "command": "swagger-explorer.createConfig",
                     "when": "view == swagger-explorer",
                     "group": "navigation"
                 }
@@ -112,6 +120,14 @@
                 "icon": {
                     "light": "resources/light/edit.svg",
                     "dark": "resources/dark/edit.svg"
+                }
+            },
+            {
+                "command": "swagger-explorer.createConfig",
+                "title": "Create Config",
+                "icon": {
+                    "light": "resources/light/string.svg",
+                    "dark": "resources/dark/string.svg"
                 }
             },
             {
@@ -241,6 +257,14 @@
             {
                 "command": "extension.convertAllFilesToCR",
                 "title": "Bar Nuri Tools: Convert All Files To CR"
+            },
+            {
+                "command": "extension.installKubeadmFlannelWithHelmWithIngress",
+                "title": "Bar Nuri Tools: Install Kubeadm Flannel With Helm With Ingress"
+            },
+            {
+                "command": "extension.InstallKubeadm",
+                "title": "Bar Nuri Tools: Install Kubeadm"
             }
         ],
         "snippets": [

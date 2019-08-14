@@ -1,0 +1,8 @@
+[
+    {
+        "name": "temp",
+        "swaggerPath": "https://petstore.swagger.io/v2/swagger.json",
+        "outputFolder": "./generatedClientFromSwagger",
+        "clientLanguage": "typescript-node"
+    }
+]

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { writeFile, readFile, makeDirIfNotExist, getFolders } from './fileHelper';
-import { appendFileSync, renameSync } from 'fs';
+import { appendFileSync, renameSync, existsSync } from 'fs';
 import { resolve } from 'path';
 import rimraf = require('rimraf');
 import unzip = require('extract-zip');
@@ -16,10 +16,12 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
     watchFile(): void {
         let prev = JSON.stringify(this.readConfig());
         setInterval(() => {
-            const current = JSON.stringify(this.readConfig());
-            if (prev !== current) {
-                this.refresh();
-            }
+            try {
+                const current = JSON.stringify(this.readConfig());
+                if (prev !== current) {
+                    this.refresh();
+                }
+            } catch {}
         }, 500);
     }
     refresh(): void {
@@ -38,10 +40,23 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
         try {
             return JSON.parse(readFile(this.configFile));
         } catch {
+            return [];
+        }
+    }
+    createConfig() {
+        try {
+            if (existsSync(resolve((vscode.workspace.rootPath || '') + '/' + this.configFile))) {
+                return;
+            }
             const defualtFile = JSON.stringify(this.defualtFile, undefined, 4);
             writeFile(this.configFile, defualtFile);
-            return defualtFile;
-        }
+            this.openConfigFile();
+        } catch {}
+    }
+    async openConfigFile() {
+        const config = resolve(vscode.workspace.rootPath || '', this.configFile);
+        const res = await vscode.workspace.openTextDocument(config);
+        await vscode.window.showTextDocument(res, { preview: false });
     }
     getTreeItem(element: SwaggerTreeItem): SwaggerTreeItem | Thenable<SwaggerTreeItem> {
         return element;

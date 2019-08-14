@@ -1,18 +1,11 @@
 import { getTerminal } from './extension';
 import { writeFile, readFile, setFullPermission } from './fileHelper';
 
-export function installMinikube() {
-    const script = readFile(`../scripts/installMinikube.sh`, false).replace(/\r/g, '');
-    writeFile('./installMinikube.sh', script);
-    setFullPermission('./installMinikube.sh');
-    getTerminal().sendText('./installMinikube.sh');
-}
-
-export function installDocker() {
-    const script = readFile(`../scripts/installDocker.sh`, false).replace(/\r/g, '');
-    writeFile('./installDocker.sh', script);
-    setFullPermission('./installDocker.sh');
-    getTerminal().sendText('./installDocker.sh');
+export function installScript(scriptName: string) {
+    const script = readFile(`../scripts/${scriptName}`, false).replace(/\r/g, '');
+    writeFile(`./${scriptName}`, script);
+    setFullPermission(`./${scriptName}`);
+    getTerminal().sendText(`./${scriptName}`);
 }
 
 export function echoStep(num: number) {
