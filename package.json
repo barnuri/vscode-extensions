@@ -260,7 +260,7 @@
             },
             {
                 "command": "extension.installKubeadmFlannelWithHelmWithIngress",
-                "title": "Bar Nuri Tools: Install Kubeadm Flannel With Helm With Ingress"
+                "title": "Bar Nuri Tools: Install Flannel On Kubeadm With Helm With Ingress"
             },
             {
                 "command": "extension.InstallKubeadm",
