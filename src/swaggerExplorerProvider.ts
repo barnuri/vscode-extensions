@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { writeFile, readFile, makeDirIfNotExist, getFolders } from './fileHelper';
+import { writeFile, readFile, makeDirIfNotExist, getFolders, getWorkspacePath } from './fileHelper';
 import { appendFileSync, renameSync, existsSync } from 'fs';
 import { resolve } from 'path';
 import rimraf = require('rimraf');
@@ -45,7 +45,7 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
     }
     createConfig() {
         try {
-            if (existsSync(resolve((vscode.workspace.rootPath || '') + '/' + this.configFile))) {
+            if (existsSync(resolve(getWorkspacePath() + '/' + this.configFile))) {
                 return;
             }
             const defualtFile = JSON.stringify(this.defualtFile, undefined, 4);
@@ -54,7 +54,7 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
         } catch {}
     }
     async openConfigFile() {
-        const config = resolve(vscode.workspace.rootPath || '', this.configFile);
+        const config = resolve(getWorkspacePath(), this.configFile);
         const res = await vscode.workspace.openTextDocument(config);
         await vscode.window.showTextDocument(res, { preview: false });
     }
@@ -132,7 +132,7 @@ export async function oldGenerate(item: SwaggerTreeItem) {
             throw err;
         });
     const zipFileBinary = await Axios.get(linkToZip, { responseType: 'arraybuffer' }).then(x => x.data);
-    const outputFolder = resolve(vscode.workspace.rootPath || '', item.swaggerConfig.outputFolder);
+    const outputFolder = resolve(getWorkspacePath(), item.swaggerConfig.outputFolder);
     const tmpFolder = outputFolder + 'tmp';
     const zipFilePath = tmpFolder + '/zipFile.zip';
     rimraf.sync(outputFolder);
@@ -158,7 +158,7 @@ export async function oldGenerate(item: SwaggerTreeItem) {
 }
 
 async function generate(item: SwaggerTreeItem) {
-    const outputFolder = resolve(vscode.workspace.rootPath || '', item.swaggerConfig.outputFolder).replace(/\\/g, '\\');
+    const outputFolder = resolve(getWorkspacePath(), item.swaggerConfig.outputFolder).replace(/\\/g, '\\');
     rimraf.sync(outputFolder);
     makeDirIfNotExist(outputFolder);
     const t = getTerminal();

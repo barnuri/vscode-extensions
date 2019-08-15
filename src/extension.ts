@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { k8sFileBuilder, jenkinsFileBuilder, dockerfileBuilder, pritterFile, nodemonFile, dockerDevNodeJS, addColorsFile } from './addFiles';
 import { installScript } from './installations';
-import { modifyPackageJson, getFilePaths, getFileExtension, writeFile } from './fileHelper';
+import { modifyPackageJson, getFilePaths, getFileExtension, writeFile, getWorkspacePath } from './fileHelper';
 import { renameSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, resolve } from 'path';
 import { SwaggerExplorerProvider, SwaggerTreeItem } from './swaggerExplorerProvider';
@@ -235,7 +235,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.convertAllFilesToLF', async () => {
-            for (const file of getFilePaths(vscode.workspace.rootPath || '')) {
+            for (const file of getFilePaths(getWorkspacePath())) {
                 writeFileSync(
                     file,
                     readFileSync(file, { encoding: 'utf8' })
@@ -249,7 +249,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.convertAllFilesToCRLF', async () => {
-            for (const file of getFilePaths(vscode.workspace.rootPath || '')) {
+            for (const file of getFilePaths(getWorkspacePath())) {
                 writeFileSync(
                     file,
                     readFileSync(file, { encoding: 'utf8' })
@@ -263,7 +263,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.convertAllFilesToCR', async () => {
-            for (const file of getFilePaths(vscode.workspace.rootPath || '')) {
+            for (const file of getFilePaths(getWorkspacePath())) {
                 writeFileSync(
                     file,
                     readFileSync(file, { encoding: 'utf8' })
@@ -295,7 +295,7 @@ export function activate(context: vscode.ExtensionContext) {
                 return;
             }
 
-            const files = getFilePaths(vscode.workspace.rootPath || '').filter(x => getFileExtension(x).toLowerCase() === fromType.toLowerCase());
+            const files = getFilePaths(getWorkspacePath()).filter(x => getFileExtension(x).toLowerCase() === fromType.toLowerCase());
             for (const file of files) {
                 const newName = file.substring(0, file.length - getFileExtension(file).length - 1) + '.' + toType;
                 renameSync(file, newName);
@@ -325,7 +325,7 @@ export function activate(context: vscode.ExtensionContext) {
                 return;
             }
 
-            const files = getFilePaths(vscode.workspace.rootPath || '').filter(x => getFileExtension(x).toLowerCase() === fileType.toLowerCase());
+            const files = getFilePaths(getWorkspacePath()).filter(x => getFileExtension(x).toLowerCase() === fileType.toLowerCase());
             let i = 1;
             for (const file of files) {
                 const dir = dirname(file);

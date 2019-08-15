@@ -1,9 +1,16 @@
 import { existsSync, mkdirSync, chmodSync, writeFileSync, readFileSync, readdirSync, statSync } from 'fs';
 import * as vscode from 'vscode';
-import { dirname, join } from 'path';
+import { dirname, join, resolve } from 'path';
+
+export function getWorkspacePath(): string {
+    if (!vscode.workspace.rootPath) {
+        throw new Error('Bar Nuri Tools: please select a workspace folder');
+    }
+    return fixPath(resolve(vscode.workspace.rootPath + '/'));
+}
 
 export function writeFile(path: string, body: string, fullPath: boolean = false) {
-    let filePath = (fullPath ? '' : vscode.workspace.rootPath + '/') + path;
+    let filePath = (fullPath ? '' : getWorkspacePath()) + path;
     filePath = fixPath(filePath);
     makeDirIfNotExist(dirname(filePath));
     writeFileSync(filePath, body, { encoding: 'utf8' });
@@ -20,7 +27,7 @@ export function modifyPackageJson(modifyFunc: (packageJson: any) => any) {
 }
 
 export function readFile(path: string, userFolder: boolean = true) {
-    let filePath = (userFolder ? vscode.workspace.rootPath : __dirname) + '/' + path;
+    let filePath = (userFolder ? getWorkspacePath() : __dirname) + '/' + path;
     filePath = fixPath(filePath);
     return readFileSync(filePath, 'utf8');
 }
