@@ -23,7 +23,7 @@ installFunc() {
 		fi
 	fi
 
-	$sh_c 'kubeadm init --pod-network-cidr=10.244.0.0/16 --upload-certs --node-name master01'
+	$sh_c 'kubeadm init --pod-network-cidr=10.244.0.0/16 --upload-certs --node-name master --ignore-preflight-errors=all'
 	$sh_c 'mkdir -p $HOME/.kube '
 	$sh_c 'cp -i /etc/kubernetes/admin.conf $HOME/.kube/config'
 	$sh_c 'chown $(id -u):$(id -g) $HOME/.kube/config'
