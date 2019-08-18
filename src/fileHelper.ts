@@ -34,9 +34,9 @@ export function readFile(path: string, userFolder: boolean = true) {
 
 export function fixPath(path: string): string {
     try {
-        return path.replace(/\\/g, '/').replace(new RegExp('//'), '/');
+        return resolve(path.replace(/\\/g, '/').replace(new RegExp('//'), '/'));
     } catch {
-        return path;
+        return resolve(path);
     }
 }
 
