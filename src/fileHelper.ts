@@ -10,7 +10,7 @@ export function getWorkspacePath(): string {
 }
 
 export function writeFile(path: string, body: string, fullPath: boolean = false) {
-    let filePath = (fullPath ? '' : getWorkspacePath()) + path;
+    let filePath = resolve(fullPath ? '' : getWorkspacePath(), path);
     filePath = fixPath(filePath);
     makeDirIfNotExist(dirname(filePath));
     writeFileSync(filePath, body, { encoding: 'utf8' });
