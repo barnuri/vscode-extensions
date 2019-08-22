@@ -33,7 +33,10 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
             name: 'temp',
             swaggerPath: 'https://petstore.swagger.io/v2/swagger.json',
             outputFolder: './generatedClientFromSwagger',
-            clientLanguage: 'typescript-node',
+            clientLanguage: 'typescript-axios',
+            options: {
+                supportsES6: true,
+            },
         },
     ];
     readConfig = () => {
@@ -99,6 +102,7 @@ class SwaggerConfig {
     swaggerPath!: string;
     outputFolder!: string;
     clientLanguage!: string;
+    options!: any;
 }
 
 export class SwaggerTreeItem extends vscode.TreeItem {
@@ -116,17 +120,22 @@ async function getSwaggerJson(item: SwaggerTreeItem) {
     return swaggerJson;
 }
 
-export async function oldGenerate(item: SwaggerTreeItem) {
-    const swaggerJson = getSwaggerJson(item);
+async function generate(item: SwaggerTreeItem) {
+    generateFromApi(item);
+}
+
+export async function generateFromApi(item: SwaggerTreeItem) {
+    const swaggerJson = await getSwaggerJson(item);
 
     const body = { spec: swaggerJson } as any;
-    if (item.swaggerConfig.clientLanguage === 'typescript-node') {
+    if (item.swaggerConfig.clientLanguage.indexOf('typescript') >= 0 || item.swaggerConfig.clientLanguage.indexOf('javascript')) {
         body.options = {
-            supportsES6: 'true',
+            supportsES6: true,
+            ...item.swaggerConfig.options,
         };
     }
-
-    const linkToZip = await Axios.post(`https://generator.swagger.io/api/gen/clients/${item.swaggerConfig.clientLanguage}`, body)
+    // https://generator.swagger.io/api/gen/clients
+    const linkToZip = await Axios.post(`http://api.openapi-generator.tech/api/gen/clients/${item.swaggerConfig.clientLanguage}`, body)
         .then(x => x.data.link)
         .catch(err => {
             throw err;
@@ -157,7 +166,7 @@ export async function oldGenerate(item: SwaggerTreeItem) {
     });
 }
 
-async function generate(item: SwaggerTreeItem) {
+export async function generateWithDocker(item: SwaggerTreeItem) {
     const outputFolder = resolve(getWorkspacePath(), item.swaggerConfig.outputFolder).replace(/\\/g, '\\');
     rimraf.sync(outputFolder);
     makeDirIfNotExist(outputFolder);
