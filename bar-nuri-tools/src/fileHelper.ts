@@ -4,7 +4,7 @@ import { dirname, join, resolve } from 'path';
 
 export function getWorkspacePath(): string {
     if (!vscode.workspace.rootPath) {
-        throw new Error('Bar Nuri Tools: please select a workspace folder');
+        throw new Error('Generator From Swagger: please select a workspace folder');
     }
     return fixPath(resolve(vscode.workspace.rootPath + '/'));
 }

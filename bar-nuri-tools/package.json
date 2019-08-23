@@ -1,5 +1,9 @@
 {
-    "version": "1.1.7",
+    "name": "generator-from-swagger",
+    "description": "Generator From Swagger Snippets for Dockerfile ,Ignore, Json, K8s, Shellscript, Typescript",
+    "displayName": "Generator From Swagger",
+    "publisher": "Bar",
+    "version": "1.0.2",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
@@ -250,10 +254,6 @@
             }
         ]
     },
-    "name": "bar-nuri-tools",
-    "displayName": "Bar Nuri Tools",
-    "publisher": "Bar",
-    "description": "Bar Nuri Tools Snippets for Dockerfile ,Ignore, Json, K8s, Shellscript, Typescript",
     "icon": "icon.png",
     "galleryBanner": {
         "color": "#343a40",
@@ -288,25 +288,13 @@
         "vscode": "^1.36.0"
     },
     "categories": [
-        "Snippets",
-        "Extension Packs",
-        "Formatters",
-        "Programming Languages",
-        "SCM Providers",
         "Other"
     ],
     "keywords": [
-        "Bar",
-        "Nuri",
+        "Swagger",
+        "Generator",
         "Tools",
         "Bar Nuri",
-        "Bar Nuri Tools",
-        "Snippets",
-        "Dockerfile Snippets",
-        "Ignore Snippets",
-        "Json Snippets",
-        "K8s Snippets",
-        "Shellscript Snippets",
-        "Typescript Snippets"
+        "Generator From Swagger"
     ]
 }
