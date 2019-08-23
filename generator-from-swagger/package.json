@@ -25,7 +25,7 @@
             "activitybar": [
                 {
                     "id": "generator-from-swagger",
-                    "title": "Swagger Explorer",
+                    "title": "Generator From Swagger",
                     "icon": "resources/Swagger.svg"
                 }
             ]
@@ -34,7 +34,7 @@
             "generator-from-swagger": [
                 {
                     "id": "generator-from-swagger",
-                    "name": "Swagger Explorer"
+                    "name": "Generator From Swagger"
                 }
             ]
         },
@@ -157,6 +157,8 @@
         "Generator",
         "Tools",
         "Bar Nuri",
+        "Nuri",
+        "Bar",
         "Generator From Swagger"
     ]
 }
