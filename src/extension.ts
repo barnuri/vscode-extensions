@@ -3,16 +3,18 @@ import { k8sFileBuilder, jenkinsFileBuilder, dockerfileBuilder, pritterFile, nod
 import { installScript } from './installations';
 import { modifyPackageJson, getFilePaths, getFileExtension, writeFile, getWorkspacePath } from './fileHelper';
 import { renameSync, readFileSync, writeFileSync } from 'fs';
-import { dirname, resolve } from 'path';
+import { dirname } from 'path';
 import { SwaggerExplorerProvider, SwaggerTreeItem } from './swaggerExplorerProvider';
+import open = require('open');
 
 export function activate(context: vscode.ExtensionContext) {
     const swaggerExplorerProvider = new SwaggerExplorerProvider();
-    vscode.window.registerTreeDataProvider('swagger-explorer', swaggerExplorerProvider);
-    context.subscriptions.push(vscode.commands.registerCommand('swagger-explorer.refresh', () => swaggerExplorerProvider.refresh()));
-    context.subscriptions.push(vscode.commands.registerCommand('swagger-explorer.createConfig', () => swaggerExplorerProvider.createConfig()));
-    context.subscriptions.push(vscode.commands.registerCommand('swagger-explorer.edit', () => swaggerExplorerProvider.openConfigFile()));
-    context.subscriptions.push(vscode.commands.registerCommand('swagger-explorer.generate', (item: SwaggerTreeItem) => item.generate()));
+    vscode.window.registerTreeDataProvider('generator-from-swagger', swaggerExplorerProvider);
+    context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.refresh', () => swaggerExplorerProvider.refresh()));
+    context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.createConfig', () => swaggerExplorerProvider.createConfig()));
+    context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.edit', () => swaggerExplorerProvider.openConfigFile()));
+    context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.generate', (item: SwaggerTreeItem) => item.generate()));
+    context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.info', () => open('http://api.openapi-generator.tech')));
 
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.textToString', () => {

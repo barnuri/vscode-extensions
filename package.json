@@ -1,5 +1,9 @@
 {
-    "version": "1.1.7",
+    "name": "generator-from-swagger",
+    "description": "Generator From Swagger Snippets for Dockerfile ,Ignore, Json, K8s, Shellscript, Typescript",
+    "displayName": "Generator From Swagger",
+    "publisher": "Bar",
+    "version": "1.0.0",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
@@ -9,60 +13,27 @@
         "removeUnusedImports": "tslint --config tslint-imports.json --fix --project ."
     },
     "activationEvents": [
-        "onCommand:extension.addColorsFile",
-        "onCommand:extension.addDocker",
-        "onCommand:extension.addDockerK8sAndJenkins",
-        "onCommand:extension.addJenkins",
-        "onCommand:extension.addK8s",
-        "onCommand:extension.addNodemon",
-        "onCommand:extension.addPrettierFile",
-        "onCommand:extension.dockerDev",
-        "onCommand:extension.dockerRemoveAll",
-        "onCommand:extension.dockerStopAll",
-        "onCommand:extension.gitCleanCache",
-        "onCommand:extension.gitFirstInit",
-        "onCommand:extension.gitDeleteLocalTags",
-        "onCommand:extension.stringArrayToText",
-        "onCommand:extension.stringToText",
-        "onCommand:extension.textToString",
-        "onCommand:extension.textToStringArray",
-        "onCommand:extension.updatePackageJson",
-        "onCommand:extension.installDocker",
-        "onCommand:extension.installMinikube",
-        "onCommand:extension.exportK8sConfig",
-        "onCommand:extension.typescriptAddRemoveUnusedImportsScript",
-        "onCommand:extension.addNewCommand",
-        "onCommand:extension.myNewCommand",
-        "onCommand:extension.convertToCR",
-        "onCommand:extension.convertToCRLF",
-        "onCommand:extension.convertToLF",
-        "onCommand:extension.convertFilesTypes",
-        "onCommand:extension.nameTemplateForFileType",
-        "onCommand:extension.convertAllFilesToLF",
-        "onCommand:extension.convertAllFilesToCRLF",
-        "onCommand:extension.convertAllFilesToCR",
-        "onCommand:swagger-explorer.refresh",
-        "onCommand:swagger-explorer.edit",
-        "onCommand:swagger-explorer.generate",
-        "onCommand:swagger-explorer.createConfig",
-        "onView:swagger-explorer",
-        "onCommand:extension.installKubeadmFlannelWithHelmWithIngress",
-        "onCommand:extension.InstallKubeadm"
+        "onCommand:generator-from-swagger.refresh",
+        "onCommand:generator-from-swagger.edit",
+        "onCommand:generator-from-swagger.generate",
+        "onCommand:generator-from-swagger.info",
+        "onCommand:generator-from-swagger.createConfig",
+        "onView:generator-from-swagger"
     ],
     "contributes": {
         "viewsContainers": {
             "activitybar": [
                 {
-                    "id": "swagger-explorer",
+                    "id": "generator-from-swagger",
                     "title": "Swagger Explorer",
                     "icon": "resources/Swagger.svg"
                 }
             ]
         },
         "views": {
-            "swagger-explorer": [
+            "generator-from-swagger": [
                 {
-                    "id": "swagger-explorer",
+                    "id": "generator-from-swagger",
                     "name": "Swagger Explorer"
                 }
             ]
@@ -70,36 +41,41 @@
         "menus": {
             "view/title": [
                 {
-                    "command": "swagger-explorer.refresh",
-                    "when": "view == swagger-explorer",
+                    "command": "generator-from-swagger.refresh",
+                    "when": "view == generator-from-swagger",
                     "group": "navigation"
                 },
                 {
-                    "command": "swagger-explorer.edit",
-                    "when": "view == swagger-explorer",
+                    "command": "generator-from-swagger.edit",
+                    "when": "view == generator-from-swagger",
                     "group": "navigation"
                 },
                 {
-                    "command": "swagger-explorer.createConfig",
-                    "when": "view == swagger-explorer",
+                    "command": "generator-from-swagger.createConfig",
+                    "when": "view == generator-from-swagger",
+                    "group": "navigation"
+                },
+                {
+                    "command": "generator-from-swagger.info",
+                    "when": "view == generator-from-swagger",
                     "group": "navigation"
                 }
             ],
             "view/item/context": [
                 {
-                    "command": "swagger-explorer.generate",
-                    "when": "view == swagger-explorer && viewItem == parent",
+                    "command": "generator-from-swagger.generate",
+                    "when": "view == generator-from-swagger && viewItem == parent",
                     "group": "inline"
                 },
                 {
-                    "command": "swagger-explorer.generate",
-                    "when": "view == swagger-explorer && viewItem == parent"
+                    "command": "generator-from-swagger.generate",
+                    "when": "view == generator-from-swagger && viewItem == parent"
                 }
             ]
         },
         "commands": [
             {
-                "command": "swagger-explorer.refresh",
+                "command": "generator-from-swagger.refresh",
                 "title": "Refresh",
                 "icon": {
                     "light": "resources/light/refresh.svg",
@@ -107,7 +83,7 @@
                 }
             },
             {
-                "command": "swagger-explorer.generate",
+                "command": "generator-from-swagger.generate",
                 "title": "Generate Client",
                 "icon": {
                     "light": "resources/light/dependency.svg",
@@ -115,7 +91,7 @@
                 }
             },
             {
-                "command": "swagger-explorer.edit",
+                "command": "generator-from-swagger.edit",
                 "title": "Edit Config",
                 "icon": {
                     "light": "resources/light/edit.svg",
@@ -123,7 +99,7 @@
                 }
             },
             {
-                "command": "swagger-explorer.createConfig",
+                "command": "generator-from-swagger.createConfig",
                 "title": "Create Config",
                 "icon": {
                     "light": "resources/light/string.svg",
@@ -131,214 +107,16 @@
                 }
             },
             {
-                "command": "extension.addNewCommand",
-                "title": "Bar Nuri Tools: Add New Command To Your Extension Project"
-            },
-            {
-                "command": "extension.installDocker",
-                "title": "Bar Nuri Tools: Install Docker On Ubuntu"
-            },
-            {
-                "command": "extension.installMinikube",
-                "title": "Bar Nuri Tools: Install Minikube On Ubuntu"
-            },
-            {
-                "command": "extension.exportK8sConfig",
-                "title": "Bar Nuri Tools: K8s Export Config - Portable Config"
-            },
-            {
-                "command": "extension.addColorsFile",
-                "title": "Bar Nuri Tools: Add Colors Helper File"
-            },
-            {
-                "command": "extension.addDocker",
-                "title": "Bar Nuri Tools: Add Dockerfile"
-            },
-            {
-                "command": "extension.addDockerK8sAndJenkins",
-                "title": "Bar Nuri Tools: Add Dockerfile, K8s, Jenkinsfile"
-            },
-            {
-                "command": "extension.addJenkins",
-                "title": "Bar Nuri Tools: Add Jenkinsfile"
-            },
-            {
-                "command": "extension.addK8s",
-                "title": "Bar Nuri Tools: Add K8s"
-            },
-            {
-                "command": "extension.addNodemon",
-                "title": "Bar Nuri Tools: Add Nodemon With Debug"
-            },
-            {
-                "command": "extension.addPrettierFile",
-                "title": "Bar Nuri Tools: Add Prettier File"
-            },
-            {
-                "command": "extension.dockerDev",
-                "title": "Bar Nuri Tools: Add Docker-Compose For Dev With Hot Reload For NodeJS/React/Anguler"
-            },
-            {
-                "command": "extension.dockerRemoveAll",
-                "title": "Bar Nuri Tools: Docker Remove All Containers"
-            },
-            {
-                "command": "extension.dockerStopAll",
-                "title": "Bar Nuri Tools: Docker Stop All Containers"
-            },
-            {
-                "command": "extension.gitCleanCache",
-                "title": "Bar Nuri Tools: Git Clean Cache"
-            },
-            {
-                "command": "extension.gitFirstInit",
-                "title": "Bar Nuri Tools: Git First Init"
-            },
-            {
-                "command": "extension.gitDeleteLocalTags",
-                "title": "Bar Nuri Tools: Git Delete Local Tags"
-            },
-            {
-                "command": "extension.stringArrayToText",
-                "title": "Bar Nuri Tools: String Array To Text"
-            },
-            {
-                "command": "extension.stringToText",
-                "title": "Bar Nuri Tools: String To Text"
-            },
-            {
-                "command": "extension.textToString",
-                "title": "Bar Nuri Tools: Text To String"
-            },
-            {
-                "command": "extension.textToStringArray",
-                "title": "Bar Nuri Tools: Text To String Array"
-            },
-            {
-                "command": "extension.updatePackageJson",
-                "title": "Bar Nuri Tools: Update package.json dependencies"
-            },
-            {
-                "command": "extension.typescriptAddRemoveUnusedImportsScript",
-                "title": "Bar Nuri Tools: Typescript Add Remove Unused Imports Script"
-            },
-            {
-                "command": "extension.myNewCommand",
-                "title": "Bar Nuri Tools: My New Command"
-            },
-            {
-                "command": "extension.convertToCR",
-                "title": "Bar Nuri Tools: Convert To CR"
-            },
-            {
-                "command": "extension.convertToCRLF",
-                "title": "Bar Nuri Tools: Convert To CRLF"
-            },
-            {
-                "command": "extension.convertToLF",
-                "title": "Bar Nuri Tools: Convert To LF"
-            },
-            {
-                "command": "extension.convertFilesTypes",
-                "title": "Bar Nuri Tools: Convert Files Types"
-            },
-            {
-                "command": "extension.nameTemplateForFileType",
-                "title": "Bar Nuri Tools: Name Templete For File Type"
-            },
-            {
-                "command": "extension.convertAllFilesToLF",
-                "title": "Bar Nuri Tools: Convert All Files To LF"
-            },
-            {
-                "command": "extension.convertAllFilesToCRLF",
-                "title": "Bar Nuri Tools: Convert All Files To CRLF"
-            },
-            {
-                "command": "extension.convertAllFilesToCR",
-                "title": "Bar Nuri Tools: Convert All Files To CR"
-            },
-            {
-                "command": "extension.installKubeadmFlannelWithHelmWithIngress",
-                "title": "Bar Nuri Tools: Install Flannel On Kubeadm With Helm With Ingress"
-            },
-            {
-                "command": "extension.InstallKubeadm",
-                "title": "Bar Nuri Tools: Install Kubeadm"
-            }
-        ],
-        "snippets": [
-            {
-                "language": "json",
-                "path": "./snippets/json.json"
-            },
-            {
-                "language": "jsonc",
-                "path": "./snippets/json.json"
-            },
-            {
-                "language": "plaintext",
-                "path": "./snippets/json.json"
-            },
-            {
-                "language": "typescript",
-                "path": "./snippets/typescript.json"
-            },
-            {
-                "language": "javascript",
-                "path": "./snippets/typescript.json"
-            },
-            {
-                "language": "plaintext",
-                "path": "./snippets/typescript.json"
-            },
-            {
-                "language": "dockerfile",
-                "path": "./snippets/dockerfile.json"
-            },
-            {
-                "language": "plaintext",
-                "path": "./snippets/dockerfile.json"
-            },
-            {
-                "language": "shellscript",
-                "path": "./snippets/shellscript.json"
-            },
-            {
-                "language": "plaintext",
-                "path": "./snippets/shellscript.json"
-            },
-            {
-                "language": "yaml",
-                "path": "./snippets/k8s.json"
-            },
-            {
-                "language": "plaintext",
-                "path": "./snippets/k8s.json"
-            },
-            {
-                "language": "groovy",
-                "path": "./snippets/groovy.json"
-            },
-            {
-                "language": "plaintext",
-                "path": "./snippets/groovy.json"
-            },
-            {
-                "language": "ignore",
-                "path": "./snippets/ignore.json"
-            },
-            {
-                "language": "plaintext",
-                "path": "./snippets/ignore.json"
+                "command": "generator-from-swagger.info",
+                "title": "Info",
+                "icon": {
+                    "light": "resources/light/info.svg",
+                    "dark": "resources/dark/info.svg"
+                }
             }
         ]
     },
-    "name": "bar-nuri-tools",
-    "displayName": "Bar Nuri Tools",
-    "publisher": "Bar",
-    "description": "Bar Nuri Tools Snippets for Dockerfile ,Ignore, Json, K8s, Shellscript, Typescript",
-    "icon": "icon.png",
+    "icon": "resources/Swagger.svg",
     "galleryBanner": {
         "color": "#343a40",
         "theme": "dark"
@@ -349,6 +127,7 @@
         "@types/rimraf": "^2.0.2",
         "axios": "^0.19.0",
         "extract-zip": "^1.6.7",
+        "open": "^6.4.0",
         "rimraf": "^2.6.3"
     },
     "devDependencies": {
@@ -371,25 +150,13 @@
         "vscode": "^1.36.0"
     },
     "categories": [
-        "Snippets",
-        "Extension Packs",
-        "Formatters",
-        "Programming Languages",
-        "SCM Providers",
         "Other"
     ],
     "keywords": [
-        "Bar",
-        "Nuri",
+        "Swagger",
+        "Generator",
         "Tools",
         "Bar Nuri",
-        "Bar Nuri Tools",
-        "Snippets",
-        "Dockerfile Snippets",
-        "Ignore Snippets",
-        "Json Snippets",
-        "K8s Snippets",
-        "Shellscript Snippets",
-        "Typescript Snippets"
+        "Generator From Swagger"
     ]
 }

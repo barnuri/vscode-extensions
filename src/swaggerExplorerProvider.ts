@@ -27,7 +27,7 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
     refresh(): void {
         this._onDidChangeTreeData.fire();
     }
-    public configFile = './.vscode/swagger-explorer.json';
+    public configFile = './.vscode/generator-from-swagger.json';
     defualtFile: SwaggerConfig[] = [
         {
             name: 'temp',
