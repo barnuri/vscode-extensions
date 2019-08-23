@@ -116,7 +116,7 @@
             }
         ]
     },
-    "icon": "resources/Swagger.svg",
+    "icon": "icon.png",
     "galleryBanner": {
         "color": "#343a40",
         "theme": "dark"

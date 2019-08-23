@@ -45,7 +45,7 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
         } catch {
             return [];
         }
-    }
+    };
     createConfig() {
         try {
             if (existsSync(resolve(getWorkspacePath() + '/' + this.configFile))) {
