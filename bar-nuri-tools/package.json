@@ -41,95 +41,11 @@
         "onCommand:extension.convertAllFilesToLF",
         "onCommand:extension.convertAllFilesToCRLF",
         "onCommand:extension.convertAllFilesToCR",
-        "onCommand:swagger-explorer.refresh",
-        "onCommand:swagger-explorer.edit",
-        "onCommand:swagger-explorer.generate",
-        "onCommand:swagger-explorer.createConfig",
-        "onView:swagger-explorer",
         "onCommand:extension.installKubeadmFlannelWithHelmWithIngress",
         "onCommand:extension.InstallKubeadm"
     ],
     "contributes": {
-        "viewsContainers": {
-            "activitybar": [
-                {
-                    "id": "swagger-explorer",
-                    "title": "Swagger Explorer",
-                    "icon": "resources/Swagger.svg"
-                }
-            ]
-        },
-        "views": {
-            "swagger-explorer": [
-                {
-                    "id": "swagger-explorer",
-                    "name": "Swagger Explorer"
-                }
-            ]
-        },
-        "menus": {
-            "view/title": [
-                {
-                    "command": "swagger-explorer.refresh",
-                    "when": "view == swagger-explorer",
-                    "group": "navigation"
-                },
-                {
-                    "command": "swagger-explorer.edit",
-                    "when": "view == swagger-explorer",
-                    "group": "navigation"
-                },
-                {
-                    "command": "swagger-explorer.createConfig",
-                    "when": "view == swagger-explorer",
-                    "group": "navigation"
-                }
-            ],
-            "view/item/context": [
-                {
-                    "command": "swagger-explorer.generate",
-                    "when": "view == swagger-explorer && viewItem == parent",
-                    "group": "inline"
-                },
-                {
-                    "command": "swagger-explorer.generate",
-                    "when": "view == swagger-explorer && viewItem == parent"
-                }
-            ]
-        },
         "commands": [
-            {
-                "command": "swagger-explorer.refresh",
-                "title": "Refresh",
-                "icon": {
-                    "light": "resources/light/refresh.svg",
-                    "dark": "resources/dark/refresh.svg"
-                }
-            },
-            {
-                "command": "swagger-explorer.generate",
-                "title": "Generate Client",
-                "icon": {
-                    "light": "resources/light/dependency.svg",
-                    "dark": "resources/dark/dependency.svg"
-                }
-            },
-            {
-                "command": "swagger-explorer.edit",
-                "title": "Edit Config",
-                "icon": {
-                    "light": "resources/light/edit.svg",
-                    "dark": "resources/dark/edit.svg"
-                }
-            },
-            {
-                "command": "swagger-explorer.createConfig",
-                "title": "Create Config",
-                "icon": {
-                    "light": "resources/light/string.svg",
-                    "dark": "resources/dark/string.svg"
-                }
-            },
             {
                 "command": "extension.addNewCommand",
                 "title": "Bar Nuri Tools: Add New Command To Your Extension Project"
@@ -349,6 +265,7 @@
         "@types/rimraf": "^2.0.2",
         "axios": "^0.19.0",
         "extract-zip": "^1.6.7",
+        "open": "^6.4.0",
         "rimraf": "^2.6.3"
     },
     "devDependencies": {
