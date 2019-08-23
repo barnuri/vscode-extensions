@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-<<<<<<< HEAD:bar-nuri-tools/src/extension.ts
 import { k8sFileBuilder, jenkinsFileBuilder, dockerfileBuilder, pritterFile, nodemonFile, dockerDevNodeJS, addColorsFile } from './addFiles';
 import { installScript } from './installations';
 import { modifyPackageJson, getFilePaths, getFileExtension, writeFile, getWorkspacePath } from './fileHelper';
@@ -375,19 +374,6 @@ function editSelectedTest(modifyFunc: (text: string) => string) {
     editor.edit(editBuilder => {
         editBuilder.replace(editor.selection, modifyFunc(editor.document.getText(editor.selection)));
     });
-=======
-import { SwaggerExplorerProvider, SwaggerTreeItem } from './swaggerExplorerProvider';
-import open = require('open');
-
-export function activate(context: vscode.ExtensionContext) {
-    const swaggerExplorerProvider = new SwaggerExplorerProvider();
-    vscode.window.registerTreeDataProvider('generator-from-swagger', swaggerExplorerProvider);
-    context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.refresh', () => swaggerExplorerProvider.refresh()));
-    context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.createConfig', () => swaggerExplorerProvider.createConfig()));
-    context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.edit', () => swaggerExplorerProvider.openConfigFile()));
-    context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.generate', (item: SwaggerTreeItem) => item.generate()));
-    context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.info', () => open('http://api.openapi-generator.tech')));
->>>>>>> 4cea2ece52bcf5328718db9eebbcc657de16acb8:src/extension.ts
 }
 
 export function getTerminal() {
