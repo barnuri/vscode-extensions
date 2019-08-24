@@ -1,9 +1,9 @@
 {
     "name": "generator-from-swagger",
-    "description": "Generator From Swagger Snippets for Dockerfile ,Ignore, Json, K8s, Shellscript, Typescript",
+    "description": "Generator From Swagger",
     "displayName": "Generator From Swagger",
     "publisher": "Bar",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
