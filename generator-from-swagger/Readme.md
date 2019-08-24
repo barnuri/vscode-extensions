@@ -1,3 +1,3 @@
 # [Generator From Swagger](https://marketplace.visualstudio.com/items?itemName=Bar.generator-from-swagger)
 
-![](./example.gif)
+![](https://media.giphy.com/media/WV4AE8U4zontlJCnEl/giphy.gif)
