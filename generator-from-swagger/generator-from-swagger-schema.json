@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "SwaggerConfig": {
+            "properties": {
+                "language": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "options": {},
+                "outputFolder": {
+                    "type": "string"
+                },
+                "swaggerPath": {
+                    "type": "string"
+                },
+                "type": {
+                    "enum": ["clients", "servers"],
+                    "type": "string"
+                }
+            },
+            "type": "object",
+            "required": ["language", "name", "options", "outputFolder", "swaggerPath", "type"],
+            "additionalProperties": false
+        }
+    },
+    "items": {
+        "$ref": "#/definitions/SwaggerConfig"
+    },
+    "type": "array"
+}

@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
-import { SwaggerExplorerProvider, SwaggerTreeItem } from './swaggerExplorerProvider';
+import { SwaggerExplorerProvider } from './swaggerExplorerProvider';
+import { SwaggerTreeItem } from "./models/SwaggerTreeItem";
 import open = require('open');
 
 export function activate(context: vscode.ExtensionContext) {
