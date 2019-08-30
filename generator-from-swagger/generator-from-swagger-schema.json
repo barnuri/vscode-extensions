@@ -19,10 +19,14 @@
                 "type": {
                     "enum": ["clients", "servers"],
                     "type": "string"
+                },
+                "generator": {
+                    "enum": ["http://api.openapi-generator.tech/api/gen", "https://generator.swagger.io/api/gen"],
+                    "type": "string"
                 }
             },
             "type": "object",
-            "required": ["language", "name", "options", "outputFolder", "swaggerPath", "type"],
+            "required": ["language", "name", "options", "outputFolder", "swaggerPath", "type", "generator"],
             "additionalProperties": false
         }
     },

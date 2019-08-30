@@ -24,12 +24,14 @@ export async function generateFromApi(item: SwaggerTreeItem) {
         };
     }
 
-    // https://generator.swagger.io/api/gen/clients
-    const linkToZip = await Axios.post(`http://api.openapi-generator.tech/api/gen/clients/${item.swaggerConfig.language}`, body)
+    item.swaggerConfig.generator = item.swaggerConfig.generator || 'http://api.openapi-generator.tech/api/gen';
+
+    const linkToZip = await Axios.post(`${item.swaggerConfig.generator}/${item.swaggerConfig.type}/${item.swaggerConfig.language}`, body)
         .then(x => x.data.link)
         .catch(err => {
             throw err;
         });
+
     const zipFileBinary = await Axios.get(linkToZip, { responseType: 'arraybuffer' }).then(x => x.data);
     const outputFolder = resolve(getWorkspacePath(), item.swaggerConfig.outputFolder);
     const tmpFolder = outputFolder + 'tmp';

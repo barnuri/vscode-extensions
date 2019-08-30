@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { SwaggerExplorerProvider } from './swaggerExplorerProvider';
-import { SwaggerTreeItem } from "./models/SwaggerTreeItem";
+import { SwaggerTreeItem } from './models/SwaggerTreeItem';
 import open = require('open');
 
 export function activate(context: vscode.ExtensionContext) {
@@ -10,7 +10,12 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.createConfig', () => swaggerExplorerProvider.createConfig()));
     context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.edit', () => swaggerExplorerProvider.openConfigFile()));
     context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.generate', (item: SwaggerTreeItem) => item.generate()));
-    context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.info', () => open('http://api.openapi-generator.tech')));
+    context.subscriptions.push(
+        vscode.commands.registerCommand('generator-from-swagger.info', () => {
+            open('http://api.openapi-generator.tech');
+            open('https://generator.swagger.io');
+        }),
+    );
 }
 
 export function getTerminal() {
