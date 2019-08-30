@@ -1,11 +1,11 @@
 {
-    "version": "2.0.5",
+    "version": "2.0.6",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "gitBeforePublish": "git add . && git commit -m \"version\" --allow-empty && git push",
-        "publish": "npm run gitBeforePublish && npm version patch && vsce publish && git push",
+        "gitBeforePublish": "npm version patch && git add . && git commit -m \"version\" --allow-empty && git push",
+        "publish": "npm run gitBeforePublish && vsce publish",
         "removeUnusedImports": "tslint --config tslint-imports.json --fix --project ."
     },
     "activationEvents": [
