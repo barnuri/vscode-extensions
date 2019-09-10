@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
-import { writeFile, modifyPackageJson } from './fileHelper';
+import { writeFile, modifyPackageJson, getWorkspacePath, readFile } from './fileHelper';
 import { getTerminal } from './extension';
+import { existsSync } from 'fs';
+import { resolve } from 'path';
 
 export function getTextFromSnippet(snippetName: string, key: string) {
     const snippet = require(`../snippets/${snippetName}.json`);
@@ -22,7 +24,15 @@ export function nodejsDockerfileBuilder() {
 
 export function addColorsFile() {
     writeFile('src/helpers/colors.ts', getTextFromSnippet('typescript', 'colorsfile'));
-    getTerminal().sendText('npm i colors');
+    const filesToTryToModify = ['src/main.ts', 'src/main.js', 'src/index.js', 'src/index.ts'];
+    for (const file of filesToTryToModify) {
+        if (!existsSync(resolve(getWorkspacePath(), file))) {
+            continue;
+        }
+        let fileBody = readFile(file);
+        fileBody = `import './helpers/colors'; \n` + fileBody;
+        writeFile(file, fileBody);
+    }
 }
 
 export async function dockerfileBuilder() {
