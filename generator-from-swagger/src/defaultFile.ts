@@ -7,7 +7,7 @@ export default [
         type: 'clients',
         language: 'typescript-axios',
         swaggerPath: 'https://petstore.swagger.io/v2/swagger.json',
-        options: { supportsES6: true },
+        options: { supportsES6: true, apiPackage: 'api', modelPackage: 'models', withSeparateModelsAndApi: true },
         outputFolder: './generatedClientFromSwagger',
     },
     {
@@ -16,7 +16,7 @@ export default [
         type: 'servers',
         language: 'aspnetcore',
         swaggerPath: 'https://petstore.swagger.io/v2/swagger.json',
-        options: { supportsES6: true },
+        options: { supportsES6: true, apiPackage: 'api', modelPackage: 'models', withSeparateModelsAndApi: true },
         outputFolder: './generatedServerFromSwagger',
     },
 ] as SwaggerConfig[];
