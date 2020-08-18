@@ -1,0 +1,9 @@
+# Ignore everything
+*
+*/**
+
+# Whitelist what you need
+!package.json
+!README.md
+!dist
+!logo.png
