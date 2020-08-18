@@ -7,6 +7,8 @@ https://code.visualstudio.com/api/working-with-extensions/publishing-extension
 https://dev.azure.com/barnuri/_usersSettings/tokens
 
 ```
+npm i -g vsce
+
 vsce login Bar
 
 vsce package
