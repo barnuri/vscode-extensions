@@ -6,6 +6,8 @@ https://code.visualstudio.com/api/working-with-extensions/publishing-extension
 
 https://dev.azure.com/barnuri/_usersSettings/tokens
 
+## Create Token Organization = All accessible organizations !!!!
+
 ```
 npm i -g vsce
 
