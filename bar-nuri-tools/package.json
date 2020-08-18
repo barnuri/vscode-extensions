@@ -1,5 +1,5 @@
 {
-    "version": "2.1.4",
+    "version": "2.1.5",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
@@ -282,7 +282,8 @@
         "rimraf": "^2.6.3"
     },
     "extensionDependencies": [
-        "Bar.generator-from-swagger"
+        "Bar.generator-from-swagger",
+        "Bar.python-import-helper"
     ],
     "devDependencies": {
         "@types/glob": "^7.1.1",
