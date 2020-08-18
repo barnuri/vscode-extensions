@@ -3,7 +3,7 @@
     "displayName": "Bar Nuri Tools Python Import Helper",
     "description": "Automatically generate import statements for Python.",
     "publisher": "Bar",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "scripts": {
         "build": "tsc",
         "vscode:prepublish": "npm run compile",
@@ -44,8 +44,7 @@
         "lodash": "4.17.15",
         "make-dir": "3.0.0",
         "tslib": "^2.0.1",
-        "utlz": "2.2.0",
-        "vscode": "1.1.36"
+        "utlz": "2.2.0"
     },
     "devDependencies": {
         "@types/make-dir": "2.1.0",
@@ -55,6 +54,7 @@
         "@types/lodash": "4.14.148",
         "@types/node": "12.12.8",
         "ts-node": "8.5.2",
-        "typescript": "3.7.2"
+        "typescript": "3.7.2",
+        "vscode": "1.1.36"
     }
 }
