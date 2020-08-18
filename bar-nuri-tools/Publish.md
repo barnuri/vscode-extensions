@@ -11,7 +11,5 @@ npm i -g vsce
 
 vsce login Bar
 
-vsce package
-
-vsce publish minor
+npm run publish 
 ```
