@@ -1,0 +1,46 @@
+{
+    "pylintrc": {
+        "prefix": [".pylintrc", "pylint", "pylintrc"],
+        "body": [
+            "[MESSAGES CONTROL]",
+            "disable=C,R,broad-except,",
+            "        redefined-builtin,",
+            "        missing-docstring,",
+            "        invalid-name,",
+            "        deprecated-lambda,",
+            "        relative-import,",
+            "        global-statement,",
+            "        redefined-outer-name,",
+            "        bare-except,",
+            "        pointless-string-statement,",
+            "        dangerous-default-value,",
+            "        unresolved-import,",
+            "        arguments-differ,",
+            "        keyword-arg-before-vararg,",
+            "        protected-access",
+            "",
+            "[REPORTS]",
+            "msg-template=\"{path}:{line}: [{msg_id}({symbol}), {obj} {msg}\"",
+            "output-format=colorized",
+            ""
+        ],
+        "description": "pylintrc"
+    },
+    "pyproject": {
+        "prefix": ["pyproject", "pyproject.toml"],
+        "body": [
+            "[tool.black]",
+            "line-length = 88",
+            "target-version = ['py36', 'py37', 'py38']",
+            "include = '\\.pyi?\\$'",
+            "exclude = '''",
+            "/(",
+            "  venv ",
+            "  | dist",
+            ")/",
+            "'''",
+            ""
+        ],
+        "description": "pyproject.toml"
+    }
+}

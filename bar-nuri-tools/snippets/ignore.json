@@ -1,7 +1,7 @@
 {
     "gitignore": {
         "prefix": "gitignore",
-        "body": ["node_modules", "dist", "build", "bin", "obj", "**/bin", "**/obj", "**/.toolstarget", "**/sqlite3", "**/.vs"],
+        "body": ["dist", "build", "**/bin", "**/obj", "**/.toolstarget", "**/sqlite3", "**/.vs", "**/*.pyc", "**/node_modules"],
         "description": "gitignore"
     },
     "dockerignore": {
@@ -37,7 +37,7 @@
             "**/obj",
             "**/.toolstarget",
             "k8s",
-            "",
+            "**/*.pyc",
             "",
             ""
         ],

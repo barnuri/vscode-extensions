@@ -10,6 +10,7 @@
     },
     "activationEvents": [
         "onCommand:extension.addColorsFile",
+        "onCommand:extension.addPylintrcFile",
         "onCommand:extension.addDocker",
         "onCommand:extension.addDockerK8sAndJenkins",
         "onCommand:extension.addJenkins",
@@ -32,7 +33,6 @@
         "onCommand:extension.exportK8sConfig",
         "onCommand:extension.typescriptAddRemoveUnusedImportsScript",
         "onCommand:extension.addNewCommand",
-        "onCommand:extension.myNewCommand",
         "onCommand:extension.convertToCR",
         "onCommand:extension.convertToCRLF",
         "onCommand:extension.convertToLF",
@@ -42,7 +42,8 @@
         "onCommand:extension.convertAllFilesToCRLF",
         "onCommand:extension.convertAllFilesToCR",
         "onCommand:extension.installKubeadmFlannelWithHelmWithIngress",
-        "onCommand:extension.InstallKubeadm"
+        "onCommand:extension.InstallKubeadm",
+        "onCommand:extension.addPyproject"
     ],
     "contributes": {
         "commands": [
@@ -65,6 +66,10 @@
             {
                 "command": "extension.addColorsFile",
                 "title": "Bar Nuri Tools: Add Colors Helper File"
+            },
+            {
+                "command": "extension.addPylintrcFile",
+                "title": "Bar Nuri Tools: Add .pylintrc File"
             },
             {
                 "command": "extension.addDocker",
@@ -139,10 +144,6 @@
                 "title": "Bar Nuri Tools: Typescript Add Remove Unused Imports Script"
             },
             {
-                "command": "extension.myNewCommand",
-                "title": "Bar Nuri Tools: My New Command"
-            },
-            {
                 "command": "extension.convertToCR",
                 "title": "Bar Nuri Tools: Convert To CR"
             },
@@ -181,9 +182,21 @@
             {
                 "command": "extension.InstallKubeadm",
                 "title": "Bar Nuri Tools: Install Kubeadm"
+            },
+            {
+                "command": "extension.addPyproject",
+                "title": "Bar Nuri Tools: Add Pyproject.toml"
             }
         ],
         "snippets": [
+            {
+                "language": "plaintext",
+                "path": "./snippets/python.json"
+            },
+            {
+                "language": "python",
+                "path": "./snippets/python.json"
+            },
             {
                 "language": "json",
                 "path": "./snippets/json.json"

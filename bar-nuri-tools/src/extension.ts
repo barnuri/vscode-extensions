@@ -1,5 +1,14 @@
 import * as vscode from 'vscode';
-import { k8sFileBuilder, jenkinsFileBuilder, dockerfileBuilder, pritterFile, nodemonFile, dockerDevNodeJS, addColorsFile } from './addFiles';
+import {
+    k8sFileBuilder,
+    jenkinsFileBuilder,
+    dockerfileBuilder,
+    pritterFile,
+    nodemonFile,
+    dockerDevNodeJS,
+    addColorsFile,
+    getTextFromSnippet,
+} from './addFiles';
 import { installScript } from './installations';
 import { modifyPackageJson, getFilePaths, getFileExtension, writeFile, getWorkspacePath } from './fileHelper';
 import { renameSync, readFileSync, writeFileSync } from 'fs';
@@ -9,12 +18,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.textToString', () => {
             editSelectedTest(text =>
-                text
-                    .replace(/\n/g, '\\n')
-                    .replace(/"/g, '\\"')
-                    .replace(/'/g, "\\'")
-                    .replace(/\\/g, '\\')
-                    .replace(/\$/g, '\\\\$'),
+                text.replace(/\n/g, '\\n').replace(/"/g, '\\"').replace(/'/g, "\\'").replace(/\\/g, '\\').replace(/\$/g, '\\\\$'),
             );
         }),
     );
@@ -68,6 +72,18 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.addColorsFile', async () => {
             addColorsFile();
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.addPylintrcFile', async () => {
+            writeFile('.pylintrc', getTextFromSnippet('python', 'pylintrc'));
+        }),
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('extension.addPyproject', async () => {
+            writeFile('pyproject.toml', getTextFromSnippet('python', 'pyproject'));
         }),
     );
 
@@ -228,13 +244,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.convertAllFilesToLF', async () => {
             for (const file of getFilePaths(getWorkspacePath())) {
-                writeFileSync(
-                    file,
-                    readFileSync(file, { encoding: 'utf8' })
-                        .replace(/\r\n/g, '\n')
-                        .replace(/\r/g, '\n'),
-                    { encoding: 'utf8' },
-                );
+                writeFileSync(file, readFileSync(file, { encoding: 'utf8' }).replace(/\r\n/g, '\n').replace(/\r/g, '\n'), { encoding: 'utf8' });
             }
         }),
     );
@@ -242,13 +252,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.convertAllFilesToCRLF', async () => {
             for (const file of getFilePaths(getWorkspacePath())) {
-                writeFileSync(
-                    file,
-                    readFileSync(file, { encoding: 'utf8' })
-                        .replace(/\r/g, '')
-                        .replace(/\n/g, '\r\n'),
-                    { encoding: 'utf8' },
-                );
+                writeFileSync(file, readFileSync(file, { encoding: 'utf8' }).replace(/\r/g, '').replace(/\n/g, '\r\n'), { encoding: 'utf8' });
             }
         }),
     );
@@ -256,13 +260,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.convertAllFilesToCR', async () => {
             for (const file of getFilePaths(getWorkspacePath())) {
-                writeFileSync(
-                    file,
-                    readFileSync(file, { encoding: 'utf8' })
-                        .replace(/\r\n/g, '\r')
-                        .replace(/\n/g, '\r'),
-                    { encoding: 'utf8' },
-                );
+                writeFileSync(file, readFileSync(file, { encoding: 'utf8' }).replace(/\r\n/g, '\r').replace(/\n/g, '\r'), { encoding: 'utf8' });
             }
         }),
     );
