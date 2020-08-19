@@ -1,5 +1,5 @@
 {
-    "version": "2.1.8",
+    "version": "2.1.9",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
@@ -321,6 +321,18 @@
         "Json Snippets",
         "K8s Snippets",
         "Shellscript Snippets",
-        "Typescript Snippets"
+        "Typescript Snippets",
+        "Nuri",
+        "BarNuri",
+        "nuri",
+        "bar",
+        "barnuri"
+    ],
+    "tags": [
+        "Nuri",
+        "BarNuri",
+        "nuri",
+        "bar",
+        "barnuri"
     ]
 }
