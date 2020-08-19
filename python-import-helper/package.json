@@ -3,7 +3,7 @@
     "displayName": "Bar Nuri Tools Python Import Helper",
     "description": "Automatically generate import statements for Python.",
     "publisher": "Bar",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "scripts": {
         "build": "tsc -b",
         "vscode:prepublish": "npm run compile",
@@ -27,7 +27,8 @@
         "python"
     ],
     "repository": {
-        "type": "git"
+        "type": "git",
+        "url": "https://github.com/barnuri/vscode-extensions"
     },
     "icon": "logo.png",
     "galleryBanner": {
