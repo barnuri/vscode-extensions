@@ -3,7 +3,7 @@
     "displayName": "Bar Nuri Tools Python Import Helper",
     "description": "Automatically generate import statements for Python.",
     "publisher": "Bar",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "scripts": {
         "build": "tsc",
         "vscode:prepublish": "npm run compile",
