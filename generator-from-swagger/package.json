@@ -3,7 +3,7 @@
     "description": "Generator From Swagger",
     "displayName": "Generator From Swagger",
     "publisher": "Bar",
-    "version": "1.1.4",
+    "version": "1.1.5",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
@@ -166,6 +166,25 @@
         "Bar Nuri",
         "Nuri",
         "Bar",
-        "Generator From Swagger"
+        "Generator From Swagger",
+        "Nuri",
+        "BarNuri",
+        "nuri",
+        "bar",
+        "barnuri"
+    ],
+    "tags": [
+        "Swagger",
+        "Generator",
+        "Tools",
+        "Bar Nuri",
+        "Nuri",
+        "Bar",
+        "Generator From Swagger",
+        "Nuri",
+        "BarNuri",
+        "nuri",
+        "bar",
+        "barnuri"
     ]
 }
