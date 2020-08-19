@@ -1,9 +1,4 @@
-# Ignore everything
-*
-*/**
-
-# Whitelist what you need
-!package.json
-!README.md
-!dist
-!logo.png
+.vscode/**
+.vscode-test/**
+.gitignore
+vsc-extension-quickstart.md
