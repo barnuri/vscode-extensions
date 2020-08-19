@@ -3,9 +3,9 @@
     "displayName": "Bar Nuri Tools Python Import Helper",
     "description": "Automatically generate import statements for Python.",
     "publisher": "Bar",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "scripts": {
-        "build": "tsc",
+        "build": "tsc -b",
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
@@ -38,7 +38,7 @@
         "workspaceContains:**/*.py"
     ],
     "engines": {
-        "vscode": "^1.31.0"
+        "vscode": "^1.33.0"
     },
     "main": "./out/extension.js",
     "dependencies": {
