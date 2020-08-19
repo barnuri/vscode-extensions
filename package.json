@@ -1,0 +1,9 @@
+{
+    "scripts": {
+        "publishAll": "npm run publish1 && npm run publish2 && npm run publish3 && npm run publish4",
+        "publish1": "cd ./bar-nuri-tools && npm run publish && cd ..",
+        "publish2": "cd ./bar-nuri-tools-bundle && npm run publish && cd ..",
+        "publish3": "cd ./generator-from-swagger && npm run publish && cd ..",
+        "publish4": "cd ./python-import-helper && npm run publish && cd .."
+    }
+}
