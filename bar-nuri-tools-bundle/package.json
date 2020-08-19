@@ -1,5 +1,5 @@
 {
-    "version": "1.0.1",
+    "version": "1.0.2",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
@@ -60,6 +60,10 @@
         "Json Snippets",
         "K8s Snippets",
         "Shellscript Snippets",
-        "Typescript Snippets"
+        "Typescript Snippets",
+        "Nuri Bundle",
+        "Bar Bundle",
+        "Bar Nuri Bundle",
+        "Bundle"
     ]
 }
