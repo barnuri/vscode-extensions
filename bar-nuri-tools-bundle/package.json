@@ -1,5 +1,5 @@
 {
-    "version": "1.0.2",
+    "version": "1.0.3",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
@@ -64,6 +64,18 @@
         "Nuri Bundle",
         "Bar Bundle",
         "Bar Nuri Bundle",
-        "Bundle"
+        "Bundle",
+        "Nuri",
+        "BarNuri",
+        "nuri",
+        "bar",
+        "barnuri"
+    ],
+    "tags": [
+        "Nuri",
+        "BarNuri",
+        "nuri",
+        "bar",
+        "barnuri"
     ]
 }
