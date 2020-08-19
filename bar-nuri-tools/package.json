@@ -1,5 +1,5 @@
 {
-    "version": "2.1.12",
+    "version": "2.1.13",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
@@ -285,7 +285,7 @@
         "@types/glob": "^7.1.3",
         "@types/mocha": "^8.0.3",
         "@types/node": "^14.6.0",
-        "@types/vscode": "^1.48.0",
+        "@types/vscode": "^1.33.0",
         "glob": "^7.1.6",
         "mocha": "^8.1.1",
         "tslint": "^6.1.3",
