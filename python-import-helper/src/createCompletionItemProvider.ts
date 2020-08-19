@@ -1,7 +1,7 @@
 import { CompletionItem, CompletionItemKind, ExtensionContext, languages, Position, TextDocument, TextEdit } from 'vscode';
 import { DisposableKey, DisposableManager } from './DisposableManager';
 import { cacheFileManager } from './cacheFileManager';
-import { RichQuickPickItem } from './types';
+import { ExportData, RichQuickPickItem, RichCompletionItem } from './types';
 import { insertImport } from './importer';
 import { buildImportItems } from './buildImportItems';
 import { CancellationToken, CompletionContext } from 'vscode';
@@ -27,35 +27,38 @@ import { CancellationToken, CompletionContext } from 'vscode';
  * with VS Code's default autoImport functionality.
  */
 
-type RichCompletionItem<Q = RichQuickPickItem> = CompletionItem & {
-    importItem: Q;
-    position: Position;
-};
+async function mapItems(exportData: ExportData, position: Position) {
+    const defVal = [] as RichCompletionItem<RichQuickPickItem>[];
+    if (!exportData) {
+        return defVal;
+    }
+    try {
+        const mergedData: any = { ...exportData.imp, ...exportData.exp };
+        if (Object.keys(mergedData).length <= 0) {
+            return defVal;
+        }
+        const items = buildImportItems(mergedData);
+        const compImtes = items.map((item: any) => {
+            const completionItem = new CompletionItem(item.label, CompletionItemKind.Class) as RichCompletionItem;
+            // Caching for use in `resolveCompletionItem`
+            completionItem.importItem = item;
+            completionItem.position = position;
+            completionItem.detail = item.description;
+            return completionItem;
+        });
+        return compImtes;
+    } catch (error) {
+        console.log(error);
+        return defVal;
+    }
+}
 
 export function registerCompletionItemProvider(context: ExtensionContext) {
     const provider = {
         async provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext) {
-            return await cacheFileManager(async exportData => {
-                if (!exportData) return [];
-                try {
-                    const mergedData: any = { ...exportData.imp, ...exportData.exp };
-                    if (Object.keys(mergedData).length <= 0) {
-                        return [];
-                    }
-                    const items = buildImportItems(mergedData);
-                    return items.map((item: any) => {
-                        const completionItem = new CompletionItem(item.label, CompletionItemKind.Class) as RichCompletionItem;
-                        // Caching for use in `resolveCompletionItem`
-                        completionItem.importItem = item;
-                        completionItem.position = position;
-                        completionItem.detail = item.description;
-                        return completionItem;
-                    });
-                } catch (error) {
-                    console.log(error);
-                    return;
-                }
-            });
+            const exportData = await cacheFileManager();
+            const mappedItems = mapItems(exportData, position);
+            return mappedItems;
         },
 
         resolveCompletionItem(completionItem: RichCompletionItem) {
@@ -66,8 +69,7 @@ export function registerCompletionItemProvider(context: ExtensionContext) {
         },
     };
 
-    const pattern = `**/*.py`;
-    const disposable = languages.registerCompletionItemProvider({ pattern, scheme: 'file' }, provider);
+    const disposable = languages.registerCompletionItemProvider('python', provider);
     context.subscriptions.push(disposable);
     DisposableManager.add(DisposableKey.PROVIDE_COMPLETIONS, disposable);
 }

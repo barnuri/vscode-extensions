@@ -1,7 +1,14 @@
+import { CompletionItem, Position } from 'vscode';
+
 export type RichQuickPickItem = {
     label: string;
     description?: string | undefined;
     isExtraImport: boolean | undefined;
+};
+
+export type RichCompletionItem<Q = RichQuickPickItem> = CompletionItem & {
+    importItem: Q;
+    position: Position;
 };
 
 export enum ExportType {

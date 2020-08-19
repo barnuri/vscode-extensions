@@ -54,25 +54,21 @@ function onChangeOrCreate(doc: Uri) {
     if (_.isEmpty(exp) && _.isEmpty(imp)) return;
 
     for (const k in exp) exp[k].cached = Date.now();
-
-    return cacheFileManager(cachedData => {
+    return cacheFileManager().then(cachedData => {
         // Concatenate & dedupe named/types arrays. Merge them into extraImports since that will in turn
         // get merged back into cachedData
         mergeObjectsWithArrays(cachedData.imp, imp);
         Object.assign(cachedData.exp, exp);
-
         return writeCacheFile(cachedData);
     });
 }
 
 export function watchForChanges() {
     const watcher = workspace.createFileSystemWatcher('**/*.*');
-
     watcher.onDidChange(onChangeOrCreate);
     watcher.onDidCreate(onChangeOrCreate);
-
     watcher.onDidDelete(doc => {
-        cacheFileManager(async cachedData => {
+        cacheFileManager().then(cachedData => {
             const key = getFilepathKey(doc.fsPath);
             const { exp } = cachedData;
             if (!exp[key]) return;

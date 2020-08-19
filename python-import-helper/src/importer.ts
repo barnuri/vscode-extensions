@@ -28,20 +28,17 @@ export async function importUndefinedVariables() {
 }
 
 export async function selectImport(text?: string | null) {
-    return await cacheFileManager(async exportData => {
-        if (!exportData) return;
+    const exportData = await cacheFileManager();
+    if (!exportData) return [];
 
-        const items = getItemsForText(exportData, text);
-        if (!items) return;
+    const items = getItemsForText(exportData, text);
+    if (!items) return;
 
-        const item =
-            !text || items.length > 1 || !getConfiguration().autoImportSingleResult
-                ? await window.showQuickPick(items, { matchOnDescription: true })
-                : items[0];
+    const item =
+        !text || items.length > 1 || !getConfiguration().autoImportSingleResult ? await window.showQuickPick(items, { matchOnDescription: true }) : items[0];
 
-        if (!item) return [];
-        await insertImport(item);
-    });
+    if (!item) return [];
+    await insertImport(item);
 }
 
 export function shouldIncludeDisgnostic({ code }: Diagnostic) {

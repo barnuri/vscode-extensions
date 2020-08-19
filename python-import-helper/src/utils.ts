@@ -25,6 +25,7 @@ const CONFIG_DIR = '.python-importer';
 const extensionToLang: { [ext: string]: string } = { py: 'Python' };
 
 export async function writeCacheFile(data: ExportData) {
+    console.log('writeCacheFile');
     await makeDir(path.dirname(plugin.cacheFilepath));
     fs.writeFileSync(plugin.cacheFilepath, JSON.stringify(data));
 }

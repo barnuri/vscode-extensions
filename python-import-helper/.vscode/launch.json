@@ -12,7 +12,8 @@
             "runtimeExecutable": "${execPath}",
             "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
             "outFiles": ["${workspaceFolder}/out/**/*.js"],
-            "preLaunchTask": "npm: build"
+            "preLaunchTask": "npm: build",
+            "internalConsoleOptions": "openOnFirstSessionStart"
         }
     ]
 }
