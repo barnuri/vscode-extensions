@@ -3,7 +3,7 @@
     "displayName": "Bar Nuri Tools Python Import Helper",
     "description": "Automatically generate import statements for Python.",
     "publisher": "Bar",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "scripts": {
         "build": "tsc -b",
         "vscode:prepublish": "npm run compile",
@@ -20,18 +20,18 @@
         "bar",
         "barnuri"
     ],
+    "keywords": [
+        "Nuri",
+        "BarNuri",
+        "nuri",
+        "bar",
+        "barnuri"
+    ],
     "categories": [
         "Programming Languages",
         "Snippets",
         "Formatters",
         "Other"
-    ],
-    "keywords": [
-        "multi-root ready",
-        "import",
-        "export",
-        "javascript",
-        "python"
     ],
     "repository": {
         "type": "git",
