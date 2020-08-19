@@ -1,44 +1,19 @@
 import { Uri, workspace } from 'vscode';
-import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as _ from 'lodash';
-import anymatch from 'anymatch';
-import { getFilepathKey, getLangFromFilePath, mergeObjectsWithArrays, showProjectExportsCachedMessage, writeCacheFile } from './utils';
+import { getFilepathKey, isPathPackage, mergeObjectsWithArrays, showProjectExportsCachedMessage, writeCacheFile } from './utils';
 import { cacheFileManager } from './cacheFileManager';
 import { plugin } from './plugins';
 import { CachingData } from './types';
-import { cacheFile } from './plugins/python/cacher';
-
-function shouldIgnore(filePath: string) {
-    return anymatch(plugin.excludePatterns, filePath);
-}
+import { getWorkspacePath, getPythonFiles, ignoreThisFile } from './helpers';
+import { parseImports } from './regex';
 
 async function cacheDir(dir: string, recursive: boolean, data: CachingData): Promise<CachingData> {
     try {
-        const items = await fs.readdir(dir);
-        const readDirPromises: Promise<any>[] = [] as any[];
-
-        for (const item of items) {
-            const fullPath = path.join(dir, item);
-            if (shouldIgnore(fullPath)) continue;
-
-            readDirPromises.push(
-                fs.stat(fullPath).then(async stats => {
-                    if (stats.isFile()) {
-                        const fileLang = getLangFromFilePath(item);
-                        if (fileLang === 'Python') {
-                            await cacheFile(fullPath, data);
-                        }
-                    } else if (recursive) {
-                        await cacheDir(fullPath, true, data);
-                    }
-
-                    return Promise.resolve();
-                }),
-            );
+        let files: string[] = getPythonFiles(dir);
+        for (const fullPath of files) {
+            cacheFile(fullPath, data);
         }
-
-        await Promise.all(readDirPromises);
         return data;
     } catch (err) {
         console.log(err);
@@ -47,7 +22,7 @@ async function cacheDir(dir: string, recursive: boolean, data: CachingData): Pro
 }
 
 export async function cacheProjectLanguage() {
-    const cachedDirTrees = await cacheDir(plugin.projectRoot, true, { imp: {}, exp: {} });
+    const cachedDirTrees = await cacheDir(getWorkspacePath(), true, { imp: {}, exp: {} });
     const finalData = { exp: {}, imp: {} };
     Object.assign(finalData.exp, cachedDirTrees.exp);
     // Merge extra import arrays
@@ -62,7 +37,7 @@ export function cacheProject() {
 function onChangeOrCreate(doc: Uri) {
     if (
         !plugin ||
-        shouldIgnore(doc.fsPath) ||
+        ignoreThisFile(doc.fsPath) ||
         // TODO: Since we are watching all files in the workspace, not just those in
         // plugin.includePaths, we need to make sure that it is actually in that array. Can this be
         // changed so that we only watch files in plugin.includePaths to begin with? Not sure if this
@@ -107,4 +82,57 @@ export function watchForChanges() {
     });
 
     return watcher;
+}
+
+export function cacheFile(filepath: string, data: CachingData) {
+    const { imp, exp } = data;
+    const fileText = fs.readFileSync(filepath, 'utf8');
+    const imports = parseImports(fileText);
+
+    for (const importData of imports) {
+        if (isPathPackage(importData.path)) {
+            const existing = imp[importData.path] || {};
+            imp[importData.path] = existing;
+            existing.isExtraImport = true;
+            if (importData.isEntirePackage) {
+                existing.importEntirePackage = true;
+            } else {
+                existing.exports = _.union(existing.exports, importData.imports);
+            }
+        }
+        // If there are imports then they'll get added to the cache when that file gets cached. For
+        // now, we only need to worry about whether then entire file is being imported
+        else if (importData.isEntirePackage) {
+            exp[importData.path] = { importEntirePackage: true };
+        }
+    }
+
+    const classes = [] as any[];
+    const functions = [] as any[];
+    const constants = [] as any[];
+    const lines = fileText.split('\n');
+
+    for (const line of lines) {
+        const words = line.split(' ');
+        const word0 = words[0];
+        const word1 = words[1];
+
+        if (word0 === 'class') {
+            classes.push(trimClassOrFn(word1));
+        } else if (word0 === 'def') {
+            // Don't export private functions
+            if (!word1.startsWith('_')) functions.push(trimClassOrFn(word1));
+        } else if (word1 === '=' && word0.toUpperCase() === word0) {
+            constants.push(word0);
+        }
+    }
+
+    const fileExports = [...classes.sort(), ...functions.sort(), ...constants.sort()];
+    if (fileExports.length) exp[getFilepathKey(filepath)] = { exports: fileExports };
+
+    return data;
+}
+
+function trimClassOrFn(str: string) {
+    return str.slice(0, str.indexOf('('));
 }

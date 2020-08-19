@@ -1,10 +1,9 @@
 import * as _ from 'lodash';
 import * as path from 'path';
 import { TextEditor, window } from 'vscode';
-import { getLastInitialComment, strUntil, last } from '../../../utils';
-import { commentRegex, ParsedImportPy } from '../regex';
-import { isPathPackage } from '../utils';
-import { plugin } from '../../../plugins';
+import { getLastInitialComment, strUntil, last, isPathPackage } from './utils';
+import { commentRegex, ParsedImportPy } from './regex';
+import { getWorkspacePath } from './helpers';
 
 /**
  * Determine which line number should get the import. This could be merged into that line
@@ -48,7 +47,7 @@ export function getImportPosition(importPath: string, isExtraImport: boolean | u
             // relative path
             if (!dirDotPath) {
                 const filepath = (window.activeTextEditor as TextEditor).document.fileName;
-                const relativeDirPath = path.relative(plugin.projectRoot, path.dirname(filepath));
+                const relativeDirPath = path.relative(getWorkspacePath(), path.dirname(filepath));
                 dirDotPath = relativeDirPath.replace(/\//g, '.');
             }
             existingImportPath = `${dirDotPath}${existingImportPath}`;

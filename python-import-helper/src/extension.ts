@@ -2,25 +2,18 @@ import * as path from 'path';
 import { commands, ExtensionContext, window, workspace } from 'vscode';
 import * as _ from 'lodash';
 import * as globals from './globals';
-import catchError from './catchError';
-import { finalizeExtensionActivation } from './initialization/finalizeExtensionActivation';
-import { initProject } from './initialization/initProject';
 import { initializePlugin } from './plugins';
 import { findPythonImportHelperConfigDir, showProjectExportsCachedMessage } from './utils';
 import { plugin } from './plugins';
+import { watchForChanges } from './cacher';
+import { registerCompletionItemProvider } from './createCompletionItemProvider';
+
+let hasFinalized = false;
 
 export const activate = async function activate(context: ExtensionContext) {
     console.log('PythonImportHelper activating');
     console.log(context);
     globals.context(context);
-
-    // We need these commands active regardless of whether any plugins exist
-    context.subscriptions.push(
-        commands.registerCommand(
-            'PythonImportHelper.initProject',
-            catchError(() => initProject(context)),
-        ),
-    );
 
     // Watch for config changes.
     workspace.onDidSaveTextDocument(async doc => {
@@ -32,12 +25,12 @@ export const activate = async function activate(context: ExtensionContext) {
     workspace.onDidChangeWorkspaceFolders(async ({ added }) => {
         const configWorkspaceFolder = findPythonImportHelperConfigDir(added);
         if (!configWorkspaceFolder) return;
-        await initializePlugins(context);
+        await initializePlugin(context);
         finalizeExtensionActivation(context);
         showProjectExportsCachedMessage();
     });
 
-    await initializePlugins(context);
+    await initializePlugin(context);
     finalizeExtensionActivation(context);
 
     return {
@@ -50,11 +43,22 @@ export const activate = async function activate(context: ExtensionContext) {
         _test: {
             plugins: [plugin],
         },
-        // Prevent PythonImportHelper JS/PY from throwing error. TODO: Remove some time in the future
         commands: {},
     };
 };
 
-export function initializePlugins(context: ExtensionContext) {
-    initializePlugin(context);
+export function finalizeExtensionActivation(context: ExtensionContext) {
+    if (hasFinalized) return;
+    hasFinalized = true;
+
+    context.subscriptions.push(
+        workspace.onDidChangeConfiguration(e => {
+            if (e.affectsConfiguration('PythonImportHelper.configLocation') || e.affectsConfiguration('PythonImportHelper.projectRoot')) {
+                initializePlugin(context);
+            }
+            registerCompletionItemProvider(context);
+        }),
+
+        watchForChanges(),
+    );
 }

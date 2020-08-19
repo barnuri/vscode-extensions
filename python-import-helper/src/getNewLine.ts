@@ -1,5 +1,5 @@
-import { getTabChar } from '../../../utils';
-import { plugin } from '../../../plugins';
+import { getTabChar } from './utils';
+import { plugin } from './plugins';
 
 export function getNewLine( importPath: string, lineImports: string[]) {
     const { maxImportLineLength } = plugin;

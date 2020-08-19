@@ -2,8 +2,8 @@ import { CompletionItem, CompletionItemKind, ExtensionContext, languages, Positi
 import { DisposableKey, DisposableManager } from './DisposableManager';
 import { cacheFileManager } from './cacheFileManager';
 import { RichQuickPickItem } from './types';
-import { insertImport } from './plugins/python/importing/importer';
-import { buildImportItems } from './plugins/python/importing/buildImportItems';
+import { insertImport } from './importer';
+import { buildImportItems } from './buildImportItems';
 import { CancellationToken, CompletionContext } from 'vscode';
 /**
  * Although we are not supposed to modify `CompletionItem.additionalTextEdits` inside

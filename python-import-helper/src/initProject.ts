@@ -1,9 +1,9 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { ExtensionContext, Uri, window, workspace, WorkspaceFolder } from 'vscode';
-import { finalizeExtensionActivation } from '../initialization/finalizeExtensionActivation';
-import { initializePlugin } from '../plugins';
-import { showProjectExportsCachedMessage } from '../utils';
+import { initializePlugin } from './plugins';
+import { showProjectExportsCachedMessage } from './utils';
+import { finalizeExtensionActivation } from './extension';
 
 const configFile = 'PythonImportHelper-py.js';
 

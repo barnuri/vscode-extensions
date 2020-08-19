@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as _ from 'lodash';
+import { getWorkspacePath } from './helpers';
 import {
     Diagnostic,
     languages,
@@ -24,7 +25,7 @@ const CONFIG_DIR = '.python-importer';
 const extensionToLang: { [ext: string]: string } = { py: 'Python' };
 
 export async function writeCacheFile(data: ExportData) {
-    await makeDir(plugin.cacheDirPath);
+    await makeDir(path.dirname(plugin.cacheFilepath));
     fs.writeFileSync(plugin.cacheFilepath, JSON.stringify(data));
 }
 
@@ -34,11 +35,20 @@ export function getLangFromFilePath(filePath: string) {
 }
 
 export function getFilepathKey(filepath: string) {
-    return filepath.slice(plugin.projectRoot.length + 1);
+    return filepath.slice(getWorkspacePath().length + 1);
 }
 
 export function basenameNoExt(filepath: string) {
     return path.basename(filepath, path.extname(filepath));
+}
+
+export function isPathPackage(importPath: string) {
+    if (importPath.startsWith('.')) return false;
+    const pathStart = strUntil(importPath, '.');
+    return !plugin.includePaths.some(p => {
+        const relativePath = p.slice(getWorkspacePath().length + 1);
+        return strUntil(relativePath, '/') === pathStart;
+    });
 }
 
 export function insertLine(newLine: string, importPosition: any, shouldApplyEdit = true) {

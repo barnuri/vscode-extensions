@@ -5,11 +5,9 @@ import { registerCompletionItemProvider } from './createCompletionItemProvider';
 import { cacheProjectLanguage } from './cacher';
 
 const HIDDEN_FOLDERS_REGEX = /.*\/\..*/;
-const sitePackgesFolders = /\*\*\/site-packages\/\*\*\/\*.py/g;
+const sitePackgesFolders = /[\\,\/]site-packages[\\,\/]/g;
 export let plugin = {
-    cacheDirPath: '',
     cacheFilepath: '',
-    projectRoot: '',
     excludePatterns: [sitePackgesFolders, HIDDEN_FOLDERS_REGEX] as RegExp[],
     includePaths: ['.'] as string[],
     maxImportLineLength: 100,
@@ -22,20 +20,16 @@ export async function initializePlugin(context: ExtensionContext) {
     }
     const cacheDirPath = context.storagePath || '';
     const cacheFileName = 'PythonImportHelper-v2-py.json';
-    const language = 'py';
-
-    plugin.excludePatterns.push(HIDDEN_FOLDERS_REGEX);
 
     plugin = {
         ...plugin,
-        cacheDirPath,
         cacheFilepath: path.join(cacheDirPath, cacheFileName),
-        projectRoot: workspaceFolders[0].uri.fsPath,
     };
 
+    console.log(plugin.cacheFilepath);
     registerCompletionItemProvider(context);
 
-    console.info(`PythonImportHelper language registered: ${language}`);
+    console.info(`PythonImportHelper language registered: Python`);
     const isInitialCache = isFile(plugin.cacheFilepath);
     await cacheProjectLanguage();
     return isInitialCache;

@@ -1,18 +1,17 @@
 import * as path from 'path';
 import { removeFileExt } from 'utlz';
 import { window, TextEditor } from 'vscode';
-import { RichQuickPickItem, ExportData } from '../../../types';
-import { plugin } from '../../../plugins';
+import { RichQuickPickItem, ExportData } from './types';
+import { getWorkspacePath } from './helpers';
 
 export function buildImportItems(exportData: ExportData): RichQuickPickItem[] {
-    const { projectRoot } = plugin;
     const editor = window.activeTextEditor as TextEditor;
     const activeFilepath = editor.document.fileName;
     const items = [] as any[];
     const sortedKeys: string[] = Object.keys(exportData);
     for (const importPath of sortedKeys) {
         const data = exportData[importPath];
-        const absImportPath = data.isExtraImport ? importPath : path.join(projectRoot, importPath);
+        const absImportPath = data.isExtraImport ? importPath : path.join(getWorkspacePath(), importPath);
         if (absImportPath === activeFilepath) continue;
 
         let dotPath;
