@@ -150,7 +150,8 @@
         "vscode-test": "^1.2.0"
     },
     "repository": {
-        "type": "git"
+        "type": "git",
+        "url": "https://github.com/barnuri/vscode-extensions"
     },
     "engines": {
         "vscode": "^1.36.0"
