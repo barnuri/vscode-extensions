@@ -1,17 +1,17 @@
 import { DisposableManager, DisposableKey } from './DisposableManager';
 import { ExtensionContext, workspace, languages, TextDocument, Position, CancellationToken, CompletionContext, TextEdit } from 'vscode';
-import { createCacheDir, findPythonImportHelperConfigDir, showProjectExportsCachedMessage } from './utils';
+import { createCacheDir, showProjectExportsCachedMessage } from './utils';
 import { cacheFolder, watchForChanges } from './cacher';
 import { RichCompletionItem } from './models/RichCompletionItem';
 import { insertImport } from './importer';
 import { mapItems } from './buildImportItems';
 import * as path from 'path';
 import { getWorkspacePath } from './helpers';
-export let cacheFilepath = '';
+
+export const getCacheFilePath = () => path.join(getWorkspacePath() || '', '/.vscode/', 'PythonImportHelper-v2-py.json');
 
 export async function activate(context: ExtensionContext) {
-    cacheFilepath = path.join(getWorkspacePath() || '', '/.vscode/', 'PythonImportHelper-v2-py.json');
-    console.log(cacheFilepath);
+    console.log(getCacheFilePath());
     console.log('writeCacheFile');
     await createCacheDir();
     cacheFolder().catch(() => {});
@@ -34,12 +34,10 @@ export async function activate(context: ExtensionContext) {
     context.subscriptions.push(disposable);
     DisposableManager.add(DisposableKey.PROVIDE_COMPLETIONS, disposable);
     context.subscriptions.push(watchForChanges());
+    setInterval(() => cacheFolder(false).catch(() => {}), 3000);
 
     workspace.onDidChangeWorkspaceFolders(async ({ added }) => {
-        if (!findPythonImportHelperConfigDir(added)) {
-            return;
-        }
-        await cacheFolder().catch(() => {});
+        await cacheFolder(false).catch(() => {});
         showProjectExportsCachedMessage();
     });
 }

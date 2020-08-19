@@ -1,22 +1,22 @@
+import { getCacheFilePath } from './extension';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as _ from 'lodash';
 import { getWorkspacePath } from './helpers';
-import { languages, Position, Range, TextDocument, TextEdit, TextEditor, TextEditorEdit, window, WorkspaceFolder } from 'vscode';
+import { languages, Position, Range, TextDocument, TextEdit, TextEditor, TextEditorEdit, window } from 'vscode';
 import config from './config';
 import { CompilationData } from './models/CompilationData';
 import makeDir = require('make-dir');
-import { cacheFilepath } from './extension';
-
-const CONFIG_DIR = '.python-importer';
 
 export async function writeCacheFile(data: CompilationData) {
     console.log('writeCacheFile');
     await createCacheDir();
+    const cacheFilepath = getCacheFilePath();
     fs.writeFileSync(cacheFilepath, JSON.stringify(data));
 }
 
 export async function createCacheDir() {
+    const cacheFilepath = getCacheFilePath();
     const dir = path.dirname(cacheFilepath);
     console.log(dir);
     await makeDir(dir).catch(e => console.error(e));
@@ -37,7 +37,9 @@ export function getFilepathKey(filepath: string) {
 }
 
 export function isPathPackage(importPath: string) {
-    if (importPath.startsWith('.')) return false;
+    if (importPath.startsWith('.')) {
+        return false;
+    }
     const pathStart = strUntil(importPath, '.');
     return !config.includePaths.some(p => {
         const relativePath = p.slice(getWorkspacePath().length + 1);
@@ -93,7 +95,9 @@ export function getLastInitialComment(text: string, commentRegex: RegExp) {
     let match;
     let lastMatch;
     while ((match = commentRegex.exec(text))) {
-        if (match.index !== expectedNextIndex) break;
+        if (match.index !== expectedNextIndex) {
+            break;
+        }
         expectedNextIndex = commentRegex.lastIndex + 1;
         lastMatch = match;
     }
@@ -113,7 +117,9 @@ export function getDiagnosticsForActiveEditor() {
 
 export function mergeObjectsWithArrays(obj1: {}, obj2: {}) {
     return _.mergeWith(obj1, obj2, (obj, src) => {
-        if (Array.isArray(obj)) return _.union(obj, src);
+        if (Array.isArray(obj)) {
+            return _.union(obj, src);
+        }
         return undefined;
     });
 }
@@ -126,9 +132,13 @@ export function addNamesAndRenames(imports: string[], names: string[], renamed: 
     for (const imp of imports) {
         const parts = imp.split(' as ');
         const name = parts[0].trim();
-        if (!name) continue;
+        if (!name) {
+            continue;
+        }
         names.push(name);
-        if (parts[1]) renamed[name] = parts[1].trim();
+        if (parts[1]) {
+            renamed[name] = parts[1].trim();
+        }
     }
 }
 
@@ -137,10 +147,12 @@ export function doesImportExist(imports: string[], newImport: string, renamed: R
     const newImportName = parts[0].trim();
     const newImportRename = parts[1] ? parts[1].trim() : null;
 
-    if (!imports.includes(newImportName)) return false;
+    if (!imports.includes(newImportName)) {
+        return false;
+    }
 
     const existingImportRename = renamed[newImportName];
-    if (newImportRename != existingImportRename) {
+    if (newImportRename !== existingImportRename) {
         window.showWarningMessage(`Already imported as \`${existingImportRename || newImportName}\`.`);
     }
 
@@ -148,16 +160,14 @@ export function doesImportExist(imports: string[], newImport: string, renamed: R
 }
 
 export function preserveRenamedImports(imports: string[], renamed: Renamed) {
-    if (_.isEmpty(renamed)) return [...imports];
+    if (_.isEmpty(renamed)) {
+        return [...imports];
+    }
 
     return imports.map(name => {
         const renaming = renamed[name];
         return renaming ? `${name} as ${renaming}` : name;
     });
-}
-
-export function findPythonImportHelperConfigDir(workspaceFolders: WorkspaceFolder[]) {
-    return workspaceFolders.find(f => f.name === CONFIG_DIR);
 }
 
 export function showProjectExportsCachedMessage() {

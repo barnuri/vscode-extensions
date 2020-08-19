@@ -1,3 +1,4 @@
+import { getCacheFilePath } from './extension';
 import { FileExports } from './models/FileExports';
 import * as _ from 'lodash';
 import { Uri, workspace, CompletionItemKind } from 'vscode';
@@ -7,7 +8,6 @@ import config from './config';
 import { getWorkspacePath, getPythonFiles, ignoreThisFile } from './helpers';
 import { parseImports } from './regex';
 import { isFile } from 'utlz';
-import { cacheFilepath } from './extension';
 import { CompilationData } from './models/CompilationData';
 /**
  * Block access to the cache file until a previous accessor has finished its operations. This
@@ -22,11 +22,12 @@ export async function cacheFileManager(): Promise<CompilationData> {
     if (fileAccess) {
         await fileAccess;
     }
+    const cacheFilepath = getCacheFilePath();
     const data = isFile(cacheFilepath) ? JSON.parse(fs.readFileSync(cacheFilepath, 'utf8')) : {};
     return data;
 }
 
-export async function cacheFolder() {
+export async function cacheFolder(showMsg: boolean = true) {
     const cachedDirTrees = { imp: {}, exp: {} } as CompilationData;
     try {
         let files: string[] = getPythonFiles(getWorkspacePath());
@@ -40,7 +41,9 @@ export async function cacheFolder() {
     Object.assign(finalData.exp, cachedDirTrees.exp);
     mergeObjectsWithArrays(finalData.imp, cachedDirTrees.imp);
     await writeCacheFile(finalData);
-    await showProjectExportsCachedMessage();
+    if (showMsg) {
+        await showProjectExportsCachedMessage();
+    }
 }
 
 async function onChangeOrCreate(doc: Uri) {

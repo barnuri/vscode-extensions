@@ -113,7 +113,7 @@ export function insertImport(importSelection: RichQuickPickItem, shouldApplyEdit
         newLine = getNewLine(lineImportPath, lineImports);
     }
 
-    newLine = newLine.replace(/\\/g, '.');
+    newLine = newLine.replace(/[\\,\/]/g, '.');
     return insertLine(newLine, importPosition, shouldApplyEdit);
 }
 

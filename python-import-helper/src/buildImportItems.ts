@@ -1,7 +1,7 @@
 import { FileExports } from './models/FileExports';
 import * as path from 'path';
 import { removeFileExt } from 'utlz';
-import { window, TextEditor, CompletionItem, Position, CompletionItemKind } from 'vscode';
+import { window, TextEditor, CompletionItem, Position, CompletionItemKind,  MarkdownString } from 'vscode';
 import { CompilationData } from './models/CompilationData';
 import { RichCompletionItem } from './models/RichCompletionItem';
 import { RichQuickPickItem } from './models/RichQuickPickItem';
@@ -24,7 +24,7 @@ export function buildImportItems(CompilationData: CompilationData): RichQuickPic
         if (data.isExtraImport) {
             dotPath = importPath;
         } else {
-            dotPath = removeFileExt(importPath).replace(/\//g, '.');
+            dotPath = removeFileExt(importPath).replace(/[\/,\\]/g, '.');
         }
 
         if (data.importEntirePackage) {
@@ -41,13 +41,13 @@ export function buildImportItems(CompilationData: CompilationData): RichQuickPic
         // Don't sort data.exports because they were already sorted when caching. See python `cacheFile`
         for (const exportObj of data.exports) {
             items.push({
-                label: exportObj.name,
+                label: exportObj.name || exportObj,
                 description: dotPath,
                 isExtraImport: data.isExtraImport,
             });
         }
     }
-    const itemsUnique = [...new Map(items.map(item => [item.description || '', item])).values()];
+    const itemsUnique = [...new Map(items.map(item => [`${item.description}-${item.label}`, item])).values()];
     return itemsUnique;
 }
 
@@ -68,6 +68,11 @@ export async function _mapItems(position: Position) {
             completionItem.importItem = item;
             completionItem.position = position;
             completionItem.detail = item.description;
+            const path = item.description?.replace(/[\/,\\]/g, '.');
+            const importScript = `from ${path} import ${item.label}`;
+            var md = new MarkdownString();
+            md.appendCodeblock(importScript, 'python');
+            completionItem.documentation = md;
             return completionItem;
         });
         return compImtes;
