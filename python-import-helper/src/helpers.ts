@@ -2,14 +2,13 @@ import * as vscode from 'vscode';
 import { resolve, join } from 'path';
 import { statSync, readdirSync } from 'fs-extra';
 import anymatch from 'anymatch';
-import { plugin } from './plugins';
+import config from './config';
 import { getLangFromFilePath } from './utils';
 
 export function getWorkspacePath(): string {
-    if (!vscode.workspace.rootPath) {
-        throw new Error('Generator From Swagger: please select a workspace folder');
-    }
-    return fixPath(resolve(vscode.workspace.rootPath + '/'));
+    const folders = vscode.workspace.workspaceFolders?.map(x => x.uri.fsPath) || [vscode.workspace.rootPath || ''];
+    const path = folders[0];
+    return fixPath(resolve(path + '/'));
 }
 
 export function fixPath(path: string): string {
@@ -43,7 +42,7 @@ export const _getFilesRecursively = path => {
 };
 
 export function ignoreThisFile(x: string) {
-    return anymatch(plugin.excludePatterns, x) || x.match(/[\\,\/]site-packages[\\,\/]/g);
+    return anymatch(config.excludePatterns, x) || x.match(/[\\,\/]site-packages[\\,\/]/g);
 }
 
 export const getPythonFiles = path => {

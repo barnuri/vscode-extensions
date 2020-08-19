@@ -1,8 +1,8 @@
-import * as _ from 'lodash';
+import { ParsedImport } from './models/ParsedImport';
 import * as path from 'path';
 import { TextEditor, window } from 'vscode';
 import { getLastInitialComment, strUntil, last, isPathPackage } from './utils';
-import { commentRegex, ParsedImportPy } from './regex';
+import { commentRegex } from './regex';
 import { getWorkspacePath } from './helpers';
 
 /**
@@ -12,7 +12,7 @@ import { getWorkspacePath } from './helpers';
  **/
 
 export type ImportPositionMatch = {
-    match: ParsedImportPy;
+    match: ParsedImport;
     indexModifier: -1 | 0 | 1;
     isFirstImport: false;
 };
@@ -27,7 +27,7 @@ export function getImportOrderPosition(importPath: string) {
     return;
 }
 
-export function getImportPosition(importPath: string, isExtraImport: boolean | undefined, imports: ParsedImportPy[], text: string): ImportPositionPy {
+export function getImportPosition(importPath: string, isExtraImport: boolean | undefined, imports: ParsedImport[], text: string): ImportPositionPy {
     // If no imports, find first non-comment line
     if (!imports.length) {
         return {
@@ -64,13 +64,17 @@ export function getImportPosition(importPath: string, isExtraImport: boolean | u
     for (const importData of imports) {
         // Package check
         const lineIsPackage = isPathPackage(importData.path);
-        if (lineIsPackage && !isExtraImport) continue;
+        if (lineIsPackage && !isExtraImport) {
+            continue;
+        }
 
         const lineImportPos = getImportOrderPosition(strUntil(importData.path, '.'));
 
         // Both have import orders
-        if (importPos != null && lineImportPos != null) {
-            if (importPos > lineImportPos) continue;
+        if (importPos !== null && lineImportPos !== null) {
+            if (importPos > lineImportPos) {
+                continue;
+            }
             return {
                 match: importData,
                 indexModifier: importPos < lineImportPos || importPath < importData.path ? -1 : 1,
@@ -86,10 +90,12 @@ export function getImportPosition(importPath: string, isExtraImport: boolean | u
         }
 
         // IF one has a position and the other doesn't...
-        if (importPos != null || lineImportPos != null) {
+        if (importPos !== null || lineImportPos !== null) {
             // Package imports without a group get sorted to the top, non-package imports without a group
             // get sorted to the end
-            if ((isExtraImport && importPos != null) || (!isExtraImport && lineImportPos != null)) continue;
+            if ((isExtraImport && importPos !== null) || (!isExtraImport && lineImportPos !== null)) {
+                continue;
+            }
             return {
                 match: importData,
                 indexModifier: -1,

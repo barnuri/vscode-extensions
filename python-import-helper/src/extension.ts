@@ -1,64 +1,45 @@
+import { DisposableManager, DisposableKey } from './DisposableManager';
+import { ExtensionContext, workspace, languages, TextDocument, Position, CancellationToken, CompletionContext, TextEdit } from 'vscode';
+import { createCacheDir, findPythonImportHelperConfigDir, showProjectExportsCachedMessage } from './utils';
+import { cacheFolder, watchForChanges } from './cacher';
+import { RichCompletionItem } from './models/RichCompletionItem';
+import { insertImport } from './importer';
+import { mapItems } from './buildImportItems';
 import * as path from 'path';
-import { commands, ExtensionContext, window, workspace } from 'vscode';
-import * as _ from 'lodash';
-import * as globals from './globals';
-import { initializePlugin } from './plugins';
-import { findPythonImportHelperConfigDir, showProjectExportsCachedMessage } from './utils';
-import { plugin } from './plugins';
-import { watchForChanges } from './cacher';
-import { registerCompletionItemProvider } from './createCompletionItemProvider';
+import { getWorkspacePath } from './helpers';
+export let cacheFilepath = '';
 
-let hasFinalized = false;
+export async function activate(context: ExtensionContext) {
+    cacheFilepath = path.join(getWorkspacePath() || '', '/.vscode/', 'PythonImportHelper-v2-py.json');
+    console.log(cacheFilepath);
+    console.log('writeCacheFile');
+    await createCacheDir();
+    cacheFolder().catch(() => {});
 
-export const activate = async function activate(context: ExtensionContext) {
-    console.log('PythonImportHelper activating');
-    console.log(context);
-    globals.context(context);
+    const provider = {
+        provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext) {
+            return mapItems(position);
+        },
+        resolveCompletionItem(completionItem: RichCompletionItem) {
+            const { importItem, position } = completionItem;
+            const edit = insertImport(importItem, false) as TextEdit | void;
+            if (edit && !edit.range.contains(position)) {
+                completionItem.additionalTextEdits = [edit];
+            }
+            return completionItem;
+        },
+    };
 
-    // Watch for config changes.
-    workspace.onDidSaveTextDocument(async doc => {
-        const file = path.basename(doc.fileName, '.js');
-        if (!file.startsWith('PythonImportHelper-')) return;
-        finalizeExtensionActivation(context);
-    });
+    const disposable = languages.registerCompletionItemProvider('python', provider);
+    context.subscriptions.push(disposable);
+    DisposableManager.add(DisposableKey.PROVIDE_COMPLETIONS, disposable);
+    context.subscriptions.push(watchForChanges());
 
     workspace.onDidChangeWorkspaceFolders(async ({ added }) => {
-        const configWorkspaceFolder = findPythonImportHelperConfigDir(added);
-        if (!configWorkspaceFolder) return;
-        await initializePlugin(context);
-        finalizeExtensionActivation(context);
+        if (!findPythonImportHelperConfigDir(added)) {
+            return;
+        }
+        await cacheFolder().catch(() => {});
         showProjectExportsCachedMessage();
     });
-
-    await initializePlugin(context);
-    finalizeExtensionActivation(context);
-
-    return {
-        registerPlugin: async ({ language }: { language: string }) => {
-            window.showErrorMessage(
-                `Please uninstall extension PythonImportHelper ${language.toUpperCase()}. PythonImportHelper no longer requires langauge extensions to be installed separately.`,
-            );
-            await commands.executeCommand('workbench.extensions.action.showEnabledExtensions');
-        },
-        _test: {
-            plugins: [plugin],
-        },
-        commands: {},
-    };
-};
-
-export function finalizeExtensionActivation(context: ExtensionContext) {
-    if (hasFinalized) return;
-    hasFinalized = true;
-
-    context.subscriptions.push(
-        workspace.onDidChangeConfiguration(e => {
-            if (e.affectsConfiguration('PythonImportHelper.configLocation') || e.affectsConfiguration('PythonImportHelper.projectRoot')) {
-                initializePlugin(context);
-            }
-            registerCompletionItemProvider(context);
-        }),
-
-        watchForChanges(),
-    );
 }

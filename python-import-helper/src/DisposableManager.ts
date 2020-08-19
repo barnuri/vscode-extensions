@@ -16,7 +16,9 @@ export const DisposableManager = {
     dispose(key: DisposableKey) {
         const arr = disposables[key];
         if (arr) {
-            for (const disposable of arr) disposable.dispose();
+            for (const disposable of arr) {
+                disposable.dispose();
+            }
         }
     },
 };

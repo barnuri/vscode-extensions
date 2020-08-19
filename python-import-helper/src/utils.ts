@@ -2,51 +2,44 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as _ from 'lodash';
 import { getWorkspacePath } from './helpers';
-import {
-    Diagnostic,
-    languages,
-    Position,
-    Range,
-    TextDocument,
-    TextEdit,
-    TextEditor,
-    TextEditorEdit,
-    window,
-    workspace,
-    WorkspaceFolder,
-    WorkspaceConfiguration,
-} from 'vscode';
-import { plugin } from './plugins';
-import { ExportData } from './types';
-const makeDir = require('make-dir');
+import { languages, Position, Range, TextDocument, TextEdit, TextEditor, TextEditorEdit, window, WorkspaceFolder } from 'vscode';
+import config from './config';
+import { CompilationData } from './models/CompilationData';
+import makeDir = require('make-dir');
+import { cacheFilepath } from './extension';
 
 const CONFIG_DIR = '.python-importer';
 
-const extensionToLang: { [ext: string]: string } = { py: 'Python' };
-
-export async function writeCacheFile(data: ExportData) {
+export async function writeCacheFile(data: CompilationData) {
     console.log('writeCacheFile');
-    await makeDir(path.dirname(plugin.cacheFilepath));
-    fs.writeFileSync(plugin.cacheFilepath, JSON.stringify(data));
+    await createCacheDir();
+    fs.writeFileSync(cacheFilepath, JSON.stringify(data));
+}
+
+export async function createCacheDir() {
+    const dir = path.dirname(cacheFilepath);
+    console.log(dir);
+    await makeDir(dir).catch(e => console.error(e));
+    try {
+        fs.mkdirSync(dir);
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 export function getLangFromFilePath(filePath: string) {
     const ext = path.extname(filePath).slice(1);
-    return extensionToLang[ext] || ext;
+    return { py: 'Python' }[ext] || ext;
 }
 
 export function getFilepathKey(filepath: string) {
     return filepath.slice(getWorkspacePath().length + 1);
 }
 
-export function basenameNoExt(filepath: string) {
-    return path.basename(filepath, path.extname(filepath));
-}
-
 export function isPathPackage(importPath: string) {
     if (importPath.startsWith('.')) return false;
     const pathStart = strUntil(importPath, '.');
-    return !plugin.includePaths.some(p => {
+    return !config.includePaths.some(p => {
         const relativePath = p.slice(getWorkspacePath().length + 1);
         return strUntil(relativePath, '/') === pathStart;
     });
@@ -113,16 +106,10 @@ export function getLastInitialComment(text: string, commentRegex: RegExp) {
         : null;
 }
 
-export type DiagnosticFilter = (d: Diagnostic) => boolean;
-
-export function getDiagnosticsForActiveEditor(filter: DiagnosticFilter) {
+export function getDiagnosticsForActiveEditor() {
     const editor = window.activeTextEditor as TextEditor;
-    return languages.getDiagnostics(editor.document.uri).filter(filter);
+    return languages.getDiagnostics(editor.document.uri).filter(d => d.code === 'F821');
 }
-
-export type DiagnosticsByFile = {
-    [path: string]: Diagnostic[];
-};
 
 export function mergeObjectsWithArrays(obj1: {}, obj2: {}) {
     return _.mergeWith(obj1, obj2, (obj, src) => {
@@ -179,23 +166,4 @@ export function showProjectExportsCachedMessage() {
 
 export function last<V>(arr: V[]) {
     return arr[arr.length - 1];
-}
-
-export function isObject(obj: unknown) {
-    return obj && typeof obj === 'object';
-}
-
-export function getWordAtPosition(document: TextDocument, position: Position) {
-    const range = document.getWordRangeAtPosition(position);
-    return range ? document.getText(range) : null;
-}
-
-type PythonImportHelperConfiguration = WorkspaceConfiguration & {
-    autoImportSingleResult: boolean;
-    showNewVersionAlert: boolean;
-    provideCompletions: boolean;
-};
-
-export function getConfiguration(): PythonImportHelperConfiguration {
-    return workspace.getConfiguration('PythonImportHelper', null) as PythonImportHelperConfiguration;
 }

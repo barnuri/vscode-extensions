@@ -30,7 +30,7 @@
         "resolveJsonModule": true,
         "strictBindCallApply": true,
         "strictNullChecks": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
     },
     "include": ["src"],
     "exclude": ["node_modules", ".vscode-test"]

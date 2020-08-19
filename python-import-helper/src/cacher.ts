@@ -1,66 +1,63 @@
-import { Uri, workspace } from 'vscode';
-import * as fs from 'fs-extra';
+import { FileExports } from './models/FileExports';
 import * as _ from 'lodash';
+import { Uri, workspace, CompletionItemKind } from 'vscode';
+import * as fs from 'fs-extra';
 import { getFilepathKey, isPathPackage, mergeObjectsWithArrays, showProjectExportsCachedMessage, writeCacheFile } from './utils';
-import { cacheFileManager } from './cacheFileManager';
-import { plugin } from './plugins';
-import { CachingData } from './types';
+import config from './config';
 import { getWorkspacePath, getPythonFiles, ignoreThisFile } from './helpers';
 import { parseImports } from './regex';
+import { isFile } from 'utlz';
+import { cacheFilepath } from './extension';
+import { CompilationData } from './models/CompilationData';
+/**
+ * Block access to the cache file until a previous accessor has finished its operations. This
+ * prevents race conditions resulting in the last accessor overwriting prior ones' data.
+ *
+ * `cb` should return a promise (e.g. any file writing operations) so that it completes before the
+ * next call to the cacheFileManager
+ */
+let fileAccess: Promise<any>;
 
-async function cacheDir(dir: string, recursive: boolean, data: CachingData): Promise<CachingData> {
+export async function cacheFileManager(): Promise<CompilationData> {
+    if (fileAccess) {
+        await fileAccess;
+    }
+    const data = isFile(cacheFilepath) ? JSON.parse(fs.readFileSync(cacheFilepath, 'utf8')) : {};
+    return data;
+}
+
+export async function cacheFolder() {
+    const cachedDirTrees = { imp: {}, exp: {} } as CompilationData;
     try {
-        let files: string[] = getPythonFiles(dir);
+        let files: string[] = getPythonFiles(getWorkspacePath());
         for (const fullPath of files) {
-            cacheFile(fullPath, data);
+            cacheFile(fullPath, cachedDirTrees);
         }
-        return data;
     } catch (err) {
         console.log(err);
-        return data;
     }
-}
-
-export async function cacheProjectLanguage() {
-    const cachedDirTrees = await cacheDir(getWorkspacePath(), true, { imp: {}, exp: {} });
     const finalData = { exp: {}, imp: {} };
     Object.assign(finalData.exp, cachedDirTrees.exp);
-    // Merge extra import arrays
     mergeObjectsWithArrays(finalData.imp, cachedDirTrees.imp);
     await writeCacheFile(finalData);
+    await showProjectExportsCachedMessage();
 }
 
-export function cacheProject() {
-    return Promise.all(_.map([plugin], cacheProjectLanguage)).then(showProjectExportsCachedMessage);
-}
-
-function onChangeOrCreate(doc: Uri) {
-    if (
-        !plugin ||
-        ignoreThisFile(doc.fsPath) ||
-        // TODO: Since we are watching all files in the workspace, not just those in
-        // plugin.includePaths, we need to make sure that it is actually in that array. Can this be
-        // changed so that we only watch files in plugin.includePaths to begin with? Not sure if this
-        // can be accomplished with a single glob. If not, we'd need multiple watchers. Would either
-        // case be more efficient than what we're currently doing?
-        !plugin.includePaths.some(p => doc.fsPath.startsWith(p))
-    )
+async function onChangeOrCreate(doc: Uri) {
+    if (ignoreThisFile(doc.fsPath) || !config.includePaths.some(p => doc.fsPath.startsWith(p))) {
         return;
-
-    const { exp, imp } = cacheFile(doc.fsPath, {
-        imp: {},
-        exp: {},
-    });
-    if (_.isEmpty(exp) && _.isEmpty(imp)) return;
-
-    for (const k in exp) exp[k].cached = Date.now();
-    return cacheFileManager().then(cachedData => {
-        // Concatenate & dedupe named/types arrays. Merge them into extraImports since that will in turn
-        // get merged back into cachedData
-        mergeObjectsWithArrays(cachedData.imp, imp);
-        Object.assign(cachedData.exp, exp);
-        return writeCacheFile(cachedData);
-    });
+    }
+    const { exp, imp } = cacheFile(doc.fsPath, { imp: {}, exp: {} });
+    if (_.isEmpty(exp) && _.isEmpty(imp)) {
+        return;
+    }
+    for (const k in exp) {
+        exp[k].cached = Date.now();
+    }
+    const cachedData = await cacheFileManager();
+    mergeObjectsWithArrays(cachedData.imp, imp);
+    Object.assign(cachedData.exp, exp);
+    return writeCacheFile(cachedData);
 }
 
 export function watchForChanges() {
@@ -71,7 +68,9 @@ export function watchForChanges() {
         cacheFileManager().then(cachedData => {
             const key = getFilepathKey(doc.fsPath);
             const { exp } = cachedData;
-            if (!exp[key]) return;
+            if (!exp[key]) {
+                return;
+            }
             delete exp[key];
             return writeCacheFile(cachedData);
         });
@@ -80,20 +79,20 @@ export function watchForChanges() {
     return watcher;
 }
 
-export function cacheFile(filepath: string, data: CachingData) {
+export function cacheFile(filepath: string, data: CompilationData) {
     const { imp, exp } = data;
     const fileText = fs.readFileSync(filepath, 'utf8');
     const imports = parseImports(fileText);
 
     for (const importData of imports) {
         if (isPathPackage(importData.path)) {
-            const existing = imp[importData.path] || {};
+            const existing = imp[importData.path] || ({ exports: [] } as FileExports);
             imp[importData.path] = existing;
             existing.isExtraImport = true;
             if (importData.isEntirePackage) {
                 existing.importEntirePackage = true;
             } else {
-                existing.exports = _.union(existing.exports, importData.imports);
+                existing.exports = [...existing.exports, ...importData.imports];
             }
         }
         // If there are imports then they'll get added to the cache when that file gets cached. For
@@ -102,11 +101,11 @@ export function cacheFile(filepath: string, data: CachingData) {
             exp[importData.path] = { importEntirePackage: true };
         }
     }
-
-    const classes = [] as any[];
-    const functions = [] as any[];
-    const constants = [] as any[];
-    const lines = fileText.split('\n');
+    type arrType = { name: string; type: CompletionItemKind }[];
+    const classes = [] as arrType;
+    const functions = [] as arrType;
+    const constants = [] as arrType;
+    const lines = fileText.replace(/\r/g, '').trim().split('\n');
 
     for (const line of lines) {
         const words = line.split(' ');
@@ -114,17 +113,21 @@ export function cacheFile(filepath: string, data: CachingData) {
         const word1 = words[1];
 
         if (word0 === 'class') {
-            classes.push(trimClassOrFn(word1));
+            classes.push({ name: trimClassOrFn(word1), type: CompletionItemKind.Class });
         } else if (word0 === 'def') {
             // Don't export private functions
-            if (!word1.startsWith('_')) functions.push(trimClassOrFn(word1));
+            if (!word1.startsWith('_')) {
+                functions.push({ name: trimClassOrFn(word1), type: CompletionItemKind.Function });
+            }
         } else if (word1 === '=' && word0.toUpperCase() === word0) {
-            constants.push(word0);
+            constants.push({ name: word0, type: CompletionItemKind.Variable });
         }
     }
 
     const fileExports = [...classes.sort(), ...functions.sort(), ...constants.sort()];
-    if (fileExports.length) exp[getFilepathKey(filepath)] = { exports: fileExports };
+    if (fileExports.length) {
+        exp[getFilepathKey(filepath)] = { exports: fileExports };
+    }
 
     return data;
 }

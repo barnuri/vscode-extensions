@@ -1,54 +1,50 @@
-import * as _ from 'lodash';
+import { RichQuickPickItem } from './models/RichQuickPickItem';
 import { Diagnostic, Range, TextDocument, TextEditor, window } from 'vscode';
-import { getConfiguration, getDiagnosticsForActiveEditor, getWordAtPosition } from './utils';
-import { cacheFileManager } from './cacheFileManager';
-import { ExportData } from './types';
+import * as _ from 'lodash';
+import { getDiagnosticsForActiveEditor } from './utils';
+import { CompilationData } from './models/CompilationData';
 import { buildImportItems } from './buildImportItems';
 import { doesImportExist, insertLine, preserveRenamedImports } from './utils';
-import { parseImports, ParsedImportPy } from './regex';
+import { parseImports } from './regex';
 import { getImportPosition, ImportPositionPy } from './getImportPosition';
-import { RichQuickPickItem } from './types';
+import { ParsedImport } from './models/ParsedImport';
 import { getNewLine } from './getNewLine';
+import { cacheFileManager } from './cacher';
 
-export const getItemsForText = (exportData: ExportData, text?: string | null) => {
-    const mergedData: any = { ...exportData.imp, ...exportData.exp };
+export const getItemsForText = async (text?: string | null) => {
+    const CompilationData: CompilationData = await cacheFileManager();
+    const mergedData: any = { ...CompilationData.imp, ...CompilationData.exp };
     const items = buildImportItems(mergedData);
-    if (!items) return;
+    if (!items) {
+        return;
+    }
 
     return text ? items.filter((item: any) => item.label === text) : items;
 };
 
 export async function importUndefinedVariables() {
-    const diagnostics = getDiagnosticsForActiveEditor(shouldIncludeDisgnostic);
-    if (!diagnostics.length) return;
+    const diagnostics = getDiagnosticsForActiveEditor();
+    if (!diagnostics.length) {
+        return;
+    }
 
     const { document } = window.activeTextEditor as TextEditor;
     const words = getUndefinedWords(document, diagnostics);
-    for (const word of words) await selectImport(word);
+    for (const word of words) {
+        await selectImport(word);
+    }
 }
 
 export async function selectImport(text?: string | null) {
-    const exportData = await cacheFileManager();
-    if (!exportData) return [];
-
-    const items = getItemsForText(exportData, text);
-    if (!items) return;
-
-    const item =
-        !text || items.length > 1 || !getConfiguration().autoImportSingleResult ? await window.showQuickPick(items, { matchOnDescription: true }) : items[0];
-
-    if (!item) return [];
+    const items = await getItemsForText(text);
+    if (!items) {
+        return;
+    }
+    const item = await window.showQuickPick(items, { matchOnDescription: true });
+    if (!item) {
+        return;
+    }
     await insertImport(item);
-}
-
-export function shouldIncludeDisgnostic({ code }: Diagnostic) {
-    return code === 'F821';
-}
-
-export async function selectImportForActiveWord() {
-    const editor = window.activeTextEditor;
-    if (!editor) return;
-    selectImport(getWordAtPosition(editor.document, editor.selection.active));
 }
 
 export function getUndefinedWords(document: TextDocument, diagnostics: Diagnostic[], ignoreRanges: Range[] = [] as any[]) {
@@ -59,11 +55,15 @@ export function getUndefinedWords(document: TextDocument, diagnostics: Diagnosti
             // Flake8 is returning a collapsed range, so expand it to the entire word
             const range = _.isEqual(d.range.start, d.range.end) ? document.getWordRangeAtPosition(d.range.start) : d.range;
 
-            if (!range) return null;
+            if (!range) {
+                return null;
+            }
 
             // Don't import word if range overlaps at all
             for (const ignoreRange of ignoreRanges) {
-                if (ignoreRange.intersection(range)) return null;
+                if (ignoreRange.intersection(range)) {
+                    return null;
+                }
             }
 
             return document.getText(range);
@@ -100,7 +100,9 @@ export function insertImport(importSelection: RichQuickPickItem, shouldApplyEdit
     }
 
     const lineImports = getNewLineImports(importPosition, exportName);
-    if (!lineImports) return;
+    if (!lineImports) {
+        return;
+    }
 
     let newLine: string;
     if (isPackageImport) {
@@ -117,11 +119,17 @@ export function insertImport(importSelection: RichQuickPickItem, shouldApplyEdit
 
 function getNewLineImports(importPosition: ImportPositionPy, newImport: string) {
     const { match, indexModifier, isFirstImport } = importPosition;
-    if (indexModifier || isFirstImport) return [newImport];
+    if (indexModifier || isFirstImport) {
+        return [newImport];
+    }
 
-    const { imports, renamed } = match as ParsedImportPy;
-    if (!imports) return [newImport];
-    if (doesImportExist(imports, newImport, renamed)) return;
+    const { imports, renamed } = match as ParsedImport;
+    if (!imports) {
+        return [newImport];
+    }
+    if (doesImportExist(imports, newImport, renamed)) {
+        return;
+    }
 
     const newImports = preserveRenamedImports(imports, renamed);
     newImports.push(newImport);

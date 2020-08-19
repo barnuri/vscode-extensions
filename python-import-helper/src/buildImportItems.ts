@@ -1,18 +1,24 @@
+import { FileExports } from './models/FileExports';
 import * as path from 'path';
 import { removeFileExt } from 'utlz';
-import { window, TextEditor } from 'vscode';
-import { RichQuickPickItem, ExportData } from './types';
+import { window, TextEditor, CompletionItem, Position, CompletionItemKind } from 'vscode';
+import { CompilationData } from './models/CompilationData';
+import { RichCompletionItem } from './models/RichCompletionItem';
+import { RichQuickPickItem } from './models/RichQuickPickItem';
 import { getWorkspacePath } from './helpers';
+import { cacheFileManager } from './cacher';
 
-export function buildImportItems(exportData: ExportData): RichQuickPickItem[] {
+export function buildImportItems(CompilationData: CompilationData): RichQuickPickItem[] {
     const editor = window.activeTextEditor as TextEditor;
     const activeFilepath = editor.document.fileName;
     const items = [] as any[];
-    const sortedKeys: string[] = Object.keys(exportData);
+    const sortedKeys: string[] = Object.keys(CompilationData);
     for (const importPath of sortedKeys) {
-        const data = exportData[importPath];
+        const data: FileExports = CompilationData[importPath];
         const absImportPath = data.isExtraImport ? importPath : path.join(getWorkspacePath(), importPath);
-        if (absImportPath === activeFilepath) continue;
+        if (absImportPath === activeFilepath) {
+            continue;
+        }
 
         let dotPath;
         if (data.isExtraImport) {
@@ -28,12 +34,14 @@ export function buildImportItems(exportData: ExportData): RichQuickPickItem[] {
             });
         }
 
-        if (!data.exports) continue;
+        if (!data.exports) {
+            continue;
+        }
 
         // Don't sort data.exports because they were already sorted when caching. See python `cacheFile`
-        for (const exportName of data.exports) {
+        for (const exportObj of data.exports) {
             items.push({
-                label: exportName,
+                label: exportObj.name,
                 description: dotPath,
                 isExtraImport: data.isExtraImport,
             });
@@ -41,4 +49,35 @@ export function buildImportItems(exportData: ExportData): RichQuickPickItem[] {
     }
     const itemsUnique = [...new Map(items.map(item => [item.description || '', item])).values()];
     return itemsUnique;
+}
+
+export async function _mapItems(position: Position) {
+    const CompilationData: CompilationData = await cacheFileManager();
+    const defVal = [] as RichCompletionItem[];
+    if (!CompilationData) {
+        return defVal;
+    }
+    try {
+        const mergedData: any = { ...CompilationData.imp, ...CompilationData.exp };
+        if (Object.keys(mergedData).length <= 0) {
+            return defVal;
+        }
+        const items = buildImportItems(mergedData);
+        const compImtes = items.map(item => {
+            const completionItem = new CompletionItem(item.label, item.type || CompletionItemKind.Class) as RichCompletionItem;
+            completionItem.importItem = item;
+            completionItem.position = position;
+            completionItem.detail = item.description;
+            return completionItem;
+        });
+        return compImtes;
+    } catch (error) {
+        console.log(error);
+        return defVal;
+    }
+}
+
+export async function mapItems(position: Position) {
+    const items = await _mapItems(position);
+    return [...new Map(items.map(item => [item.detail || '', item])).values()];
 }

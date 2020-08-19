@@ -1,9 +1,8 @@
 import { getTabChar } from './utils';
-import { plugin } from './plugins';
+import config from './config';
 
-export function getNewLine( importPath: string, lineImports: string[]) {
-    const { maxImportLineLength } = plugin;
-
+export function getNewLine(importPath: string, lineImports: string[]) {
+    const maxImportLineLength = config.maxImportLineLength;
     const sensitivity = { sensitivity: 'base' };
     lineImports.sort((a, b) => a.localeCompare(b, undefined, sensitivity));
 
@@ -24,10 +23,14 @@ export function getNewLine( importPath: string, lineImports: string[]) {
         const isLast = i === lineImports.length - 1;
 
         let newText = (i > 0 ? ' ' : '') + name;
-        if (!isLast) newText += ',';
+        if (!isLast) {
+            newText += ',';
+        }
 
         let newLength = line.length + newText.length;
-        if (isLast) newLength++; // for closing parenthesis
+        if (isLast) {
+            newLength++;
+        } // for closing parenthesis
 
         if (newLength < maxImportLineLength) {
             line += newText;
@@ -36,7 +39,9 @@ export function getNewLine( importPath: string, lineImports: string[]) {
             line = tabChar + newText.trim();
         }
 
-        if (isLast) fullText += line;
+        if (isLast) {
+            fullText += line;
+        }
     });
 
     return fullText + ')';
