@@ -45,6 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
                         .replace(/"/g, '\\"')
                         .replace(/'/g, "\\'")
                         .replace(/\$/g, '\\\\$')
+                        .replace(/\r/g, '')
                         .replace(/\\n/g, '!@#!@##@!!@##@!!@#@!@')
                         .split('\n')
                         .join(' " , "')
