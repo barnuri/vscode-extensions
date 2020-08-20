@@ -10,45 +10,20 @@ import { RichCompletionItem } from './models/RichCompletionItem';
 
 export function insertImport(importSelection: RichCompletionItem, shouldApplyEdit = true) {
     const { label: exportName, isExtraImport } = importSelection;
-    const isPackageImport = !importSelection.description;
     const importPath = importSelection.description || exportName;
     const editor = window.activeTextEditor as TextEditor;
-
     const fileText = editor.document.getText();
     const imports = parseImports(fileText);
+
     const importPosition = getImportPosition(importPath, isExtraImport, imports, fileText);
-
-    // Make sure we aren't importing a full package when it already has a partial import, or vice versa
-    if (!importPosition.indexModifier && !importPosition.isFirstImport) {
-        // We have an exact line match for position
-        if (isPackageImport) {
-            if (!importPosition.match['isEntirePackage']) {
-                // partial imports exist
-                window.showErrorMessage("Can't import entire package when parts of the package are already being imported.");
-            }
-            return;
-        } else if (importPosition.match['isEntirePackage']) {
-            // partial imports don't exist
-            window.showErrorMessage("Can't import part of a package when the entire package is already being imported.");
-            return;
-        }
-    }
-
     const lineImports = getNewLineImports(importPosition, exportName);
     if (!lineImports) {
         return;
     }
 
-    let newLine: string;
-    if (isPackageImport) {
-        newLine = `import ${exportName}`;
-    } else {
-        // If we're adding to an existing line, re-use its path from `importPosition.match.path` in case it is a relative one
-        const lineImportPath = importPosition.indexModifier || !importPosition.match['path'] ? importPath : importPosition.match['path'];
-        newLine = getNewLine(lineImportPath, lineImports);
-    }
+    const lineImportPath = importPosition.indexModifier || !importPosition.match['path'] ? importPath : importPosition.match['path'];
+    const newLine = getNewLine(lineImportPath, lineImports).replace(/[\\,\/]/g, '.');
 
-    newLine = newLine.replace(/[\\,\/]/g, '.');
     return insertLine(newLine, importPosition, shouldApplyEdit);
 }
 
