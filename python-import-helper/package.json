@@ -3,7 +3,7 @@
     "displayName": "Bar Nuri Tools Python Import Helper",
     "description": "Automatically generate import statements for Python.",
     "publisher": "Bar",
-    "version": "1.0.25",
+    "version": "1.0.26",
     "scripts": {
         "vscode:prepublish": "webpack --mode production",
         "webpack": "webpack --mode development",

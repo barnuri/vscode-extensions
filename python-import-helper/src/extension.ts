@@ -31,7 +31,7 @@ export async function activate(context: ExtensionContext) {
     context.subscriptions.push(disposable);
     DisposableManager.add(disposable);
     context.subscriptions.push(watchForChanges());
-    setInterval(() => buildDataFile(), 3000);
+    setInterval(() => buildDataFile(), 60000);
 }
 
 const disposables: Disposable[] = [];
