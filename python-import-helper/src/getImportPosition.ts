@@ -1,9 +1,8 @@
 import { ParsedImport } from './models/ParsedImport';
 import * as path from 'path';
 import { TextEditor, window } from 'vscode';
-import { getLastInitialComment, last, isPathPackage } from './utils';
+import { getLastInitialComment, last, isPathPackage, getWorkspacePath } from './utils';
 import { commentRegex } from './regex';
-import { getWorkspacePath } from './helpers';
 import { ImportPositionPy } from './models/ImportPositionPy';
 
 export function getImportPosition(importPath: string, isExtraImport: boolean | undefined, imports: ParsedImport[], text: string): ImportPositionPy {

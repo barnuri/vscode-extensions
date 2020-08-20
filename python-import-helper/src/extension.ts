@@ -4,7 +4,7 @@ import { buildDataFile, watchForChanges } from './data';
 import { RichCompletionItem } from './models/RichCompletionItem';
 import { insertImport } from './importer';
 import * as path from 'path';
-import { getWorkspacePath } from './helpers';
+import { getWorkspacePath } from './utils';
 import { buildCompletionItems } from './buildImportItems';
 
 export const getDataFilePath = () => path.join(getWorkspacePath() || '', '/.vscode/', 'PythonImportHelper-v2-py.json');

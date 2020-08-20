@@ -6,7 +6,7 @@ import { Uri, workspace, CompletionItemKind } from 'vscode';
 import * as fs from 'fs-extra';
 import { getFilepathKey, isPathPackage, mergeObjectsWithArrays, showProjectExportsCachedMessage, writeDataFile } from './utils';
 import config from './config';
-import { getWorkspacePath, getPythonFiles, ignoreThisFile } from './helpers';
+import { getWorkspacePath, getPythonFiles, ignoreThisFile } from './utils';
 import { parseImports } from './regex';
 import { isFile } from 'utlz';
 import { CompilationData } from './models/CompilationData';

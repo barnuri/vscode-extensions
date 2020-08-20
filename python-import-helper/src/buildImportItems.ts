@@ -4,7 +4,7 @@ import { removeFileExt } from 'utlz';
 import { window, TextEditor, CompletionItem, Position, CompletionItemKind, MarkdownString } from 'vscode';
 import { CompilationData } from './models/CompilationData';
 import { RichCompletionItem } from './models/RichCompletionItem';
-import { getWorkspacePath } from './helpers';
+import { getWorkspacePath } from './utils';
 import { dataFileManager } from './data';
 
 export async function buildCompletionItems(position: Position): Promise<RichCompletionItem[]> {
