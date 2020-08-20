@@ -1,79 +1,14 @@
-import { RichQuickPickItem } from './models/RichQuickPickItem';
-import { Diagnostic, Range, TextDocument, TextEditor, window } from 'vscode';
+import { TextEditor, window } from 'vscode';
 import * as _ from 'lodash';
-import { getDiagnosticsForActiveEditor } from './utils';
-import { CompilationData } from './models/CompilationData';
-import { buildImportItems } from './buildImportItems';
 import { doesImportExist, insertLine, preserveRenamedImports } from './utils';
 import { parseImports } from './regex';
-import { getImportPosition, ImportPositionPy } from './getImportPosition';
+import { getImportPosition } from './getImportPosition';
+import { ImportPositionPy } from './models/ImportPositionPy';
 import { ParsedImport } from './models/ParsedImport';
 import { getNewLine } from './getNewLine';
-import { cacheFileManager } from './cacher';
+import { RichCompletionItem } from './models/RichCompletionItem';
 
-export const getItemsForText = async (text?: string | null) => {
-    const CompilationData: CompilationData = await cacheFileManager();
-    const mergedData: any = { ...CompilationData.imp, ...CompilationData.exp };
-    const items = buildImportItems(mergedData);
-    if (!items) {
-        return;
-    }
-
-    return text ? items.filter((item: any) => item.label === text) : items;
-};
-
-export async function importUndefinedVariables() {
-    const diagnostics = getDiagnosticsForActiveEditor();
-    if (!diagnostics.length) {
-        return;
-    }
-
-    const { document } = window.activeTextEditor as TextEditor;
-    const words = getUndefinedWords(document, diagnostics);
-    for (const word of words) {
-        await selectImport(word);
-    }
-}
-
-export async function selectImport(text?: string | null) {
-    const items = await getItemsForText(text);
-    if (!items) {
-        return;
-    }
-    const item = await window.showQuickPick(items, { matchOnDescription: true });
-    if (!item) {
-        return;
-    }
-    await insertImport(item);
-}
-
-export function getUndefinedWords(document: TextDocument, diagnostics: Diagnostic[], ignoreRanges: Range[] = [] as any[]) {
-    // Must collect all words before inserting any because insertions will cause the diagnostic ranges
-    // to no longer be correct, thus not allowing us to get subsequent words
-    const words = diagnostics
-        .map(d => {
-            // Flake8 is returning a collapsed range, so expand it to the entire word
-            const range = _.isEqual(d.range.start, d.range.end) ? document.getWordRangeAtPosition(d.range.start) : d.range;
-
-            if (!range) {
-                return null;
-            }
-
-            // Don't import word if range overlaps at all
-            for (const ignoreRange of ignoreRanges) {
-                if (ignoreRange.intersection(range)) {
-                    return null;
-                }
-            }
-
-            return document.getText(range);
-        })
-        .filter(Boolean);
-
-    return _.uniq(words);
-}
-
-export function insertImport(importSelection: RichQuickPickItem, shouldApplyEdit = true) {
+export function insertImport(importSelection: RichCompletionItem, shouldApplyEdit = true) {
     const { label: exportName, isExtraImport } = importSelection;
     const isPackageImport = !importSelection.description;
     const importPath = importSelection.description || exportName;

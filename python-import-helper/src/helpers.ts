@@ -1,9 +1,8 @@
 import * as vscode from 'vscode';
-import { resolve, join } from 'path';
+import { resolve, join, extname } from 'path';
 import { statSync, readdirSync } from 'fs-extra';
 import anymatch from 'anymatch';
 import config from './config';
-import { getLangFromFilePath } from './utils';
 
 export function getWorkspacePath(): string {
     const folders = vscode.workspace.workspaceFolders?.map(x => x.uri.fsPath) || [vscode.workspace.rootPath || ''];
@@ -47,6 +46,6 @@ export function ignoreThisFile(x: string) {
 
 export const getPythonFiles = path => {
     const allFiles: string[] = _getFilesRecursively(path);
-    const pythonFiles = allFiles.filter(x => !ignoreThisFile(x) && getLangFromFilePath(x) === 'Python');
+    const pythonFiles = allFiles.filter(x => !ignoreThisFile(x) && extname(x).slice(1) === 'py');
     return pythonFiles;
 };

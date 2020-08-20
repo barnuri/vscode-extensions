@@ -1,4 +1,4 @@
-import { getCacheFilePath } from './extension';
+import { getDataFilePath } from './extension';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as _ from 'lodash';
@@ -8,28 +8,28 @@ import config from './config';
 import { CompilationData } from './models/CompilationData';
 import makeDir = require('make-dir');
 
-export async function writeCacheFile(data: CompilationData) {
-    console.log('writeCacheFile');
-    await createCacheDir();
-    const cacheFilepath = getCacheFilePath();
-    fs.writeFileSync(cacheFilepath, JSON.stringify(data));
+export async function writeDataFile(data: CompilationData) {
+    await createDataDir();
+    fs.writeFileSync(getDataFilePath(), JSON.stringify(data, undefined, 4));
 }
 
-export async function createCacheDir() {
-    const cacheFilepath = getCacheFilePath();
-    const dir = path.dirname(cacheFilepath);
-    console.log(dir);
-    await makeDir(dir).catch(e => console.error(e));
+export async function createDataDir() {
     try {
-        fs.mkdirSync(dir);
-    } catch (e) {
-        console.error(e);
+        const cacheFilepath = getDataFilePath();
+        const dir = path.dirname(cacheFilepath);
+        if (fs.existsSync(dir)) {
+            return;
+        }
+        console.log(`creating ${dir}`);
+        await makeDir(dir).catch(e => console.error(e));
+        try {
+            fs.mkdirSync(dir);
+        } catch (e) {
+            console.error(`createDataDir error ${e}`);
+        }
+    } catch (ex) {
+        console.error(`createDataDir error ${ex}`);
     }
-}
-
-export function getLangFromFilePath(filePath: string) {
-    const ext = path.extname(filePath).slice(1);
-    return { py: 'Python' }[ext] || ext;
 }
 
 export function getFilepathKey(filepath: string) {

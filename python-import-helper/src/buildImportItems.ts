@@ -1,36 +1,42 @@
 import { FileExports } from './models/FileExports';
 import * as path from 'path';
 import { removeFileExt } from 'utlz';
-import { window, TextEditor, CompletionItem, Position, CompletionItemKind,  MarkdownString } from 'vscode';
+import { window, TextEditor, CompletionItem, Position, CompletionItemKind, MarkdownString } from 'vscode';
 import { CompilationData } from './models/CompilationData';
 import { RichCompletionItem } from './models/RichCompletionItem';
-import { RichQuickPickItem } from './models/RichQuickPickItem';
 import { getWorkspacePath } from './helpers';
-import { cacheFileManager } from './cacher';
+import { dataFileManager } from './data';
 
-export function buildImportItems(CompilationData: CompilationData): RichQuickPickItem[] {
+export async function buildCompletionItems(position: Position): Promise<RichCompletionItem[]> {
+    const data: CompilationData = await dataFileManager();
+    if (!data) {
+        return [];
+    }
+    const mergedData = { ...data.imp, ...data.exp };
+    if (Object.keys(mergedData).length <= 0) {
+        return [];
+    }
     const editor = window.activeTextEditor as TextEditor;
     const activeFilepath = editor.document.fileName;
-    const items = [] as any[];
-    const sortedKeys: string[] = Object.keys(CompilationData);
+    const items = [] as RichCompletionItem[];
+    const sortedKeys: string[] = Object.keys(mergedData);
+    const defItem = new CompletionItem('', CompletionItemKind.Class) as RichCompletionItem;
+
     for (const importPath of sortedKeys) {
-        const data: FileExports = CompilationData[importPath];
+        const data: FileExports = mergedData[importPath];
         const absImportPath = data.isExtraImport ? importPath : path.join(getWorkspacePath(), importPath);
         if (absImportPath === activeFilepath) {
             continue;
         }
 
-        let dotPath;
-        if (data.isExtraImport) {
-            dotPath = importPath;
-        } else {
-            dotPath = removeFileExt(importPath).replace(/[\/,\\]/g, '.');
-        }
-
         if (data.importEntirePackage) {
             items.push({
+                ...defItem,
                 label: importPath,
                 isExtraImport: data.isExtraImport,
+                importPath: importPath,
+                type: CompletionItemKind.Class,
+                description: importPath,
             });
         }
 
@@ -40,49 +46,38 @@ export function buildImportItems(CompilationData: CompilationData): RichQuickPic
 
         // Don't sort data.exports because they were already sorted when caching. See python `cacheFile`
         for (const exportObj of data.exports) {
+            let dotPath;
+            if (data.isExtraImport) {
+                dotPath = importPath;
+            } else {
+                dotPath = removeFileExt(importPath).replace(/[\/,\\]/g, '.');
+            }
             items.push({
-                label: exportObj.name || exportObj,
+                ...defItem,
+                type: exportObj.type,
+                importPath: dotPath,
+                label: exportObj.name || (exportObj as any),
                 description: dotPath,
                 isExtraImport: data.isExtraImport,
+                peekOfCode: exportObj.peekOfCode,
             });
         }
     }
-    const itemsUnique = [...new Map(items.map(item => [`${item.description}-${item.label}`, item])).values()];
-    return itemsUnique;
-}
 
-export async function _mapItems(position: Position) {
-    const CompilationData: CompilationData = await cacheFileManager();
-    const defVal = [] as RichCompletionItem[];
-    if (!CompilationData) {
-        return defVal;
-    }
-    try {
-        const mergedData: any = { ...CompilationData.imp, ...CompilationData.exp };
-        if (Object.keys(mergedData).length <= 0) {
-            return defVal;
-        }
-        const items = buildImportItems(mergedData);
-        const compImtes = items.map(item => {
-            const completionItem = new CompletionItem(item.label, item.type || CompletionItemKind.Class) as RichCompletionItem;
-            completionItem.importItem = item;
-            completionItem.position = position;
-            completionItem.detail = item.description;
-            const path = item.description?.replace(/[\/,\\]/g, '.');
-            const importScript = `from ${path} import ${item.label}`;
-            var md = new MarkdownString();
-            md.appendCodeblock(importScript, 'python');
-            completionItem.documentation = md;
-            return completionItem;
-        });
-        return compImtes;
-    } catch (error) {
-        console.log(error);
-        return defVal;
-    }
-}
+    for (const item of items) {
+        item.importPath = item.importPath.replace(/[\/,\\]/g, '.');
+        item.description = item.importPath;
+        item.type = item.type || CompletionItemKind.Class;
+        item.detail = item.importPath;
+        item.position = position;
 
-export async function mapItems(position: Position) {
-    const items = await _mapItems(position);
-    return [...new Map(items.map(item => [item.detail || '', item])).values()];
+        var md = new MarkdownString();
+        md.appendCodeblock(`from ${item.importPath} import ${item.label}`, 'python');
+        md.appendCodeblock(`\n`, 'python');
+        md.appendCodeblock(item.peekOfCode, 'python');
+        item.documentation = md;
+    }
+
+    const itemKey = (item: RichCompletionItem) => `${item.detail}-${item.type}-${item.description}`;
+    return [...new Map(items.map(item => [itemKey(item), item])).values()];
 }

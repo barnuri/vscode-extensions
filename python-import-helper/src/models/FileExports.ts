@@ -1,7 +1,8 @@
-import { CompletionItemKind } from 'vscode';
+import { FileData } from './FileData';
+
 export type FileExports = {
     importEntirePackage?: boolean;
-    exports?: { name: string; type: CompletionItemKind }[];
+    exports?: FileData[];
     cached?: number;
     isExtraImport?: true;
 };

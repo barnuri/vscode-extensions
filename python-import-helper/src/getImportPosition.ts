@@ -1,31 +1,10 @@
 import { ParsedImport } from './models/ParsedImport';
 import * as path from 'path';
 import { TextEditor, window } from 'vscode';
-import { getLastInitialComment, strUntil, last, isPathPackage } from './utils';
+import { getLastInitialComment, last, isPathPackage } from './utils';
 import { commentRegex } from './regex';
 import { getWorkspacePath } from './helpers';
-
-/**
- * Determine which line number should get the import. This could be merged into that line
- * if they have the same path (resulting in lineIndexModifier = 0), or inserted as an entirely
- * new import line before or after (lineIndexModifier = -1 or 1)
- **/
-
-export type ImportPositionMatch = {
-    match: ParsedImport;
-    indexModifier: -1 | 0 | 1;
-    isFirstImport: false;
-};
-export type ImportPositionNoMatch = {
-    match: { start: number; end: number } | null;
-    indexModifier: 1;
-    isFirstImport: true;
-};
-export type ImportPositionPy = ImportPositionMatch | ImportPositionNoMatch;
-
-export function getImportOrderPosition(importPath: string) {
-    return;
-}
+import { ImportPositionPy } from './models/ImportPositionPy';
 
 export function getImportPosition(importPath: string, isExtraImport: boolean | undefined, imports: ParsedImport[], text: string): ImportPositionPy {
     // If no imports, find first non-comment line
@@ -58,7 +37,6 @@ export function getImportPosition(importPath: string, isExtraImport: boolean | u
         return { match: exactMatch, indexModifier: 0, isFirstImport: false };
     }
 
-    const importPos = getImportOrderPosition(strUntil(importPath, '.'));
     const importIsAbsolute = !importPath.startsWith('.');
 
     for (const importData of imports) {
@@ -68,39 +46,11 @@ export function getImportPosition(importPath: string, isExtraImport: boolean | u
             continue;
         }
 
-        const lineImportPos = getImportOrderPosition(strUntil(importData.path, '.'));
-
-        // Both have import orders
-        if (importPos !== null && lineImportPos !== null) {
-            if (importPos > lineImportPos) {
-                continue;
-            }
-            return {
-                match: importData,
-                indexModifier: importPos < lineImportPos || importPath < importData.path ? -1 : 1,
-                isFirstImport: false,
-            };
-        }
-
         // One is a package and the other isn't
         if (isExtraImport && !lineIsPackage) {
             return { match: importData, indexModifier: -1, isFirstImport: false };
         } else if (!isExtraImport && lineIsPackage) {
             continue;
-        }
-
-        // IF one has a position and the other doesn't...
-        if (importPos !== null || lineImportPos !== null) {
-            // Package imports without a group get sorted to the top, non-package imports without a group
-            // get sorted to the end
-            if ((isExtraImport && importPos !== null) || (!isExtraImport && lineImportPos !== null)) {
-                continue;
-            }
-            return {
-                match: importData,
-                indexModifier: -1,
-                isFirstImport: false,
-            };
         }
 
         if (isExtraImport && (!lineIsPackage || importPath < importData.path)) {

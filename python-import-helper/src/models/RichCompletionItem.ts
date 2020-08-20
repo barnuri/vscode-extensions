@@ -1,7 +1,11 @@
-import { CompletionItem, Position } from 'vscode';
-import { RichQuickPickItem } from './RichQuickPickItem';
+import { CompletionItem, CompletionItemKind, Position } from 'vscode';
 
 export type RichCompletionItem = CompletionItem & {
-    importItem: RichQuickPickItem;
     position: Position;
+    type: CompletionItemKind;
+    label: string;
+    description: string;
+    isExtraImport: boolean | undefined;
+    importPath: string;
+    peekOfCode: string;
 };
