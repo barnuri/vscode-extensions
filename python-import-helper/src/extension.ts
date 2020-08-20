@@ -1,5 +1,4 @@
-import { DisposableManager, DisposableKey } from './DisposableManager';
-import { ExtensionContext, languages, TextDocument, Position, CancellationToken, CompletionContext, TextEdit } from 'vscode';
+import { ExtensionContext, languages, TextDocument, Position, CancellationToken, CompletionContext, TextEdit, Disposable } from 'vscode';
 import { createDataDir } from './utils';
 import { buildDataFile, watchForChanges } from './data';
 import { RichCompletionItem } from './models/RichCompletionItem';
@@ -30,7 +29,21 @@ export async function activate(context: ExtensionContext) {
 
     const disposable = languages.registerCompletionItemProvider('python', provider);
     context.subscriptions.push(disposable);
-    DisposableManager.add(DisposableKey.PROVIDE_COMPLETIONS, disposable);
+    DisposableManager.add(disposable);
     context.subscriptions.push(watchForChanges());
     setInterval(() => buildDataFile(), 3000);
 }
+
+const disposables: Disposable[] = [];
+
+export const DisposableManager = {
+    add(disposable: Disposable) {
+        disposables.push(disposable);
+    },
+
+    dispose() {
+        for (const disposable of disposables) {
+            disposable.dispose();
+        }
+    },
+};
