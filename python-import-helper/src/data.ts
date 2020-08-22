@@ -1,30 +1,20 @@
 import { FileData } from './models/FileData';
-import { getDataFilePath } from './extension';
+import { getCompletionFilePath } from './extension';
 import { FileExports } from './models/FileExports';
 import * as _ from 'lodash';
-import { Uri, workspace, CompletionItemKind } from 'vscode';
+import { Uri, CompletionItemKind, window } from 'vscode';
 import * as fs from 'fs-extra';
-import { getFilepathKey, isPathPackage, mergeObjectsWithArrays, showProjectExportsCachedMessage, writeDataFile } from './utils';
-import config from './config';
+import { createDataDir, getFilepathKey, isPathPackage, mergeObjectsWithArrays } from './utils';
 import { getWorkspacePath, getPythonFiles, ignoreThisFile } from './utils';
 import { parseImports } from './regex';
 import { isFile } from 'utlz';
 import { CompilationData } from './models/CompilationData';
-/**
- * Block access to the cache file until a previous accessor has finished its operations. This
- * prevents race conditions resulting in the last accessor overwriting prior ones' data.
- *
- * `cb` should return a promise (e.g. any file writing operations) so that it completes before the
- * next call to the cacheFileManager
- */
-let fileAccess: Promise<any>;
+import { RichCompletionItem } from './models/RichCompletionItem';
+import { buildCompletionItems } from './buildImportItems';
 
-export async function dataFileManager(): Promise<CompilationData> {
-    if (fileAccess) {
-        await fileAccess;
-    }
-    const dataFilePath = getDataFilePath();
-    const data = isFile(dataFilePath) ? JSON.parse(fs.readFileSync(dataFilePath, 'utf8')) : {};
+export function compilationFileManager(): RichCompletionItem[] {
+    const completionFilePath = getCompletionFilePath();
+    const data = isFile(completionFilePath) ? JSON.parse(fs.readFileSync(completionFilePath, 'utf8')) : {};
     return data;
 }
 
@@ -42,48 +32,28 @@ export async function buildDataFile(showMsg: boolean = false) {
         const finalData = { exp: {}, imp: {} };
         Object.assign(finalData.exp, cachedDirTrees.exp);
         mergeObjectsWithArrays(finalData.imp, cachedDirTrees.imp);
-        await writeDataFile(finalData);
+        await createDataDir();
+        await buildCompletionItems(finalData);
         if (showMsg) {
-            await showProjectExportsCachedMessage();
+            window.showInformationMessage('Project exports have been cached. 🐔');
         }
     } catch (ex) {
         console.error(`buildDataFile error ${ex}`);
     }
 }
 
-async function onChangeOrCreate(doc: Uri) {
-    if (ignoreThisFile(doc.fsPath) || !config.includePaths.some(p => doc.fsPath.startsWith(p))) {
+export async function onChangeOrCreate(doc: Uri) {
+    if (ignoreThisFile(doc.fsPath)) {
         return;
     }
-    const { exp, imp } = getDataFromPythonFile(doc.fsPath, { imp: {}, exp: {} });
-    if (_.isEmpty(exp) && _.isEmpty(imp)) {
-        return;
-    }
-    for (const k in exp) {
-        exp[k].cached = Date.now();
-    }
-    const cachedData = await dataFileManager();
-    mergeObjectsWithArrays(cachedData.imp, imp);
-    Object.assign(cachedData.exp, exp);
-    return writeDataFile(cachedData);
+    await buildDataFile(false);
 }
 
-export function watchForChanges() {
-    const watcher = workspace.createFileSystemWatcher('**/*.*');
-    watcher.onDidChange(onChangeOrCreate);
-    watcher.onDidCreate(onChangeOrCreate);
-    watcher.onDidDelete(async doc => {
-        const cachedData = await dataFileManager();
-        const key = getFilepathKey(doc.fsPath);
-        const { exp } = cachedData;
-        if (!exp[key]) {
-            return;
-        }
-        delete exp[key];
-        return writeDataFile(cachedData);
-    });
-
-    return watcher;
+export async function onDelete(doc: Uri) {
+    if (ignoreThisFile(doc.fsPath)) {
+        return;
+    }
+    await buildDataFile(false);
 }
 
 export function getDataFromPythonFile(filepath: string, data: CompilationData) {
@@ -125,14 +95,14 @@ export function getDataFromPythonFile(filepath: string, data: CompilationData) {
         const peekOfCode = peekArr.slice(0, Math.min(10, peekArr.length)).join('\n');
 
         if (word0 === 'class') {
-            classes.push({ name: trimClassOrFn(word1), type: CompletionItemKind.Class, peekOfCode });
+            classes.push({ name: trimClassOrFn(word1), kind: CompletionItemKind.Class, peekOfCode });
         } else if (word0 === 'def') {
             // Don't export private functions
             if (!word1.startsWith('_')) {
-                functions.push({ name: trimClassOrFn(word1), type: CompletionItemKind.Function, peekOfCode });
+                functions.push({ name: trimClassOrFn(word1), kind: CompletionItemKind.Function, peekOfCode });
             }
-        } else if (word1 === '=' && word0.toUpperCase() === word0) {
-            constants.push({ name: word0, type: CompletionItemKind.Variable, peekOfCode });
+        } else if (word1 === '=') {
+            constants.push({ name: word0, kind: CompletionItemKind.Variable, peekOfCode });
         }
     }
 

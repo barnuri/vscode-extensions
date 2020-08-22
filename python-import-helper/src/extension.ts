@@ -1,49 +1,47 @@
-import { ExtensionContext, languages, TextDocument, Position, CancellationToken, CompletionContext, TextEdit, Disposable } from 'vscode';
-import { createDataDir } from './utils';
-import { buildDataFile, watchForChanges } from './data';
+import * as vscode from 'vscode';
+import { createDataDir, ignoreThisFile } from './utils';
+import { buildDataFile, compilationFileManager } from './data';
 import { RichCompletionItem } from './models/RichCompletionItem';
 import { insertImport } from './importer';
 import * as path from 'path';
 import { getWorkspacePath } from './utils';
-import { buildCompletionItems } from './buildImportItems';
 
-export const getDataFilePath = () => path.join(getWorkspacePath() || '', '/.vscode/', 'PythonImportHelper-v2-py.json');
+export const getCompletionFilePath = () => path.join(getWorkspacePath() || '', '/.vscode/', 'PythonImportHelper-v2-Completion.json');
 
-export async function activate(context: ExtensionContext) {
-    console.log(getDataFilePath());
+export async function activate(context: vscode.ExtensionContext) {
     createDataDir();
     buildDataFile(true);
 
-    const provider = {
-        async provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext) {
-            return await buildCompletionItems(position);
+    context.subscriptions.push(vscode.commands.registerCommand('extension.rebuild', () => buildDataFile(true)));
+
+    const provider = vscode.languages.registerCompletionItemProvider('python', {
+        provideCompletionItems(
+            document: vscode.TextDocument,
+            position: vscode.Position,
+            token: vscode.CancellationToken,
+            context: vscode.CompletionContext,
+        ): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+            return compilationFileManager();
         },
         resolveCompletionItem(completionItem: RichCompletionItem) {
-            const edit = insertImport(completionItem, false) as TextEdit | void;
+            const edit = insertImport(completionItem) as vscode.TextEdit | void;
             if (edit && !edit.range.contains(completionItem.position)) {
                 completionItem.additionalTextEdits = [edit];
             }
             return completionItem;
         },
-    };
+    });
+    context.subscriptions.push(provider);
 
-    const disposable = languages.registerCompletionItemProvider('python', provider);
-    context.subscriptions.push(disposable);
-    DisposableManager.add(disposable);
-    context.subscriptions.push(watchForChanges());
-    setInterval(() => buildDataFile(), 60000);
-}
-
-const disposables: Disposable[] = [];
-
-export const DisposableManager = {
-    add(disposable: Disposable) {
-        disposables.push(disposable);
-    },
-
-    dispose() {
-        for (const disposable of disposables) {
-            disposable.dispose();
+    const watcher = vscode.workspace.createFileSystemWatcher('**/*.py');
+    const onChangeOrDelete = async (doc: vscode.Uri) => {
+        if (ignoreThisFile(doc.fsPath)) {
+            return;
         }
-    },
-};
+        await buildDataFile(false);
+    };
+    watcher.onDidChange(onChangeOrDelete);
+    watcher.onDidCreate(onChangeOrDelete);
+    watcher.onDidDelete(onChangeOrDelete);
+    context.subscriptions.push(watcher);
+}

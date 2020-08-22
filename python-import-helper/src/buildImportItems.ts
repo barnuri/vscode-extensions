@@ -1,14 +1,13 @@
 import { FileExports } from './models/FileExports';
-import * as path from 'path';
 import { removeFileExt } from 'utlz';
-import { window, TextEditor, CompletionItem, Position, CompletionItemKind, MarkdownString } from 'vscode';
-import { CompilationData } from './models/CompilationData';
+import { CompletionItem, CompletionItemKind, MarkdownString } from 'vscode';
 import { RichCompletionItem } from './models/RichCompletionItem';
-import { getWorkspacePath } from './utils';
-import { dataFileManager } from './data';
+import { createDataDir } from './utils';
+import { CompilationData } from './models/CompilationData';
+import { getCompletionFilePath } from './extension';
+import { writeFileSync } from 'fs-extra';
 
-export async function buildCompletionItems(position: Position): Promise<RichCompletionItem[]> {
-    const data: CompilationData = await dataFileManager();
+export async function buildCompletionItems(data: CompilationData): Promise<RichCompletionItem[]> {
     if (!data) {
         return [];
     }
@@ -16,18 +15,12 @@ export async function buildCompletionItems(position: Position): Promise<RichComp
     if (Object.keys(mergedData).length <= 0) {
         return [];
     }
-    const editor = window.activeTextEditor as TextEditor;
-    const activeFilepath = editor.document.fileName;
     const items = [] as RichCompletionItem[];
     const sortedKeys: string[] = Object.keys(mergedData);
-    const defItem = new CompletionItem('', CompletionItemKind.Class) as RichCompletionItem;
+    const defItem = new CompletionItem('', CompletionItemKind.Variable) as RichCompletionItem;
 
     for (const importPath of sortedKeys) {
         const data: FileExports = mergedData[importPath];
-        const absImportPath = data.isExtraImport ? importPath : path.join(getWorkspacePath(), importPath);
-        if (absImportPath === activeFilepath) {
-            continue;
-        }
 
         if (data.importEntirePackage) {
             items.push({
@@ -35,7 +28,7 @@ export async function buildCompletionItems(position: Position): Promise<RichComp
                 label: importPath,
                 isExtraImport: data.isExtraImport,
                 importPath: importPath,
-                type: CompletionItemKind.Class,
+                kind: CompletionItemKind.Class,
                 description: importPath,
             });
         }
@@ -54,7 +47,7 @@ export async function buildCompletionItems(position: Position): Promise<RichComp
             }
             items.push({
                 ...defItem,
-                type: exportObj.type,
+                kind: exportObj.kind,
                 importPath: dotPath,
                 label: exportObj.name || (exportObj as any),
                 description: dotPath,
@@ -67,9 +60,8 @@ export async function buildCompletionItems(position: Position): Promise<RichComp
     for (const item of items) {
         item.importPath = item.importPath.replace(/[\/,\\]/g, '.');
         item.description = item.importPath;
-        item.type = item.type || CompletionItemKind.Class;
         item.detail = item.importPath;
-        item.position = position;
+        // item.position = position;
 
         var md = new MarkdownString();
         md.appendCodeblock(`from ${item.importPath} import ${item.label}`, 'python');
@@ -78,6 +70,7 @@ export async function buildCompletionItems(position: Position): Promise<RichComp
         item.documentation = md;
     }
 
-    const itemKey = (item: RichCompletionItem) => `${item.detail}-${item.type}-${item.description}`;
-    return [...new Map(items.map(item => [itemKey(item), item])).values()];
+    await createDataDir();
+    writeFileSync(getCompletionFilePath(), JSON.stringify(items, undefined, 4));
+    return items;
 }

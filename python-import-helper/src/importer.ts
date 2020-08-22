@@ -8,7 +8,7 @@ import { ParsedImport } from './models/ParsedImport';
 import { getNewLine } from './getNewLine';
 import { RichCompletionItem } from './models/RichCompletionItem';
 
-export function insertImport(importSelection: RichCompletionItem, shouldApplyEdit = true) {
+export function insertImport(importSelection: RichCompletionItem) {
     const { label: exportName, isExtraImport } = importSelection;
     const importPath = importSelection.description || exportName;
     const editor = window.activeTextEditor as TextEditor;
@@ -22,9 +22,9 @@ export function insertImport(importSelection: RichCompletionItem, shouldApplyEdi
     }
 
     const lineImportPath = importPosition.indexModifier || !importPosition.match['path'] ? importPath : importPosition.match['path'];
-    const newLine = getNewLine(lineImportPath, lineImports).replace(/[\\,\/]/g, '.');
+    const newLine = getNewLine(lineImportPath, lineImports);
 
-    return insertLine(newLine, importPosition, shouldApplyEdit);
+    return insertLine(newLine, importPosition);
 }
 
 function getNewLineImports(importPosition: ImportPositionPy, newImport: string) {

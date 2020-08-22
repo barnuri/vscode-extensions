@@ -9,7 +9,7 @@
         "webpack": "webpack --mode development",
         "webpack-dev": "webpack --mode development --watch",
         "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
+        "watch": "npm run webpack-dev",
         "gitBeforePublish": "npm version patch && git add . && git commit -m \"version\" --allow-empty && git push",
         "publish": "npm run gitBeforePublish && vsce publish",
         "removeUnusedImports": "tslint --config tslint-imports.json --fix --project ."
@@ -44,8 +44,17 @@
         "theme": "dark"
     },
     "activationEvents": [
-        "workspaceContains:**/*.py"
+        "workspaceContains:**/*.py",
+        "onCommand:extension.rebuild"
     ],
+    "contributes": {
+        "commands": [
+            {
+                "command": "extension.rebuild",
+                "title": "Bar Nuri Tools Python Import Helper: Rebuild"
+            }
+        ]
+    },
     "engines": {
         "vscode": "^1.33.0"
     },

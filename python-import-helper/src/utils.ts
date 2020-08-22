@@ -1,15 +1,15 @@
-import { getDataFilePath } from './extension';
+import { getCompletionFilePath } from './extension';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as _ from 'lodash';
-import { languages, Position, Range, TextDocument, TextEdit, TextEditor, TextEditorEdit, window } from 'vscode';
-import { CompilationData } from './models/CompilationData';
+import { Position, Range, TextDocument, TextEdit, TextEditor, TextEditorEdit, window } from 'vscode';
 import makeDir = require('make-dir');
 import * as vscode from 'vscode';
 import { resolve, join, extname } from 'path';
 import { statSync, readdirSync } from 'fs-extra';
 import anymatch from 'anymatch';
 import config from './config';
+import { Renamed } from './models/Renamed';
 
 export function getWorkspacePath(): string {
     const folders = vscode.workspace.workspaceFolders?.map(x => x.uri.fsPath) || [vscode.workspace.rootPath || ''];
@@ -57,14 +57,9 @@ export const getPythonFiles = path => {
     return pythonFiles;
 };
 
-export async function writeDataFile(data: CompilationData) {
-    await createDataDir();
-    fs.writeFileSync(getDataFilePath(), JSON.stringify(data, undefined, 4));
-}
-
 export async function createDataDir() {
     try {
-        const cacheFilepath = getDataFilePath();
+        const cacheFilepath = getCompletionFilePath();
         const dir = path.dirname(cacheFilepath);
         if (fs.existsSync(dir)) {
             return;
@@ -96,7 +91,7 @@ export function isPathPackage(importPath: string) {
     });
 }
 
-export function insertLine(newLine: string, importPosition: any, shouldApplyEdit = true) {
+export function insertLine(newLine: string, importPosition: any) {
     const { match, isFirstImport } = importPosition;
     const editor = window.activeTextEditor as TextEditor;
     const { document } = editor;
@@ -107,9 +102,7 @@ export function insertLine(newLine: string, importPosition: any, shouldApplyEdit
         newLine += '\n';
     }
 
-    return shouldApplyEdit
-        ? editor.edit(builder => createEdit(builder, document, newLine, importPosition))
-        : createEdit(TextEdit, document, newLine, importPosition);
+    return createEdit(TextEdit, document, newLine, importPosition);
 }
 
 function createEdit(edit: TextEditorEdit | typeof TextEdit, document: TextDocument, newLine: string, importPosition: any) {
@@ -159,11 +152,6 @@ export function getLastInitialComment(text: string, commentRegex: RegExp) {
         : null;
 }
 
-export function getDiagnosticsForActiveEditor() {
-    const editor = window.activeTextEditor as TextEditor;
-    return languages.getDiagnostics(editor.document.uri).filter(d => d.code === 'F821');
-}
-
 export function mergeObjectsWithArrays(obj1: {}, obj2: {}) {
     return _.mergeWith(obj1, obj2, (obj, src) => {
         if (Array.isArray(obj)) {
@@ -172,10 +160,6 @@ export function mergeObjectsWithArrays(obj1: {}, obj2: {}) {
         return undefined;
     });
 }
-
-export type Renamed = {
-    [originalName: string]: string;
-};
 
 export function addNamesAndRenames(imports: string[], names: string[], renamed: Renamed) {
     for (const imp of imports) {
@@ -217,10 +201,6 @@ export function preserveRenamedImports(imports: string[], renamed: Renamed) {
         const renaming = renamed[name];
         return renaming ? `${name} as ${renaming}` : name;
     });
-}
-
-export function showProjectExportsCachedMessage() {
-    window.showInformationMessage('Project exports have been cached. 🐔');
 }
 
 export function last<V>(arr: V[]) {
