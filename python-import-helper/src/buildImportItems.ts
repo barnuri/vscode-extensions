@@ -61,12 +61,16 @@ export async function buildCompletionItems(data: CompilationData): Promise<RichC
         item.importPath = item.importPath.replace(/[\/,\\]/g, '.');
         item.description = item.importPath;
         item.detail = item.importPath;
-        // item.position = position;
 
         var md = new MarkdownString();
-        md.appendCodeblock(`from ${item.importPath} import ${item.label}`, 'python');
-        md.appendCodeblock(`\n`, 'python');
-        md.appendCodeblock(item.peekOfCode, 'python');
+        if (item.isExtraImport) {
+            md.appendCodeblock(`import ${item.importPath}`, 'python');
+        } else {
+            md.appendCodeblock(`from ${item.importPath} import ${item.label}`, 'python');
+            md.appendCodeblock(`\n`, 'python');
+            md.appendCodeblock(item.peekOfCode, 'python');
+        }
+
         item.documentation = md;
     }
 
