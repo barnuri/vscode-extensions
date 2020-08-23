@@ -3,7 +3,7 @@
     "displayName": "Python Import Helper",
     "description": "Automatically generate import statements for Python.",
     "publisher": "Bar",
-    "version": "1.0.30",
+    "version": "1.0.31",
     "scripts": {
         "vscode:prepublish": "webpack --mode production",
         "webpack": "webpack --mode development",
@@ -49,7 +49,7 @@
         "commands": [
             {
                 "command": "extension.rebuild",
-                "title": "Bar Nuri Tools Python Import Helper: Rebuild"
+                "title": "Python Import Helper: Rebuild"
             }
         ]
     },
