@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { createDataDir, ignoreThisFile } from './utils';
-import { buildDataFile, compilationFileManager } from './data';
+import { buildDataFile, compilationFileManager, getWorkspacePythonFiles } from './data';
 import { RichCompletionItem } from './models/RichCompletionItem';
 import { insertImport } from './importer';
 import * as path from 'path';
@@ -9,8 +9,10 @@ import { getWorkspacePath } from './utils';
 export const getCompletionFilePath = () => path.join(getWorkspacePath() || '', '/.vscode/', 'PythonImportHelper-v2-Completion.json');
 
 export async function activate(context: vscode.ExtensionContext) {
-    createDataDir();
-    buildDataFile(true);
+    if (getWorkspacePythonFiles().length > 0) {
+        createDataDir();
+        buildDataFile(true);
+    }
 
     context.subscriptions.push(vscode.commands.registerCommand('extension.rebuild', () => buildDataFile(true)));
 

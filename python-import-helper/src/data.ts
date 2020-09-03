@@ -18,11 +18,13 @@ export function compilationFileManager(): RichCompletionItem[] {
     return data;
 }
 
+export const getWorkspacePythonFiles = () => getPythonFiles(getWorkspacePath()) || [];
+
 export async function buildDataFile(showMsg: boolean = false) {
     try {
         const cachedDirTrees = { imp: {}, exp: {} } as CompilationData;
         try {
-            let files: string[] = getPythonFiles(getWorkspacePath());
+            let files: string[] = getWorkspacePythonFiles();
             for (const fullPath of files) {
                 getDataFromPythonFile(fullPath, cachedDirTrees);
             }
