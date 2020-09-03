@@ -1,7 +1,6 @@
-import { CompletionItem, Position } from 'vscode';
+import { CompletionItem } from 'vscode';
 
 export type RichCompletionItem = CompletionItem & {
-    position: Position;
     label: string;
     description: string;
     isExtraImport: boolean | undefined;

@@ -27,7 +27,7 @@ export async function activate(context: vscode.ExtensionContext) {
         },
         resolveCompletionItem(completionItem: RichCompletionItem) {
             const edit = insertImport(completionItem) as vscode.TextEdit | void;
-            if (edit && !edit.range.contains(completionItem.position)) {
+            if (edit) {
                 completionItem.additionalTextEdits = [edit];
             }
             return completionItem;

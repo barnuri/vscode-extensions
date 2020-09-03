@@ -22,7 +22,12 @@ export function insertImport(importSelection: RichCompletionItem) {
     }
 
     const lineImportPath = importPosition.indexModifier || !importPosition.match['path'] ? importPath : importPosition.match['path'];
-    const newLine = getNewLine(lineImportPath, lineImports);
+    let newLine = '';
+    if (importSelection.isExtraImport) {
+        newLine = `import ${importSelection.importPath}`;
+    } else {
+        newLine = getNewLine(lineImportPath, lineImports);
+    }
 
     return insertLine(newLine, importPosition);
 }
