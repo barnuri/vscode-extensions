@@ -96,7 +96,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('extension.addPyproject', async () => {
             writeFile('pyproject.toml', getTextFromSnippet('python', 'pyproject'));
             writeFile('black.sh', 'black .');
-            writeFile('pylint.ps1', 'black .');
+            writeFile('black.ps1', 'black .');
         }),
     );
 
