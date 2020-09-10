@@ -18,7 +18,15 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.textToString', () => {
             editSelectedTest(text =>
-                text.replace(/\n/g, '\\n').replace(/"/g, '\\"').replace(/'/g, "\\'").replace(/\\/g, '\\').replace(/\$/g, '\\\\$'),
+                text
+                    .replace(/\\/g, '\\\\')
+                    .replace(/"/g, '\\"')
+                    .replace(/'/g, "\\'")
+                    .replace(/\$/g, '\\\\$')
+                    .replace(/\r/g, '')
+                    .replace(/\\n/g, '!@#!@##@!!@##@!!@#@!@')
+                    .replace(/\n/g, '\\n')
+                    .replace(/!@#!@##@!!@##@!!@#@!@/g, '\\n'),
             );
         }),
     );
@@ -79,12 +87,16 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.addPylintrcFile', async () => {
             writeFile('.pylintrc', getTextFromSnippet('python', 'pylintrc'));
+            writeFile('pylint.sh', 'pylint $(pwd)');
+            writeFile('pylint.ps1', 'pylint $pwd.path');
         }),
     );
 
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.addPyproject', async () => {
             writeFile('pyproject.toml', getTextFromSnippet('python', 'pyproject'));
+            writeFile('black.sh', 'black .');
+            writeFile('pylint.ps1', 'black .');
         }),
     );
 
