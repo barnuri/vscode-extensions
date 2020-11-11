@@ -38,7 +38,7 @@
             "**/.toolstarget",
             "k8s",
             "**/*.pyc",
-            "",
+            "**/venv*",
             ""
         ],
         "description": "dockerignore"

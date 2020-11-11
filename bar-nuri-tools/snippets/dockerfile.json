@@ -62,7 +62,7 @@
     "dockerfile-dotnetcore": {
         "prefix": "dockerfile-dotnetcore",
         "body": [
-            "FROM microsoft/dotnet:2.2-sdk AS build",
+            "FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build",
             "WORKDIR /src",
             "COPY . .",
             "RUN dotnet restore",
@@ -70,7 +70,7 @@
             "RUN dotnet test",
             "RUN dotnet publish -c Release -o publish",
             " ",
-            "FROM microsoft/dotnet:2.2-aspnetcore-runtime",
+            "FROM mcr.microsoft.com/dotnet/core/aspnet:3.1",
             "WORKDIR /publish",
             "ARG ASPNETCORE_ENVIRONMENT",
             "ENV ASPNETCORE_ENVIRONMENT \\$ASPNETCORE_ENVIRONMENT",
@@ -78,5 +78,23 @@
             "ENTRYPOINT [\"dotnet\", \"PROJECT_NAME_REPLACE.dll\"]"
         ],
         "description": "dockerfile-dotnetcore"
+    },
+    "dockerfile-python": {
+        "prefix": "dockerfile-python",
+        "body": [
+            "FROM python",
+            " ",
+            "RUN apt-get update -y ",
+            "RUN apt-get install -y git",
+            "RUN git config --global http.sslVerify false ",
+            " ",
+            "WORKDIR /app ",
+            "COPY REQUIREMENTS REQUIREMENTS ",
+            "RUN pip install --upgrade -r REQUIREMENTS --use-feature=2020-resolver ",
+            "COPY . . ",
+            "ENTRYPOINT python -u \"./file.py\" ",
+            ""
+        ],
+        "description": "dockerfile-python"
     }
 }

@@ -1,0 +1,254 @@
+[
+    {
+        "label": "loads",
+        "importPath": "json",
+        "description": "json",
+        "isExtraImport": true,
+        "detail": "json",
+        "documentation": {
+            "value": "\n```import json\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "dumps",
+        "importPath": "json",
+        "description": "json",
+        "isExtraImport": true,
+        "detail": "json",
+        "documentation": {
+            "value": "\n```import json\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "new",
+        "importPath": "hmac",
+        "description": "hmac",
+        "isExtraImport": true,
+        "detail": "hmac",
+        "documentation": {
+            "value": "\n```import hmac\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "sha512",
+        "importPath": "hashlib",
+        "description": "hashlib",
+        "isExtraImport": true,
+        "detail": "hashlib",
+        "documentation": {
+            "value": "\n```import hashlib\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "time",
+        "importPath": "time",
+        "description": "time",
+        "isExtraImport": true,
+        "detail": "time",
+        "documentation": {
+            "value": "\n```import time\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "sleep",
+        "importPath": "time",
+        "description": "time",
+        "isExtraImport": true,
+        "detail": "time",
+        "documentation": {
+            "value": "\n```import time\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "chain",
+        "importPath": "itertools",
+        "description": "itertools",
+        "isExtraImport": true,
+        "detail": "itertools",
+        "documentation": {
+            "value": "\n```import itertools\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "wraps",
+        "importPath": "functools",
+        "description": "functools",
+        "isExtraImport": true,
+        "detail": "functools",
+        "documentation": {
+            "value": "\n```import functools\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "Thread",
+        "importPath": "threading",
+        "description": "threading",
+        "isExtraImport": true,
+        "detail": "threading",
+        "documentation": {
+            "value": "\n```import threading\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
+        "documentation": {
+            "value": "\n```import logging\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "RequestException",
+        "importPath": "requests.exceptions",
+        "description": "requests.exceptions",
+        "isExtraImport": true,
+        "detail": "requests.exceptions",
+        "documentation": {
+            "value": "\n```import requests.exceptions\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "Session",
+        "importPath": "requests",
+        "description": "requests",
+        "isExtraImport": true,
+        "detail": "requests",
+        "documentation": {
+            "value": "\n```import requests\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "WebSocketApp",
+        "importPath": "websocket",
+        "description": "websocket",
+        "isExtraImport": true,
+        "detail": "websocket",
+        "documentation": {
+            "value": "\n```import websocket\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "PoloniexError",
+        "kind": 6,
+        "importPath": "__init__",
+        "description": "__init__",
+        "peekOfCode": "class PoloniexError(Exception):\n    \"\"\" Exception for handling poloniex api errors \"\"\"\n    pass\nclass RetryException(PoloniexError):\n    \"\"\" Exception for retry decorator \"\"\"\n    pass\nclass PoloniexBase(object):\n    \"\"\"The PoloniexBase Object!\"\"\"\n    def __init__(\n        self,",
+        "detail": "__init__",
+        "documentation": {
+            "value": "\n```from __init__ import PoloniexError\npython\n```\n\n```\n\npython\n```\n\n```class PoloniexError(Exception):\n    \"\"\" Exception for handling poloniex api errors \"\"\"\n    pass\nclass RetryException(PoloniexError):\n    \"\"\" Exception for retry decorator \"\"\"\n    pass\nclass PoloniexBase(object):\n    \"\"\"The PoloniexBase Object!\"\"\"\n    def __init__(\n        self,\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "RetryException",
+        "kind": 6,
+        "importPath": "__init__",
+        "description": "__init__",
+        "peekOfCode": "class RetryException(PoloniexError):\n    \"\"\" Exception for retry decorator \"\"\"\n    pass\nclass PoloniexBase(object):\n    \"\"\"The PoloniexBase Object!\"\"\"\n    def __init__(\n        self,\n        key=False,\n        secret=False,\n        timeout=None,",
+        "detail": "__init__",
+        "documentation": {
+            "value": "\n```from __init__ import RetryException\npython\n```\n\n```\n\npython\n```\n\n```class RetryException(PoloniexError):\n    \"\"\" Exception for retry decorator \"\"\"\n    pass\nclass PoloniexBase(object):\n    \"\"\"The PoloniexBase Object!\"\"\"\n    def __init__(\n        self,\n        key=False,\n        secret=False,\n        timeout=None,\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "PoloniexBase",
+        "kind": 6,
+        "importPath": "__init__",
+        "description": "__init__",
+        "peekOfCode": "class PoloniexBase(object):\n    \"\"\"The PoloniexBase Object!\"\"\"\n    def __init__(\n        self,\n        key=False,\n        secret=False,\n        timeout=None,\n        coach=True,\n        jsonNums=False,\n        proxies=None,",
+        "detail": "__init__",
+        "documentation": {
+            "value": "\n```from __init__ import PoloniexBase\npython\n```\n\n```\n\npython\n```\n\n```class PoloniexBase(object):\n    \"\"\"The PoloniexBase Object!\"\"\"\n    def __init__(\n        self,\n        key=False,\n        secret=False,\n        timeout=None,\n        coach=True,\n        jsonNums=False,\n        proxies=None,\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "Poloniex",
+        "kind": 6,
+        "importPath": "__init__",
+        "description": "__init__",
+        "peekOfCode": "class Poloniex(PoloniexBase):\n    # --PUBLIC COMMANDS-------------------------------------------------------\n    def returnTicker(self):\n        \"\"\" Returns the ticker for all markets. \"\"\"\n        return self.__call__(\"returnTicker\")\n    def return24hVolume(self):\n        \"\"\" Returns the 24-hour volume for all markets,\n        plus totals for primary currencies. \"\"\"\n        return self.__call__(\"return24hVolume\")\n    def returnOrderBook(self, currencyPair=\"all\", depth=20):",
+        "detail": "__init__",
+        "documentation": {
+            "value": "\n```from __init__ import Poloniex\npython\n```\n\n```\n\npython\n```\n\n```class Poloniex(PoloniexBase):\n    # --PUBLIC COMMANDS-------------------------------------------------------\n    def returnTicker(self):\n        \"\"\" Returns the ticker for all markets. \"\"\"\n        return self.__call__(\"returnTicker\")\n    def return24hVolume(self):\n        \"\"\" Returns the 24-hour volume for all markets,\n        plus totals for primary currencies. \"\"\"\n        return self.__call__(\"return24hVolume\")\n    def returnOrderBook(self, currencyPair=\"all\", depth=20):\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "PoloniexSocketed",
+        "kind": 6,
+        "importPath": "__init__",
+        "description": "__init__",
+        "peekOfCode": "class PoloniexSocketed(Poloniex):\n    \"\"\" Child class of Poloniex with support for the websocket api \"\"\"\n    def __init__(\n        self, key=None, secret=None, subscribe={}, start=False, *args, **kwargs\n    ):\n        super(PoloniexSocketed, self).__init__(key, secret, *args, **kwargs)\n        self.socket = WebSocketApp(\n            url=\"wss://api2.poloniex.com/\",\n            on_open=self.on_open,\n            on_message=self.on_message,",
+        "detail": "__init__",
+        "documentation": {
+            "value": "\n```from __init__ import PoloniexSocketed\npython\n```\n\n```\n\npython\n```\n\n```class PoloniexSocketed(Poloniex):\n    \"\"\" Child class of Poloniex with support for the websocket api \"\"\"\n    def __init__(\n        self, key=None, secret=None, subscribe={}, start=False, *args, **kwargs\n    ):\n        super(PoloniexSocketed, self).__init__(key, secret, *args, **kwargs)\n        self.socket = WebSocketApp(\n            url=\"wss://api2.poloniex.com/\",\n            on_open=self.on_open,\n            on_message=self.on_message,\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "__init__",
+        "description": "__init__",
+        "peekOfCode": "logger = logging.getLogger(__name__)\nretryDelays = (0, 2, 5, 30)\n# Possible Commands\nPUBLIC_COMMANDS = [\n    \"returnTicker\",\n    \"return24hVolume\",\n    \"returnOrderBook\",\n    \"marketTradeHist\",\n    \"returnChartData\",\n    \"returnCurrencies\",",
+        "detail": "__init__",
+        "documentation": {
+            "value": "\n```from __init__ import logger\npython\n```\n\n```\n\npython\n```\n\n```logger = logging.getLogger(__name__)\nretryDelays = (0, 2, 5, 30)\n# Possible Commands\nPUBLIC_COMMANDS = [\n    \"returnTicker\",\n    \"return24hVolume\",\n    \"returnOrderBook\",\n    \"marketTradeHist\",\n    \"returnChartData\",\n    \"returnCurrencies\",\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "retryDelays",
+        "kind": 5,
+        "importPath": "__init__",
+        "description": "__init__",
+        "peekOfCode": "retryDelays = (0, 2, 5, 30)\n# Possible Commands\nPUBLIC_COMMANDS = [\n    \"returnTicker\",\n    \"return24hVolume\",\n    \"returnOrderBook\",\n    \"marketTradeHist\",\n    \"returnChartData\",\n    \"returnCurrencies\",\n    \"returnLoanOrders\",",
+        "detail": "__init__",
+        "documentation": {
+            "value": "\n```from __init__ import retryDelays\npython\n```\n\n```\n\npython\n```\n\n```retryDelays = (0, 2, 5, 30)\n# Possible Commands\nPUBLIC_COMMANDS = [\n    \"returnTicker\",\n    \"return24hVolume\",\n    \"returnOrderBook\",\n    \"marketTradeHist\",\n    \"returnChartData\",\n    \"returnCurrencies\",\n    \"returnLoanOrders\",\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "PUBLIC_COMMANDS",
+        "kind": 5,
+        "importPath": "__init__",
+        "description": "__init__",
+        "peekOfCode": "PUBLIC_COMMANDS = [\n    \"returnTicker\",\n    \"return24hVolume\",\n    \"returnOrderBook\",\n    \"marketTradeHist\",\n    \"returnChartData\",\n    \"returnCurrencies\",\n    \"returnLoanOrders\",\n]\nPRIVATE_COMMANDS = [",
+        "detail": "__init__",
+        "documentation": {
+            "value": "\n```from __init__ import PUBLIC_COMMANDS\npython\n```\n\n```\n\npython\n```\n\n```PUBLIC_COMMANDS = [\n    \"returnTicker\",\n    \"return24hVolume\",\n    \"returnOrderBook\",\n    \"marketTradeHist\",\n    \"returnChartData\",\n    \"returnCurrencies\",\n    \"returnLoanOrders\",\n]\nPRIVATE_COMMANDS = [\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "PRIVATE_COMMANDS",
+        "kind": 5,
+        "importPath": "__init__",
+        "description": "__init__",
+        "peekOfCode": "PRIVATE_COMMANDS = [\n    \"returnBalances\",\n    \"returnCompleteBalances\",\n    \"returnDepositAddresses\",\n    \"generateNewAddress\",\n    \"returnDepositsWithdrawals\",\n    \"returnOpenOrders\",\n    \"returnTradeHistory\",\n    \"returnAvailableAccountBalances\",\n    \"returnTradableBalances\",",
+        "detail": "__init__",
+        "documentation": {
+            "value": "\n```from __init__ import PRIVATE_COMMANDS\npython\n```\n\n```\n\npython\n```\n\n```PRIVATE_COMMANDS = [\n    \"returnBalances\",\n    \"returnCompleteBalances\",\n    \"returnDepositAddresses\",\n    \"generateNewAddress\",\n    \"returnDepositsWithdrawals\",\n    \"returnOpenOrders\",\n    \"returnTradeHistory\",\n    \"returnAvailableAccountBalances\",\n    \"returnTradableBalances\",\npython\n```\n",
+            "supportThemeIcons": false
+        }
+    }
+]

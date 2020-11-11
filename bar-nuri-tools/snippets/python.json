@@ -2,6 +2,11 @@
     "pylintrc": {
         "prefix": [".pylintrc", "pylint", "pylintrc"],
         "body": [
+            "[MASTER]  ",
+            "ignore=\"venv,CVS\"  ",
+            "ignore-patterns=\"^.*\\.(?!py\\$)[^.]+\\$\"  ",
+            "init-hook=\"from pylint.config import find_pylintrc; import os, sys; sys.path.append(os.path.dirname(find_pylintrc()))\" ",
+            " ",
             "[MESSAGES CONTROL] ",
             "disable=C,R,broad-except, ",
             "        redefined-builtin, ",
@@ -20,7 +25,8 @@
             "        protected-access, ",
             "        anomalous-backslash-in-string, ",
             "        expression-not-assigned, ",
-            "        no-init ",
+            "        no-init,",
+            "        cell-var-from-loop ",
             " ",
             "[REPORTS] ",
             "msg-template=\"{path}:{line}: [{msg_id}({symbol}), {obj} {msg}\" ",

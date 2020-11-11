@@ -24,7 +24,7 @@ installFunc() {
 	fi
 
 
-	$sh_c 'echo { \"insecure-registries\": [\"registry.codeoasis.com:8082\"], \"exec-opts\": [\"native.cgroupdriver=systemd\"], \"log-driver\": \"json-file\", \"log-opts\": { \"max-size\": \"100m\" }, \"storage-driver\": \"overlay2\" } > /etc/docker/daemon.json'
+	$sh_c 'echo { \"insecure-registries\": [\"registry.server.com:8082\"], \"exec-opts\": [\"native.cgroupdriver=systemd\"], \"log-driver\": \"json-file\", \"log-opts\": { \"max-size\": \"100m\" }, \"storage-driver\": \"overlay2\" } > /etc/docker/daemon.json'
 
 	$sh_c 'mkdir -p /etc/systemd/system/docker.service.d'
 	$sh_c 'systemctl daemon-reload'
