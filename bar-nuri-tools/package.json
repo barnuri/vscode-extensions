@@ -260,6 +260,18 @@
             {
                 "language": "plaintext",
                 "path": "./snippets/ignore.json"
+            },
+            {
+                "language": "es",
+                "path": "./snippets/es.json"
+            },
+            {
+                "language": "plaintext",
+                "path": "./snippets/es.json"
+            },
+            {
+                "language": "json",
+                "path": "./snippets/es.json"
             }
         ]
     },

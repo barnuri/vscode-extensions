@@ -1,0 +1,372 @@
+{
+    "Elasticsearch Query Term": {
+        "prefix": "term",
+        "description": "Elasticsearch query term",
+        "body": "{ term: { ${1:fieldName}: '${2:value}' }"
+    },
+    "Elasticsearch Query Terms": {
+        "prefix": "terms",
+        "description": "Elasticsearch query terms",
+        "body": "{ terms: { ${1:fieldName}: ['$2', '$3'] }"
+    },
+    "Elasticsearch Query Range": {
+        "prefix": "range",
+        "description": "Elasticsearch query range",
+        "body": "{ range: { ${1:fieldName}: { gt: '$2', lt: '$3' }}"
+    },
+    "Elasticsearch Query Exists": {
+        "prefix": "exists",
+        "description": "Elasticsearch query exists",
+        "body": "{ exists: { field: '${1:fieldName}' }}"
+    },
+    "Elasticsearch Query Prefix": {
+        "prefix": "prefix",
+        "description": "Elasticsearch query prefix",
+        "body": "{ prefix: { ${1:fieldName}: '${2:value}' }}"
+    },
+    "Elasticsearch Query Prefix Advanced": {
+        "prefix": "prefix-adv",
+        "description": "Elasticsearch query prefix advanced",
+        "body": "{ prefix: { ${1:fieldName}: { value: '${2:fieldValue}', boost: ${3:2.0} }}"
+    },
+    "Elasticsearch Query Wildcard": {
+        "prefix": "wildcard",
+        "description": "Elasticsearch query wildcard",
+        "body": "{ wildcard: { ${1:fieldName}: '${2:value}' }}"
+    },
+    "Elasticsearch Query Wildcard Advanced": {
+        "prefix": "wildcard-adv",
+        "description": "Elasticsearch query wildcard advanced",
+        "body": "{ wildcard: { ${1:fieldName}: { value: '${2:fieldValue}', boost: ${3:2.0} }}"
+    },
+    "Elasticsearch Query Regexp": {
+        "prefix": "regexp",
+        "description": "Elasticsearch query regexp",
+        "body": "{ regexp: { ${1:fieldName}: '${2:value}' }}"
+    },
+    "Elasticsearch Query Regexp Advanced": {
+        "prefix": "regexp-adv",
+        "description": "Elasticsearch query regexp advanced",
+        "body": "{ regexp: { ${1:fieldName}: { value: '${2:fieldValue}', boost: ${3:2.0}, flags: ${4:ALL} }}"
+    },
+    "Elasticsearch Query Fuzzy": {
+        "prefix": "fuzzy",
+        "description": "Elasticsearch query fuzzy",
+        "body": "{ fuzzy: { ${1:fieldName}: '${2:value}' }}"
+    },
+    "Elasticsearch Query Fuzzy Advanced": {
+        "prefix": "fuzzy-adv",
+        "description": "Elasticsearch query fuzzy advanced",
+        "body": "{ fuzzy: { ${1:fieldName}: { value: '${2:fieldValue}', boost: ${3:2.0}, fuzziness: ${4:2} }}"
+    },
+    "Elasticsearch Query Type": {
+        "prefix": "type",
+        "description": "Elasticsearch query type",
+        "body": "{ type: { value: '${1:mappingType}' }}"
+    },
+    "Elasticsearch Query Ids": {
+        "prefix": "ids",
+        "description": "Elasticsearch query ids",
+        "body": "{ ids: { type: '${1:mappingType}', values: ['$2', '$3'] }}"
+    },
+
+    "Elasticsearch Script Inline": {
+        "prefix": "script-inline",
+        "description": "Elasticsearch script inline",
+        "body": "{ script: { inline: '$1', lang: '${2:painless}' }}"
+    },
+    "Elasticsearch Script File": {
+        "prefix": "script-file",
+        "description": "Elasticsearch script file",
+        "body": "{ script: { inline: '${1:my_script}', params: { ${2:name}: ${3:value} }}"
+    },
+    "Elasticsearch Aggregations Avg": {
+        "prefix": "agg-avg",
+        "description": "Elasticsearch aggregations average",
+        "body": "{ avg: { field: '${1:fieldName}' }}"
+    },
+    "Elasticsearch Aggregations Cardinality": {
+        "prefix": "agg-cardinality",
+        "description": "Elasticsearch aggregations cardinality",
+        "body": "{ cardinality: { field: '${1:fieldName}' }}"
+    },
+    "Elasticsearch Aggregations Extended Stats": {
+        "prefix": "agg-extstats",
+        "description": "Elasticsearch aggregations extended stats",
+        "body": "{ extended_stats: { field: '${1:fieldName}' }}"
+    },
+    "Elasticsearch Aggregations Geo Bounds": {
+        "prefix": "agg-geobounds",
+        "description": "Elasticsearch aggregations geo bounds",
+        "body": "{ geo_bounds: { field: '${1:fieldName}' }}"
+    },
+    "Elasticsearch Aggregations Geo Centroid": {
+        "prefix": "agg-geocentroid",
+        "description": "Elasticsearch aggregations geo centroid",
+        "body": "{ geo_centroid: { field: '${1:fieldName}' }}"
+    },
+    "Elasticsearch Aggregations Max": {
+        "prefix": "agg-max",
+        "description": "Elasticsearch aggregations max",
+        "body": "{ max: { field: '${1:fieldName}' }}"
+    },
+    "Elasticsearch Aggregations Min": {
+        "prefix": "agg-min",
+        "description": "Elasticsearch aggregations min",
+        "body": "{ min: { field: '${1:fieldName}' }}"
+    },
+    "Elasticsearch Aggregations Percentiles": {
+        "prefix": "agg-percentiles",
+        "description": "Elasticsearch aggregations percentiles",
+        "body": "{ percentiles: { field: '${1:fieldName}' }}"
+    },
+    "Elasticsearch Aggregations Percentiles Ranks": {
+        "prefix": "agg-percentiles-rank",
+        "description": "Elasticsearch aggregations percentiles ranks",
+        "body": "{ percentile_ranks: { field: '${1:fieldName}', values: [${2}] }}"
+    },
+    "Elasticsearch Aggregations Scripted Metric": {
+        "prefix": "agg-scripted-metric",
+        "description": "Elasticsearch aggregations scripted metric",
+        "body": [
+            "{",
+            "\tscripted_metric: {",
+            "\t\tinit_script: '${1:initScript}'",
+            "\t\tmap_script: '${2:mapScript}'",
+            "\t\tcombine_script: '${3:combineScript}'",
+            "\t\treduce_script: '${4:reduceScript}'",
+            "\t}",
+            "}"
+        ]
+    },
+    "Elasticsearch Aggregations Stats": {
+        "prefix": "agg-stats",
+        "description": "Elasticsearch aggregations stats",
+        "body": "{ stats: { field: '${1:fieldName}' }}"
+    },
+    "Elasticsearch Aggregations Sum": {
+        "prefix": "agg-sum",
+        "description": "Elasticsearch aggregations sum",
+        "body": "{ sum: { field: '${1:fieldName}' }}"
+    },
+    "Elasticsearch Aggregations Top Hits": {
+        "prefix": "agg-top-hits",
+        "description": "Elasticsearch aggregations top hits",
+        "body": ["{", "\ttop_hits: {", "\t\tsort: [{ ${1:fieldName}: { order: '${2:desc}' }],", "\t\tsize: ${3:1}", "\t}", "}"]
+    },
+    "Elasticsearch Aggregations Value Count": {
+        "prefix": "agg-value-count",
+        "description": "Elasticsearch aggregations value count",
+        "body": "{ value_count: { field: '${1:fieldName}' }}"
+    },
+    "Elasticsearch Aggs Children": {
+        "prefix": "agg-children",
+        "description": "Elasticsearch aggregations children",
+        "body": "{ children: { type: '${1:fieldName}' }}"
+    },
+    "Elasticsearch Aggs Date Histogram": {
+        "prefix": "agg-date-histogram",
+        "description": "Elasticsearch aggregations date histogram",
+        "body": [
+            "{",
+            "\tdate_histogram: {",
+            "\t\tfield: '${1:fieldName}',",
+            "\t\tinterval: '${2:month}',",
+            "\t\tformat: '${3:yyyy-MM-dd}',",
+            "\t}",
+            "}"
+        ]
+    },
+    "Elasticsearch Aggs Date Range": {
+        "prefix": "agg-date-range",
+        "description": "Elasticsearch aggregations date range",
+        "body": [
+            "{",
+            "\tdate_range: {",
+            "\t\tfield: '${1:fieldName}',",
+            "\t\tformat: '${2:yyyy-MM-dd}',",
+            "\t\tranges: [",
+            "\t\t\t{ from: '${3:now-10M/M}' },",
+            "\t\t\t{ to: '${4:now-10M/M}' },",
+            "\t\t],",
+            "\t}",
+            "}"
+        ]
+    },
+    "Elasticsearch Aggs Diversified Sampler": {
+        "prefix": "agg-div-sampler",
+        "description": "Elasticsearch aggregations diversified sampler",
+        "body": "{ diversified_sampler: { type: '${1:fieldName}', shard_size: ${2:200} }}"
+    },
+    "Elasticsearch Aggs Geo Distance": {
+        "prefix": "agg-geodistance",
+        "description": "Elasticsearch aggregations geo distance",
+        "body": [
+            "{",
+            "\tgeo_distance: {",
+            "\t\tfield: '${1:fieldName}',",
+            "\t\torigin: '${2:52.3760, 4.894}',",
+            "\t\tranges: [",
+            "\t\t\t{ from: ${3:100} },",
+            "\t\t\t{ to: ${4:200} },",
+            "\t\t],",
+            "\t}",
+            "}"
+        ]
+    },
+    "Elasticsearch Aggs Geohash Grid": {
+        "prefix": "agg-geohash-grid",
+        "description": "Elasticsearch aggregations geohash grid",
+        "body": "{ geohash_grid: { field: '${1:fieldName}', precision: ${2:3} }}"
+    },
+    "Elasticsearch Aggs Global": {
+        "prefix": "agg-global",
+        "description": "Elasticsearch aggregations global",
+        "body": "{ global: {}}"
+    },
+    "Elasticsearch Aggs Histogram": {
+        "prefix": "agg-histogram",
+        "description": "Elasticsearch aggregations histogram",
+        "body": "{ histogram: { field: '${1:fieldName}', interval: ${2:50} }}"
+    },
+    "Elasticsearch Aggs IP Range": {
+        "prefix": "agg-iprange",
+        "description": "Elasticsearch aggregations IP range",
+        "body": [
+            "{",
+            "\tip_range: {",
+            "\t\tfield: '${1:fieldName}',",
+            "\t\tranges: [",
+            "\t\t\t{ from: '${2:10.0.0.5}' },",
+            "\t\t\t{ to: '${3:10.0.0.5}' },",
+            "\t\t],",
+            "\t}",
+            "}"
+        ]
+    },
+    "Elasticsearch Aggs Missing": {
+        "prefix": "agg-missing",
+        "description": "Elasticsearch aggregations missing",
+        "body": "{ missing: { field: '${1:fieldName}' }}"
+    },
+    "Elasticsearch Aggs Nested": {
+        "prefix": "agg-nested",
+        "description": "Elasticsearch aggregations nested",
+        "body": "{ nested: { path: '${1:path}' }}"
+    },
+    "Elasticsearch Aggs Range": {
+        "prefix": "agg-range",
+        "description": "Elasticsearch aggregations range",
+        "body": [
+            "{",
+            "\trange: {",
+            "\t\tfield: '${1:fieldName}',",
+            "\t\tranges: [",
+            "\t\t\t{ from: '${2:50}' },",
+            "\t\t\t{ from: '${3:50}', to: '${4:100}' },",
+            "\t\t\t{ to: '${5:100}' },",
+            "\t\t],",
+            "\t}",
+            "}"
+        ]
+    },
+    "Elasticsearch Aggs Reverse Nested": {
+        "prefix": "agg-reverse-nested",
+        "description": "Elasticsearch aggregations reverse nested",
+        "body": "{ reverse_nested: {}}"
+    },
+    "Elasticsearch Aggs Significant Terms": {
+        "prefix": "agg-sig-terms",
+        "description": "Elasticsearch aggregations significant terms",
+        "body": "{ significant_terms: { field: '${1:fieldName}' }}"
+    },
+    "Elasticsearch Aggs Terms": {
+        "prefix": "agg-terms",
+        "description": "Elasticsearch aggregations terms",
+        "body": "{ terms: { field: '${1:fieldName}' }}"
+    },
+    "Filtered Query": {
+        "prefix": "filtered query",
+        "body": ["\"filtered\": {", "\t\"query\": {", "\t\t\"match_all\": {}", "\t},", "\t\"filter\" : {", "\t}", "}"]
+    },
+    "Nested Query": {
+        "prefix": "nested query",
+        "body": ["\"nested\" : {", "\t\"path\" : \"${path:Path to nested doc}\",", "\t\"score_mode\" : \"\",", "\t\"query\" : {}", "}"]
+    },
+    "Bool Query": {
+        "prefix": "bool query",
+        "body": ["\"bool\" : {", "\t\"must\" : {},", "\t\"must_not\" : {},", "\t\"should\" : {}", "}"]
+    },
+    "Term Query": {
+        "prefix": "term query",
+        "body": ["\"term\" : { \"${field}\" : \"${value}\" }"]
+    },
+    "Range Query": {
+        "prefix": "range query",
+        "body": ["\"range\" : {", "\t\"${field}\" : {", "\t\t\"${param}\" : ${range:0}", "}"]
+    },
+    "Exists Query": {
+        "prefix": "exists query",
+        "body": ["\"exists\" : { \"field\" : \"${field_name}\" }"]
+    },
+    "Ids Query": {
+        "prefix": "ids query",
+        "body": ["\"ids\" : {", "\t\"type\" : \"${my_type}\",", "\t\"values\" : [\"${values_0}\"]", "}"]
+    },
+    "Match Query - Boolean": {
+        "prefix": "boolean match query",
+        "body": ["\"match\" : {", "\t\"${file}\" : \"${value}\"", "}"]
+    },
+    "Multi Match Query": {
+        "prefix": "multi match query",
+        "body": ["\"multi_match\" : {", "\t\"query\": \"${value}\",", "\t\"fields\": [\"${fields}\"]", "}"]
+    },
+    "Common Terms Query": {
+        "prefix": "common terms",
+        "body": [
+            "\"common\" : {",
+            "\t\"${field}\" : {",
+            "\t\t\"query\" : \"${query_string}\",",
+            "\t\t\"cutoff_frequency\" : \"${freq:0.01}\",",
+            "\t\t\"low_freq_operator\" : \"${op}\"",
+            "\t}",
+            "}"
+        ]
+    },
+    "Function Score Query": {
+        "prefix": "function score",
+        "body": [
+            "\"function_score\": {",
+            "\t\"query\" : {},",
+            "\t\"boost\" : \"boost for the whole query\",",
+            "\t\"functions\" : [],",
+            "\t\"boost_mode\" : \"${mode}\"",
+            "}"
+        ]
+    },
+    "Has Child Query": {
+        "prefix": "has child query",
+        "body": ["\"has_child\": {", "\t\"type\": \"${type}\",", "\t\"score_mode\": \"${mode}\",", "\t\"query\": {}", "}"]
+    },
+    "Terms Aggregation": {
+        "prefix": "terms aggs",
+        "body": ["\"aggs\" : {", "\t\"${name}\" : {", "\t\t\"terms\" : { \"field\" : \"${fieldName}\" }", "\t}", "}"]
+    },
+    "Filter Aggregation": {
+        "prefix": "filter aggs",
+        "body": ["\"aggs\" : {", "\t\"${name}\" : {", "\t\t\"filter\" : {},", "\t\t\"aggs\" : {}", "\t}", "}"]
+    },
+    "Nested Aggregation": {
+        "prefix": "nested aggs",
+        "body": [
+            "\"aggs\" : {",
+            "\t\"${name}\" : {",
+            "\t\t\"nested\" : {",
+            "\t\t\t\"path\" : \"${path to nested doc}\"",
+            "\t\t},",
+            "\t\t\"aggs\" : {}",
+            "\t}",
+            "}"
+        ]
+    }
+}
