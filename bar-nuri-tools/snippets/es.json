@@ -313,10 +313,15 @@
         "prefix": "ids query",
         "body": ["\"ids\" : {", "\t\"type\" : \"${my_type}\",", "\t\"values\" : [\"${values_0}\"]", "}"]
     },
+    "Match All": {
+        "prefix": "boolean match query",
+        "body": ["\"match_all\": {}"]
+    },
     "Match Query - Boolean": {
         "prefix": "boolean match query",
         "body": ["\"match\" : {", "\t\"${file}\" : \"${value}\"", "}"]
     },
+
     "Multi Match Query": {
         "prefix": "multi match query",
         "body": ["\"multi_match\" : {", "\t\"query\": \"${value}\",", "\t\"fields\": [\"${fields}\"]", "}"]
@@ -368,5 +373,13 @@
             "\t}",
             "}"
         ]
+    },
+    "Elasticsearch Query": {
+        "prefix": "query",
+        "body": ["\"query\": {", "\t${query}", "}"]
+    },
+    "Elasticsearch Size": {
+        "prefix": "size",
+        "body": ["\"size\": ${size}"]
     }
 }
