@@ -53,7 +53,8 @@ export function ignoreThisFile(x: string) {
 
 export const getPythonFiles = path => {
     const allFiles: string[] = _getFilesRecursively(path);
-    const pythonFiles = allFiles.filter(x => !ignoreThisFile(x) && extname(x).slice(1) === 'py');
+    let pythonFiles = allFiles.filter(x => !ignoreThisFile(x) && extname(x).slice(1) === 'py');
+    pythonFiles = pythonFiles.filter(x => !x.toLowerCase().endsWith('__.py'));
     return pythonFiles;
 };
 
