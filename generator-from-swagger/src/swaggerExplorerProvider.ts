@@ -12,11 +12,6 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
     public configFile = './.vscode/generator-from-swagger.json';
     public refresh = () => this._onDidChangeTreeData.fire();
     getTreeItem = (element: SwaggerTreeItem) => element;
-    openConfigFile = async () =>
-        await vscode.window.showTextDocument(await vscode.workspace.openTextDocument(resolve(getWorkspacePath(), this.configFile)), {
-            preview: false,
-        })
-
     constructor() {
         this.watchFile();
     }
@@ -39,7 +34,7 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
         } catch {
             return [];
         }
-    }
+    };
 
     createConfig() {
         try {
@@ -50,6 +45,15 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
             writeFile(this.configFile, defaultFileObj);
             this.openConfigFile();
         } catch {}
+    }
+
+    openConfigFile() {
+        const filePath = resolve(getWorkspacePath(), this.configFile);
+        if (!existsSync(filePath)) {
+            this.createConfig();
+            return;
+        }
+        vscode.workspace.openTextDocument(filePath).then(res => vscode.window.showTextDocument(res, { preview: false }));
     }
 
     getChildren(element?: SwaggerTreeItem | undefined) {

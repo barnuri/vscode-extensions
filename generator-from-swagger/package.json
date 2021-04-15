@@ -134,6 +134,7 @@
         "axios": "^0.19.0",
         "extract-zip": "^1.6.7",
         "open": "^6.4.0",
+        "openapi-definition-to-editor": "^1.0.75",
         "rimraf": "^2.6.3"
     },
     "devDependencies": {
