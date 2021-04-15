@@ -3,7 +3,7 @@
     "description": "Generator From Swagger",
     "displayName": "Generator From Swagger",
     "publisher": "Bar",
-    "version": "1.1.17",
+    "version": "1.1.18",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
