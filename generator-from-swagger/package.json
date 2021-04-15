@@ -3,7 +3,7 @@
     "description": "Generator From Swagger",
     "displayName": "Generator From Swagger",
     "publisher": "Bar",
-    "version": "1.1.9",
+    "version": "1.1.10",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
@@ -134,7 +134,7 @@
         "axios": "^0.19.0",
         "extract-zip": "^1.6.7",
         "open": "^6.4.0",
-        "openapi-definition-to-editor": "^1.0.75",
+        "openapi-definition-to-editor": "^1.0.76",
         "rimraf": "^2.6.3"
     },
     "devDependencies": {
