@@ -39,8 +39,8 @@ export async function generateFromApi(item: SwaggerTreeItem) {
     rimraf.sync(outputFolder);
     rimraf.sync(tmpFolder);
     makeDirIfNotExist(tmpFolder);
-    appendFileSync(zipFilePath, new Buffer(zipFileBinary));
-    unzip(zipFilePath, { dir: tmpFolder }, (err: any) => {
+    appendFileSync(zipFilePath, new Uint8Array(zipFileBinary));
+    await unzip(zipFilePath, { dir: tmpFolder }).catch(err => {
         if (err) {
             return;
         }

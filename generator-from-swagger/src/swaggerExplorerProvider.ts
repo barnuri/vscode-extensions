@@ -10,7 +10,7 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
     private _onDidChangeTreeData = new vscode.EventEmitter<SwaggerTreeItem | undefined>();
     readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
     public configFile = './.vscode/generator-from-swagger.json';
-    public refresh = () => this._onDidChangeTreeData.fire();
+    public refresh = () => this._onDidChangeTreeData.fire(undefined);
     getTreeItem = (element: SwaggerTreeItem) => element;
     constructor() {
         this.watchFile();
@@ -34,7 +34,7 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
         } catch {
             return [];
         }
-    };
+    }
 
     createConfig() {
         try {
