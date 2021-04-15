@@ -147,7 +147,7 @@
         "tslint": "^5.18.0",
         "tslint-etc": "^1.6.0",
         "typescript": "^3.5.3",
-        "vsce": "^1.66.0",
+        "vsce": "^1.87.1",
         "vscode-test": "^1.2.0"
     },
     "repository": {
