@@ -5,13 +5,13 @@ import open = require('open');
 
 export function activate(context: vscode.ExtensionContext) {
     const swaggerExplorerProvider = new SwaggerExplorerProvider();
-    vscode.window.registerTreeDataProvider('generator-from-swagger', swaggerExplorerProvider);
-    context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.refresh', () => swaggerExplorerProvider.refresh()));
-    context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.createConfig', () => swaggerExplorerProvider.createConfig()));
-    context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.edit', () => swaggerExplorerProvider.openConfigFile()));
-    context.subscriptions.push(vscode.commands.registerCommand('generator-from-swagger.generate', (item: SwaggerTreeItem) => item.generate()));
+    vscode.window.registerTreeDataProvider('extensionView', swaggerExplorerProvider);
+    context.subscriptions.push(vscode.commands.registerCommand('extension.refresh', () => swaggerExplorerProvider.refresh()));
+    context.subscriptions.push(vscode.commands.registerCommand('extension.createConfig', () => swaggerExplorerProvider.createConfig()));
+    context.subscriptions.push(vscode.commands.registerCommand('extension.edit', () => swaggerExplorerProvider.openConfigFile()));
+    context.subscriptions.push(vscode.commands.registerCommand('extension.generate', (item: SwaggerTreeItem) => item.generate()));
     context.subscriptions.push(
-        vscode.commands.registerCommand('generator-from-swagger.info', () => {
+        vscode.commands.registerCommand('extension.info', () => {
             open('http://api.openapi-generator.tech');
             open('https://generator.swagger.io');
         }),

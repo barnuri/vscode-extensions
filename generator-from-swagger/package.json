@@ -3,7 +3,7 @@
     "description": "Generator From Swagger",
     "displayName": "Generator From Swagger",
     "publisher": "Bar",
-    "version": "1.1.18",
+    "version": "1.1.19",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
@@ -13,12 +13,12 @@
         "removeUnusedImports": "tslint --config tslint-imports.json --fix --project ."
     },
     "activationEvents": [
-        "onCommand:generator-from-swagger.refresh",
-        "onCommand:generator-from-swagger.edit",
-        "onCommand:generator-from-swagger.generate",
-        "onCommand:generator-from-swagger.info",
-        "onCommand:generator-from-swagger.createConfig",
-        "onView:generator-from-swagger"
+        "onCommand:extension.refresh",
+        "onCommand:extension.edit",
+        "onCommand:extension.generate",
+        "onCommand:extension.info",
+        "onCommand:extension.createConfig",
+        "onView:extensionView"
     ],
     "contributes": {
         "jsonValidation": [
@@ -30,16 +30,16 @@
         "viewsContainers": {
             "activitybar": [
                 {
-                    "id": "generator-from-swagger",
+                    "id": "extensionView",
                     "title": "Generator From Swagger",
                     "icon": "resources/Swagger2.svg"
                 }
             ]
         },
         "views": {
-            "generator-from-swagger": [
+            "extensionView": [
                 {
-                    "id": "generator-from-swagger",
+                    "id": "extensionView",
                     "name": "Generator From Swagger"
                 }
             ]
@@ -47,41 +47,41 @@
         "menus": {
             "view/title": [
                 {
-                    "command": "generator-from-swagger.refresh",
-                    "when": "view == generator-from-swagger",
+                    "command": "extension.refresh",
+                    "when": "view == extensionView",
                     "group": "navigation"
                 },
                 {
-                    "command": "generator-from-swagger.edit",
-                    "when": "view == generator-from-swagger",
+                    "command": "extension.edit",
+                    "when": "view == extensionView",
                     "group": "navigation"
                 },
                 {
-                    "command": "generator-from-swagger.createConfig",
-                    "when": "view == generator-from-swagger",
+                    "command": "extension.createConfig",
+                    "when": "view == extensionView",
                     "group": "navigation"
                 },
                 {
-                    "command": "generator-from-swagger.info",
-                    "when": "view == generator-from-swagger",
+                    "command": "extension.info",
+                    "when": "view == extensionView",
                     "group": "navigation"
                 }
             ],
             "view/item/context": [
                 {
-                    "command": "generator-from-swagger.generate",
-                    "when": "view == generator-from-swagger && viewItem == parent",
+                    "command": "extension.generate",
+                    "when": "view == extensionView && viewItem == parent",
                     "group": "inline"
                 },
                 {
-                    "command": "generator-from-swagger.generate",
-                    "when": "view == generator-from-swagger && viewItem == parent"
+                    "command": "extension.generate",
+                    "when": "view == extensionView && viewItem == parent"
                 }
             ]
         },
         "commands": [
             {
-                "command": "generator-from-swagger.refresh",
+                "command": "extension.refresh",
                 "title": "Refresh",
                 "icon": {
                     "light": "resources/light/refresh.svg",
@@ -89,7 +89,7 @@
                 }
             },
             {
-                "command": "generator-from-swagger.generate",
+                "command": "extension.generate",
                 "title": "Generate",
                 "icon": {
                     "light": "resources/light/dependency.svg",
@@ -97,7 +97,7 @@
                 }
             },
             {
-                "command": "generator-from-swagger.edit",
+                "command": "extension.edit",
                 "title": "Edit Config",
                 "icon": {
                     "light": "resources/light/edit.svg",
@@ -105,7 +105,7 @@
                 }
             },
             {
-                "command": "generator-from-swagger.createConfig",
+                "command": "extension.createConfig",
                 "title": "Create Config",
                 "icon": {
                     "light": "resources/light/string.svg",
@@ -113,7 +113,7 @@
                 }
             },
             {
-                "command": "generator-from-swagger.info",
+                "command": "extension.info",
                 "title": "Info",
                 "icon": {
                     "light": "resources/light/info.svg",
