@@ -53,7 +53,13 @@ export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerT
             this.createConfig();
             return;
         }
-        vscode.workspace.openTextDocument(filePath).then(res => vscode.window.showTextDocument(res, { preview: false }));
+        vscode.workspace
+            .openTextDocument(filePath)
+            .then(res =>
+                vscode.window
+                    .showTextDocument(res, { preview: false })
+                    .then(() => vscode.commands.executeCommand('workbench.explorer.fileView.focus')),
+            );
     }
 
     getChildren(element?: SwaggerTreeItem | undefined) {
