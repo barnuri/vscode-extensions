@@ -190,6 +190,14 @@
         ],
         "snippets": [
             {
+                "language": "typescriptreact",
+                "path": "./snippets/typescriptreact.json"
+            },
+            {
+                "language": "javascriptreact",
+                "path": "./snippets/javascriptreact.json"
+            },
+            {
                 "language": "plaintext",
                 "path": "./snippets/python.json"
             },

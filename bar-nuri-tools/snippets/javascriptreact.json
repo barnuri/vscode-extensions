@@ -1,0 +1,28 @@
+{
+    "React Hooks Javascript By Filename": {
+        "prefix": "reacthooks",
+        "body": [
+            "import * as React from 'react'; ",
+            "",
+            "const $TM_FILENAME_BASE = ({}) => {",
+            "    return <></>; ",
+            "}",
+            "",
+            "export default $TM_FILENAME_BASE;"
+        ],
+        "description": "React Hooks Javascript"
+    },
+    "React Hooks Javascript By Foldername": {
+        "prefix": "reacthooks2",
+        "body": [
+            "import * as React from 'react'; ",
+            "",
+            "const ${TM_DIRECTORY/^.+\\\\(.*)$/$1/} = ({}) => {",
+            "    return <></>; ",
+            "}",
+            "",
+            "export default ${TM_DIRECTORY/^.+\\\\(.*)$/$1/};"
+        ],
+        "description": "React Hooks Javascript"
+    }
+}
