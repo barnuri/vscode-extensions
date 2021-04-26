@@ -10,5 +10,13 @@ export async function generateFromMyLib(item: SwaggerTreeItem) {
 
     const generatorName = item.swaggerConfig.language || (item.swaggerConfig as any).clientLanguage || 'typescript-axios';
     const outputFolder = resolve(getWorkspacePath(), item.swaggerConfig.outputFolder);
-    generate(swaggerPath, generatorName, outputFolder);
+    const options = {
+        ...item.swaggerConfig,
+        ...(item.swaggerConfig || {}).options,
+        generator: generatorName,
+        type: item.swaggerConfig.type,
+        output: outputFolder,
+        pathOrUrl: swaggerPath,
+    } as any;
+    await generate(options);
 }

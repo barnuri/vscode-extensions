@@ -12,10 +12,10 @@ export async function generateFromApi(item: SwaggerTreeItem) {
     const body = { spec: swaggerJson } as any;
 
     item.swaggerConfig.language = item.swaggerConfig.language || (item.swaggerConfig as any).clientLanguage || 'typescript-axios';
-    item.swaggerConfig.type = item.swaggerConfig.type !== 'clients' && item.swaggerConfig.type !== 'servers' ? 'clients' : item.swaggerConfig.type;
+    item.swaggerConfig.type = item.swaggerConfig.type !== 'client' && item.swaggerConfig.type !== 'server' ? 'client' : item.swaggerConfig.type;
 
     if (
-        item.swaggerConfig.type === 'clients' &&
+        item.swaggerConfig.type === 'client' &&
         (item.swaggerConfig.language.indexOf('typescript') >= 0 || item.swaggerConfig.language.indexOf('javascript'))
     ) {
         body.options = {
@@ -26,7 +26,7 @@ export async function generateFromApi(item: SwaggerTreeItem) {
 
     item.swaggerConfig.generator = item.swaggerConfig.generator || 'http://api.openapi-generator.tech/api/gen';
 
-    const linkToZip = await Axios.post(`${item.swaggerConfig.generator}/${item.swaggerConfig.type}/${item.swaggerConfig.language}`, body)
+    const linkToZip = await Axios.post(`${item.swaggerConfig.generator}/${item.swaggerConfig.type}s/${item.swaggerConfig.language}`, body)
         .then(x => x.data.link)
         .catch(err => {
             throw err;
