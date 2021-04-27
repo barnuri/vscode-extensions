@@ -43,7 +43,9 @@
         "onCommand:extension.convertAllFilesToCR",
         "onCommand:extension.installKubeadmFlannelWithHelmWithIngress",
         "onCommand:extension.InstallKubeadm",
-        "onCommand:extension.addPyproject"
+        "onCommand:extension.addPyproject",
+        "onCommand:extension.jsonToC#FormattedString",
+        "onCommand:extension.c#FormattedStringToJson"
     ],
     "contributes": {
         "commands": [
@@ -186,6 +188,14 @@
             {
                 "command": "extension.addPyproject",
                 "title": "Bar Nuri Tools: Add Pyproject.toml"
+            },
+            {
+                "command": "extension.jsonToC#FormattedString",
+                "title": "Bar Nuri Tools: Json To C# Formatted String"
+            },
+            {
+                "command": "extension.c#FormattedStringToJson",
+                "title": "Bar Nuri Tools: C# Formatted String To Json"
             }
         ],
         "snippets": [
