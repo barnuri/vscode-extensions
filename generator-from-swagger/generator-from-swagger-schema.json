@@ -21,7 +21,7 @@
                     "type": "string"
                 },
                 "generator": {
-                    "enum": ["openapi-definition-to-editor", "http://api.openapi-generator.tech/api/gen", "https://generator.swagger.io/api/gen"],
+                    "enum": ["openapi-toolkit", "http://api.openapi-generator.tech/api/gen", "https://generator.swagger.io/api/gen"],
                     "type": "string"
                 }
             },

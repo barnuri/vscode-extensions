@@ -13,9 +13,7 @@ export class SwaggerTreeItem extends vscode.TreeItem {
         try {
             vscode.window.showInformationMessage('SwaggerGenerator: start generate');
             const generateMethod =
-                !this.swaggerConfig.generator || this.swaggerConfig.generator === 'openapi-definition-to-editor'
-                    ? generateFromMyLib
-                    : generateFromApi;
+                !this.swaggerConfig.generator || this.swaggerConfig.generator === 'openapi-toolkit' ? generateFromMyLib : generateFromApi;
             await generateMethod(this);
             const outputFolder = join(getWorkspacePath(), this.swaggerConfig.outputFolder);
             const files = getFilePaths(outputFolder);

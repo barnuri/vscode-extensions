@@ -14,7 +14,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('extension.info', () => {
             open('http://api.openapi-generator.tech');
             open('https://generator.swagger.io');
-            open('https://www.npmjs.com/package/openapi-definition-to-editor');
+            open('https://www.npmjs.com/package/openapi-toolkit');
         }),
     );
 }

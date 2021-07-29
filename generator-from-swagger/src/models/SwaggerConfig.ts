@@ -5,5 +5,5 @@ export class SwaggerConfig {
     options: any;
     type!: 'client' | 'server';
     language!: string;
-    generator!: 'openapi-definition-to-editor' | 'http://api.openapi-generator.tech/api/gen' | 'https://generator.swagger.io/api/gen';
+    generator!: 'openapi-toolkit' | 'http://api.openapi-generator.tech/api/gen' | 'https://generator.swagger.io/api/gen';
 }

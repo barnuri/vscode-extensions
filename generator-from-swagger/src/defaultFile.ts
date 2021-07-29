@@ -3,7 +3,7 @@ import { SwaggerConfig } from './models/SwaggerConfig';
 export default [
     {
         name: 'exampleClient',
-        generator: 'openapi-definition-to-editor',
+        generator: 'openapi-toolkit',
         type: 'client',
         language: 'typescript-axios',
         swaggerPath: 'https://petstore.swagger.io/v2/swagger.json',

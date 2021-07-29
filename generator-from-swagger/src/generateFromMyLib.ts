@@ -1,7 +1,7 @@
 import { fixPath, getWorkspacePath } from './fileHelper';
 import { resolve } from 'path';
 import { SwaggerTreeItem } from './models/SwaggerTreeItem';
-import { generate } from 'openapi-definition-to-editor';
+import { generate } from 'openapi-toolkit';
 
 export async function generateFromMyLib(item: SwaggerTreeItem) {
     const swaggerPath = item.swaggerConfig.swaggerPath.toLowerCase().startsWith('http')
