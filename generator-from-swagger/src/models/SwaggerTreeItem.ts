@@ -5,7 +5,6 @@ import { generateFromMyLib } from '../generateFromMyLib';
 import * as vscode from 'vscode';
 import { join } from 'path';
 import { getWorkspacePath, getFilePaths } from '../fileHelper';
-import { ViewColumn } from 'vscode';
 
 export class SwaggerTreeItem extends vscode.TreeItem {
     swaggerConfig!: SwaggerConfig;
