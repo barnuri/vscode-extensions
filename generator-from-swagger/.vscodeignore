@@ -9,3 +9,4 @@ vsc-extension-quickstart.md
 **/.oxlintrc.json
 **/*.map
 **/*.ts
+node_modules/**

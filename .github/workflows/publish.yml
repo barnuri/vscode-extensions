@@ -1,0 +1,72 @@
+name: Publish extensions
+
+on:
+  workflow_dispatch:
+    inputs:
+      extension:
+        description: Extension to publish
+        type: choice
+        default: all
+        options:
+          - all
+          - bar-nuri-tools
+          - bar-nuri-tools-bundle
+          - generator-from-swagger
+          - python-import-helper
+      bump:
+        description: Version bump
+        type: choice
+        default: patch
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      VSCE_PAT: ${{ secrets.VCSE_TOKEN }}
+      EXTENSION: ${{ inputs.extension }}
+      BUMP: ${{ inputs.bump }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Publish
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898208+github-actions[bot]@users.noreply.github.com"
+          if [ "$EXTENSION" = "all" ]; then
+            extensions="bar-nuri-tools generator-from-swagger python-import-helper bar-nuri-tools-bundle"
+          else
+            extensions="$EXTENSION"
+          fi
+          for extension in $extensions; do
+            echo "::group::$extension"
+            pushd "$extension" > /dev/null
+            npm ci
+            if npm pkg get scripts.test | grep -qv '{}'; then
+              npm test
+            fi
+            version=$(npm version "$BUMP" --no-git-tag-version)
+            npx vsce publish
+            git add package.json package-lock.json
+            git commit -m "$extension $version"
+            popd > /dev/null
+            echo "::endgroup::"
+          done
+
+      - name: Push version bumps
+        if: always()
+        run: git push
