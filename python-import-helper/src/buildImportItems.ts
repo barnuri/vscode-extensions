@@ -1,13 +1,10 @@
 import { FileExports } from './models/FileExports';
-import { removeFileExt } from 'utlz';
 import { CompletionItem, CompletionItemKind, MarkdownString } from 'vscode';
 import { RichCompletionItem } from './models/RichCompletionItem';
-import { createDataDir } from './utils';
 import { CompilationData } from './models/CompilationData';
-import { getCompletionFilePath } from './extension';
-import { writeFileSync } from 'fs-extra';
+import { filepathKeyToModulePath } from './utils';
 
-export async function buildCompletionItems(data: CompilationData): Promise<RichCompletionItem[]> {
+export function buildCompletionItems(data: CompilationData): RichCompletionItem[] {
     if (!data) {
         return [];
     }
@@ -43,7 +40,7 @@ export async function buildCompletionItems(data: CompilationData): Promise<RichC
             if (data.isExtraImport) {
                 dotPath = importPath;
             } else {
-                dotPath = removeFileExt(importPath).replace(/[\/,\\]/g, '.');
+                dotPath = filepathKeyToModulePath(importPath);
             }
             items.push({
                 ...defItem,
@@ -61,20 +58,19 @@ export async function buildCompletionItems(data: CompilationData): Promise<RichC
         item.importPath = item.importPath.replace(/[\/,\\]/g, '.');
         item.description = item.importPath;
         item.detail = item.importPath;
-
-        var md = new MarkdownString();
-        if (item.isExtraImport) {
-            md.appendCodeblock(`import ${item.importPath}`, 'python');
-        } else {
-            md.appendCodeblock(`from ${item.importPath} import ${item.label}`, 'python');
-            md.appendCodeblock(`\n`, 'python');
-            md.appendCodeblock(item.peekOfCode, 'python');
-        }
-
-        item.documentation = md;
     }
 
-    await createDataDir();
-    writeFileSync(getCompletionFilePath(), JSON.stringify(items, undefined, 4));
     return items;
+}
+
+export function buildDocumentation(item: RichCompletionItem): MarkdownString {
+    const md = new MarkdownString();
+    if (item.isExtraImport) {
+        md.appendCodeblock(`import ${item.importPath}`, 'python');
+    } else {
+        md.appendCodeblock(`from ${item.importPath} import ${item.label}`, 'python');
+        md.appendCodeblock(`\n`, 'python');
+        md.appendCodeblock(item.peekOfCode, 'python');
+    }
+    return md;
 }

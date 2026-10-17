@@ -3,7 +3,7 @@ import config from './config';
 
 export function getNewLine(importPath: string, lineImports: string[]) {
     const maxImportLineLength = config.maxImportLineLength;
-    const sensitivity = { sensitivity: 'base' };
+    const sensitivity: Intl.CollatorOptions = { sensitivity: 'base' };
     lineImports.sort((a, b) => a.localeCompare(b, undefined, sensitivity));
 
     const newLineStart = 'from ' + importPath + ' import ';

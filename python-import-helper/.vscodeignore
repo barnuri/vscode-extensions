@@ -8,3 +8,5 @@ out/
 src/
 tsconfig.json
 webpack.config.js
+out-test/
+tests/

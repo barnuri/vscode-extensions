@@ -16,3 +16,4 @@ build
 **/.vs
 **/*.pyc
 **/node_modules
+out-test

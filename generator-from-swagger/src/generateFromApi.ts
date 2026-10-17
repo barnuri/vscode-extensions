@@ -1,8 +1,8 @@
 import { makeDirIfNotExist, getFolders, getWorkspacePath } from './fileHelper';
-import { appendFileSync, renameSync } from 'fs';
+import { renameSync } from 'fs';
 import { resolve } from 'path';
-import rimraf = require('rimraf');
-import unzip = require('extract-zip');
+import { rimrafSync } from 'rimraf';
+import AdmZip from 'adm-zip';
 import Axios from 'axios';
 import { SwaggerTreeItem } from './models/SwaggerTreeItem';
 import { getSwaggerJson } from './getSwaggerJson';
@@ -32,21 +32,14 @@ export async function generateFromApi(item: SwaggerTreeItem) {
             throw err;
         });
 
-    const zipFileBinary = await Axios.get(linkToZip, { responseType: 'arraybuffer' }).then(x => x.data);
+    const zipFileBinary: ArrayBuffer = await Axios.get(linkToZip, { responseType: 'arraybuffer' }).then(x => x.data);
     const outputFolder = resolve(getWorkspacePath(), item.swaggerConfig.outputFolder);
     const tmpFolder = outputFolder + 'tmp';
-    const zipFilePath = tmpFolder + '/zipFile.zip';
-    rimraf.sync(outputFolder);
-    rimraf.sync(tmpFolder);
+    rimrafSync(outputFolder);
+    rimrafSync(tmpFolder);
     makeDirIfNotExist(tmpFolder);
-    appendFileSync(zipFilePath, new Uint8Array(zipFileBinary));
-    await unzip(zipFilePath, { dir: tmpFolder }).catch(err => {
-        if (err) {
-            return;
-        }
-        rimraf.sync(zipFilePath);
-        const folderToMove = getFolders(tmpFolder)[0];
-        renameSync(folderToMove, outputFolder);
-        rimraf.sync(tmpFolder);
-    });
+    await new AdmZip(Buffer.from(zipFileBinary)).extractAllToAsync(tmpFolder, true);
+    const folderToMove = getFolders(tmpFolder)[0];
+    renameSync(folderToMove, outputFolder);
+    rimrafSync(tmpFolder);
 }

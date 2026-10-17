@@ -42,7 +42,7 @@ function getNewLineImports(importPosition: ImportPositionPy, newImport: string) 
     if (!imports) {
         return [newImport];
     }
-    if (doesImportExist(imports, newImport, renamed)) {
+    if (doesImportExist(imports, newImport)) {
         return;
     }
 

@@ -6,26 +6,28 @@ import { SwaggerConfig } from './models/SwaggerConfig';
 import { SwaggerTreeItem } from './models/SwaggerTreeItem';
 import defaultFile from './defaultFile';
 
-export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerTreeItem> {
+export class SwaggerExplorerProvider implements vscode.TreeDataProvider<SwaggerTreeItem>, vscode.Disposable {
     private _onDidChangeTreeData = new vscode.EventEmitter<SwaggerTreeItem | undefined>();
     readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
     public configFile = './.vscode/generator-from-swagger.json';
     public refresh = () => this._onDidChangeTreeData.fire(undefined);
     getTreeItem = (element: SwaggerTreeItem) => element;
+    private readonly configWatcher: vscode.FileSystemWatcher;
     constructor() {
-        this.watchFile();
+        this.configWatcher = this.watchFile();
     }
 
-    watchFile(): void {
-        let prev = JSON.stringify(this.readConfig());
-        setInterval(() => {
-            try {
-                const current = JSON.stringify(this.readConfig());
-                if (prev !== current) {
-                    this.refresh();
-                }
-            } catch {}
-        }, 500);
+    watchFile(): vscode.FileSystemWatcher {
+        const watcher = vscode.workspace.createFileSystemWatcher('**/.vscode/generator-from-swagger.json');
+        watcher.onDidCreate(this.refresh);
+        watcher.onDidChange(this.refresh);
+        watcher.onDidDelete(this.refresh);
+        return watcher;
+    }
+
+    dispose() {
+        this.configWatcher.dispose();
+        this._onDidChangeTreeData.dispose();
     }
 
     readConfig = () => {

@@ -1,27 +1,21 @@
 import * as vscode from 'vscode';
-import { createDataDir, ignoreThisFile } from './utils';
-import { buildDataFile, compilationFileManager, getWorkspacePythonFiles } from './data';
+import { getModulePath, getWorkspacePath, isPythonModuleFile, resetSourceRoots } from './utils';
+import { buildDataFile, getCompletionItems, updateFiles } from './data';
 import { RichCompletionItem } from './models/RichCompletionItem';
 import { insertImport } from './importer';
-import * as path from 'path';
-import { getWorkspacePath } from './utils';
-
-export const getCompletionFilePath = () => path.join(getWorkspacePath() || '', '/.vscode/', 'PythonImportHelper-v2-Completion.json');
+import { buildDocumentation } from './buildImportItems';
+import config from './config';
 
 export async function activate(context: vscode.ExtensionContext) {
-    backgroundTask().catch(() => {});
+    buildDataFile(true).catch(err => console.error(`buildDataFile error ${err}`));
     context.subscriptions.push(vscode.commands.registerCommand('extension.rebuild', () => buildDataFile(true)));
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider('python', {
-            provideCompletionItems(
-                _: vscode.TextDocument,
-                __: vscode.Position,
-                ___: vscode.CancellationToken,
-                ____: vscode.CompletionContext,
-            ): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-                return compilationFileManager();
+            provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.ProviderResult<vscode.CompletionItem[]> {
+                return getImportCompletions(document, position);
             },
             resolveCompletionItem(completionItem: RichCompletionItem) {
+                completionItem.documentation = buildDocumentation(completionItem);
                 const edit = insertImport(completionItem) as vscode.TextEdit | void;
                 if (edit) {
                     completionItem.additionalTextEdits = [edit];
@@ -30,27 +24,61 @@ export async function activate(context: vscode.ExtensionContext) {
             },
         }),
     );
-    context.subscriptions.push(PythonFilesWatcher());
+    context.subscriptions.push(...PythonFilesWatcher());
 }
 
-function PythonFilesWatcher() {
+function getImportCompletions(document: vscode.TextDocument, position: vscode.Position): RichCompletionItem[] | undefined {
+    const wordRange = document.getWordRangeAtPosition(position);
+    if (!wordRange) {
+        return undefined;
+    }
+    const lineText = document.lineAt(position.line).text;
+    if (lineText[wordRange.start.character - 1] === '.') {
+        return undefined;
+    }
+    const currentModule = getModulePath(document.uri.fsPath);
+    const firstChar = document.getText(wordRange)[0].toLowerCase();
+    return getCompletionItems()
+        .filter(item => item.importPath !== currentModule && item.label.toLowerCase().includes(firstChar))
+        .map(item => ({ ...item }));
+}
+
+function PythonFilesWatcher(): vscode.Disposable[] {
+    const pendingFiles = new Set<string>();
+    let rebuildTimer: NodeJS.Timeout | undefined;
+    const flushPendingFiles = () => {
+        const files = [...pendingFiles];
+        pendingFiles.clear();
+        updateFiles(files).catch(err => console.error(`updateFiles error ${err}`));
+    };
     const watcherCallback = (doc: vscode.Uri) => {
-        if (ignoreThisFile(doc.fsPath)) {
+        if (!isPythonModuleFile(doc.fsPath)) {
             return;
         }
-        buildDataFile(false).catch(() => {});
+        pendingFiles.add(doc.fsPath);
+        clearTimeout(rebuildTimer);
+        rebuildTimer = setTimeout(flushPendingFiles, config.rebuildDelayMs);
+    };
+    const rebuildAll = () => {
+        resetSourceRoots();
+        buildDataFile(false).catch(err => console.error(`buildDataFile error ${err}`));
     };
 
     const watcher = vscode.workspace.createFileSystemWatcher('**/*.py');
     watcher.onDidChange(watcherCallback);
     watcher.onDidCreate(watcherCallback);
     watcher.onDidDelete(watcherCallback);
-    return watcher;
-}
 
-async function backgroundTask() {
-    if (getWorkspacePythonFiles().length > 0) {
-        createDataDir();
-        buildDataFile(true);
-    }
+    const pyprojectWatcher = vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(getWorkspacePath(), config.pyprojectFileName));
+    pyprojectWatcher.onDidChange(rebuildAll);
+    pyprojectWatcher.onDidCreate(rebuildAll);
+    pyprojectWatcher.onDidDelete(rebuildAll);
+
+    const configWatcher = vscode.workspace.onDidChangeConfiguration(event => {
+        if (event.affectsConfiguration(config.settingsSection)) {
+            rebuildAll();
+        }
+    });
+
+    return [watcher, pyprojectWatcher, configWatcher, { dispose: () => clearTimeout(rebuildTimer) }];
 }

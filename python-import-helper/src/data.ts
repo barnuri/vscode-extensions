@@ -1,41 +1,48 @@
 import { FileData } from './models/FileData';
-import { getCompletionFilePath } from './extension';
 import { FileExports } from './models/FileExports';
-import * as _ from 'lodash';
-import { Uri, CompletionItemKind, window } from 'vscode';
-import * as fs from 'fs-extra';
-import { createDataDir, getFilepathKey, isPathPackage, mergeObjectsWithArrays } from './utils';
-import { getWorkspacePath, getPythonFiles, ignoreThisFile } from './utils';
+import { CompletionItemKind, RelativePattern, window, workspace } from 'vscode';
+import * as fs from 'fs';
+import { getExcludeGlob, getFilepathKey, getWorkspacePath, isPathPackage, isPythonModuleFile, mergeObjectsWithArrays } from './utils';
 import { parseImports } from './regex';
-import { isFile } from 'utlz';
 import { CompilationData } from './models/CompilationData';
 import { RichCompletionItem } from './models/RichCompletionItem';
 import { buildCompletionItems } from './buildImportItems';
 
-export function compilationFileManager(): RichCompletionItem[] {
-    const completionFilePath = getCompletionFilePath();
-    const data = isFile(completionFilePath) ? JSON.parse(fs.readFileSync(completionFilePath, 'utf8')) : {};
-    return data;
+const pythonIdentifier = /^[A-Za-z_][A-Za-z0-9_]*$/;
+const peekScanLineCount = 20;
+const peekLineCount = 10;
+const readBatchSize = 100;
+
+let fileDataCache = new Map<string, CompilationData>();
+let completionItems: RichCompletionItem[] | undefined;
+
+export function getCompletionItems(): RichCompletionItem[] {
+    if (!completionItems) {
+        completionItems = buildCompletionItems(mergeFileData());
+    }
+    return completionItems;
 }
 
-export const getWorkspacePythonFiles = () => getPythonFiles(getWorkspacePath()) || [];
+function mergeFileData(): CompilationData {
+    const finalData = { exp: {}, imp: {} } as CompilationData;
+    for (const data of fileDataCache.values()) {
+        Object.assign(finalData.exp, data.exp);
+        mergeObjectsWithArrays(finalData.imp, data.imp);
+    }
+    return finalData;
+}
 
 export async function buildDataFile(showMsg: boolean = false) {
     try {
-        const cachedDirTrees = { imp: {}, exp: {} } as CompilationData;
-        try {
-            let files: string[] = getWorkspacePythonFiles();
-            for (const fullPath of files) {
-                getDataFromPythonFile(fullPath, cachedDirTrees);
-            }
-        } catch (err) {
-            console.log(err);
+        const uris = await workspace.findFiles(new RelativePattern(getWorkspacePath(), '**/*.py'), getExcludeGlob());
+        const files = uris.map(uri => uri.fsPath).filter(isPythonModuleFile);
+        const newCache = new Map<string, CompilationData>();
+        for (let index = 0; index < files.length; index += readBatchSize) {
+            const batch = files.slice(index, index + readBatchSize);
+            await Promise.all(batch.map(filepath => readFileData(filepath, newCache)));
         }
-        const finalData = { exp: {}, imp: {} };
-        Object.assign(finalData.exp, cachedDirTrees.exp);
-        mergeObjectsWithArrays(finalData.imp, cachedDirTrees.imp);
-        await createDataDir();
-        await buildCompletionItems(finalData);
+        fileDataCache = newCache;
+        completionItems = undefined;
         if (showMsg) {
             window.showInformationMessage('Project exports have been cached. 🐔');
         }
@@ -44,23 +51,28 @@ export async function buildDataFile(showMsg: boolean = false) {
     }
 }
 
-export async function onChangeOrCreate(doc: Uri) {
-    if (ignoreThisFile(doc.fsPath)) {
-        return;
+export async function updateFiles(filepaths: string[]) {
+    for (const filepath of filepaths.filter(isPythonModuleFile)) {
+        await readFileData(filepath, fileDataCache);
     }
-    await buildDataFile(false);
+    completionItems = undefined;
 }
 
-export async function onDelete(doc: Uri) {
-    if (ignoreThisFile(doc.fsPath)) {
-        return;
+async function readFileData(filepath: string, cache: Map<string, CompilationData>) {
+    try {
+        const fileText = await fs.promises.readFile(filepath, 'utf8');
+        cache.set(filepath, getDataFromPythonFile(filepath, fileText));
+    } catch (err) {
+        cache.delete(filepath);
+        if (!(err instanceof Error && 'code' in err && err.code === 'ENOENT')) {
+            console.error(`readFileData error ${filepath} ${err}`);
+        }
     }
-    await buildDataFile(false);
 }
 
-export function getDataFromPythonFile(filepath: string, data: CompilationData) {
+export function getDataFromPythonFile(filepath: string, fileText: string): CompilationData {
+    const data = { imp: {}, exp: {} } as CompilationData;
     const { imp, exp } = data;
-    const fileText = fs.readFileSync(filepath, 'utf8');
     const imports = parseImports(fileText);
 
     for (const importData of imports) {
@@ -84,27 +96,27 @@ export function getDataFromPythonFile(filepath: string, data: CompilationData) {
     const functions = [] as FileData[];
     const constants = [] as FileData[];
     const lines = fileText.replace(/\r/g, '').trim().split('\n');
+    const getPeekOfCode = (index: number) =>
+        lines
+            .slice(index, index + peekScanLineCount)
+            .filter(x => x.trim().length > 0)
+            .slice(0, peekLineCount)
+            .join('\n');
 
     for (let index = 0; index < lines.length; index++) {
-        const line = lines[index];
-        const words = line.split(' ');
+        const words = lines[index].split(' ');
         const word0 = words[0];
         const word1 = words[1];
 
-        const peekArr = lines
-            .slice(index, Math.min(index + 20, lines.length))
-            .filter(x => x.trim().replace(/\n/g, '').replace(/\r/g, '').replace(/\t/g, '').length > 0);
-        const peekOfCode = peekArr.slice(0, Math.min(10, peekArr.length)).join('\n');
-
         if (word0 === 'class') {
-            classes.push({ name: trimClassOrFn(word1), kind: CompletionItemKind.Class, peekOfCode });
+            classes.push({ name: trimClassOrFn(word1), kind: CompletionItemKind.Class, peekOfCode: getPeekOfCode(index) });
         } else if (word0 === 'def') {
             // Don't export private functions
             if (!word1.startsWith('_')) {
-                functions.push({ name: trimClassOrFn(word1), kind: CompletionItemKind.Function, peekOfCode });
+                functions.push({ name: trimClassOrFn(word1), kind: CompletionItemKind.Function, peekOfCode: getPeekOfCode(index) });
             }
-        } else if (word1 === '=') {
-            constants.push({ name: word0, kind: CompletionItemKind.Variable, peekOfCode });
+        } else if (word1 === '=' && pythonIdentifier.test(word0)) {
+            constants.push({ name: word0, kind: CompletionItemKind.Variable, peekOfCode: getPeekOfCode(index) });
         }
     }
 
