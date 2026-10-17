@@ -15,12 +15,28 @@ const readBatchSize = 100;
 
 let fileDataCache = new Map<string, CompilationData>();
 let completionItems: RichCompletionItem[] | undefined;
+let completionItemsByChar = new Map<string, RichCompletionItem[]>();
 
 export function getCompletionItems(): RichCompletionItem[] {
     if (!completionItems) {
         completionItems = buildCompletionItems(mergeFileData());
     }
     return completionItems;
+}
+
+export function getCompletionItemsContaining(lowerCaseChar: string): RichCompletionItem[] {
+    const cached = completionItemsByChar.get(lowerCaseChar);
+    if (cached) {
+        return cached;
+    }
+    const matching = getCompletionItems().filter(item => item.label.toLowerCase().includes(lowerCaseChar));
+    completionItemsByChar.set(lowerCaseChar, matching);
+    return matching;
+}
+
+function rebuildCompletionItems() {
+    completionItems = buildCompletionItems(mergeFileData());
+    completionItemsByChar = new Map();
 }
 
 function mergeFileData(): CompilationData {
@@ -42,7 +58,7 @@ export async function buildDataFile(showMsg: boolean = false) {
             await Promise.all(batch.map(filepath => readFileData(filepath, newCache)));
         }
         fileDataCache = newCache;
-        completionItems = undefined;
+        rebuildCompletionItems();
         if (showMsg) {
             window.showInformationMessage('Project exports have been cached. 🐔');
         }
@@ -55,7 +71,7 @@ export async function updateFiles(filepaths: string[]) {
     for (const filepath of filepaths.filter(isPythonModuleFile)) {
         await readFileData(filepath, fileDataCache);
     }
-    completionItems = undefined;
+    rebuildCompletionItems();
 }
 
 async function readFileData(filepath: string, cache: Map<string, CompilationData>) {

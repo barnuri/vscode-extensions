@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { getModulePath, getWorkspacePath, isPythonModuleFile, resetSourceRoots } from './utils';
-import { buildDataFile, getCompletionItems, updateFiles } from './data';
+import { buildDataFile, getCompletionItemsContaining, updateFiles } from './data';
 import { RichCompletionItem } from './models/RichCompletionItem';
 import { insertImport } from './importer';
 import { buildDocumentation } from './buildImportItems';
@@ -38,8 +38,8 @@ function getImportCompletions(document: vscode.TextDocument, position: vscode.Po
     }
     const currentModule = getModulePath(document.uri.fsPath);
     const firstChar = document.getText(wordRange)[0].toLowerCase();
-    return getCompletionItems()
-        .filter(item => item.importPath !== currentModule && item.label.toLowerCase().includes(firstChar))
+    return getCompletionItemsContaining(firstChar)
+        .filter(item => item.importPath !== currentModule)
         .map(item => ({ ...item }));
 }
 

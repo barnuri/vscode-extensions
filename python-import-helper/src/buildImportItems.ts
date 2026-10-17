@@ -18,15 +18,17 @@ export function buildCompletionItems(data: CompilationData): RichCompletionItem[
 
     for (const importPath of sortedKeys) {
         const data: FileExports = mergedData[importPath];
+        const packagePath = importPath.replace(/[\/,\\]/g, '.');
 
         if (data.importEntirePackage) {
             items.push({
                 ...defItem,
                 label: importPath,
                 isExtraImport: data.isExtraImport,
-                importPath: importPath,
+                importPath: packagePath,
                 kind: CompletionItemKind.Class,
-                description: importPath,
+                description: packagePath,
+                detail: packagePath,
             });
         }
 
@@ -34,30 +36,20 @@ export function buildCompletionItems(data: CompilationData): RichCompletionItem[
             continue;
         }
 
+        const dotPath = data.isExtraImport ? packagePath : filepathKeyToModulePath(importPath);
         // Don't sort data.exports because they were already sorted when caching. See python `cacheFile`
         for (const exportObj of data.exports) {
-            let dotPath;
-            if (data.isExtraImport) {
-                dotPath = importPath;
-            } else {
-                dotPath = filepathKeyToModulePath(importPath);
-            }
             items.push({
                 ...defItem,
                 kind: exportObj.kind,
                 importPath: dotPath,
                 label: exportObj.name || (exportObj as any),
                 description: dotPath,
+                detail: dotPath,
                 isExtraImport: data.isExtraImport,
                 peekOfCode: exportObj.peekOfCode,
             });
         }
-    }
-
-    for (const item of items) {
-        item.importPath = item.importPath.replace(/[\/,\\]/g, '.');
-        item.description = item.importPath;
-        item.detail = item.importPath;
     }
 
     return items;
