@@ -1,9 +1,11 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
-        "target": "es6",
+        "module": "preserve",
+        "moduleResolution": "bundler",
+        "target": "es2022",
         "outDir": "out",
-        "lib": ["es6"],
+        "lib": ["es2022"],
+        "types": ["node"],
         "sourceMap": true,
         "rootDir": "src",
         "strict": true /* enable all strict type-checking options */

@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
 import { SwaggerExplorerProvider } from './swaggerExplorerProvider';
 import { SwaggerTreeItem } from './models/SwaggerTreeItem';
-import open = require('open');
+import open from 'open';
 
 export function activate(context: vscode.ExtensionContext) {
     const swaggerExplorerProvider = new SwaggerExplorerProvider();
+    context.subscriptions.push(swaggerExplorerProvider);
     vscode.window.registerTreeDataProvider('extensionView', swaggerExplorerProvider);
     context.subscriptions.push(vscode.commands.registerCommand('extension.refresh', () => swaggerExplorerProvider.refresh()));
     context.subscriptions.push(vscode.commands.registerCommand('extension.createConfig', () => swaggerExplorerProvider.createConfig()));

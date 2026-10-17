@@ -1,15 +1,19 @@
-import { getCompletionFilePath } from './extension';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as _ from 'lodash';
 import { Position, Range, TextDocument, TextEdit, TextEditor, TextEditorEdit, window } from 'vscode';
-import makeDir = require('make-dir');
 import * as vscode from 'vscode';
-import { resolve, join, extname } from 'path';
-import { statSync, readdirSync } from 'fs-extra';
-import anymatch from 'anymatch';
+import { resolve } from 'path';
 import config from './config';
 import { Renamed } from './models/Renamed';
+
+const pyprojectSourceRootPatterns = [
+    /package-dir\s*=\s*\{[^}]*?["']{2}\s*=\s*["']([^"']+)["']/,
+    /\bwhere\s*=\s*\[\s*["']([^"']+)["']/,
+    /\bfrom\s*=\s*["']([^"']+)["']/,
+];
+
+let sourceRootsCache: string[] | undefined;
 
 export function getWorkspacePath(): string {
     const folders = vscode.workspace.workspaceFolders?.map(x => x.uri.fsPath) || [vscode.workspace.rootPath || ''];
@@ -25,60 +29,67 @@ export function fixPath(path: string): string {
     }
 }
 
-const isDirectory = path => statSync(path).isDirectory();
-
-const isFile = path => statSync(path).isFile();
-const getFiles = path => {
-    return readdirSync(path)
-        .map(name => join(path, name))
-        .filter(isFile);
-};
-const getDirectories = path => {
-    return readdirSync(path)
-        .map(name => join(path, name))
-        .filter(isDirectory);
-};
-
-export const _getFilesRecursively = path => {
-    let dirs = getDirectories(path);
-    let files = dirs
-        .map(dir => _getFilesRecursively(dir)) // go through each directory
-        .reduce((a, b) => a.concat(b), []); // map returns a 2d array (array of file arrays) so flatten
-    return files.concat(getFiles(path));
-};
-
 export function ignoreThisFile(x: string) {
-    return anymatch(config.excludePatterns, x) || x.match(/[\\,\/]site-packages[\\,\/]/g);
+    if (config.excludePatterns.some(pattern => pattern.test(x))) {
+        return true;
+    }
+    const segments = x.split(/[\\/]/);
+    return segments.some(segment => config.excludeFolders.includes(segment));
 }
 
-export const getPythonFiles = path => {
-    const allFiles: string[] = _getFilesRecursively(path);
-    let pythonFiles = allFiles.filter(x => !ignoreThisFile(x) && extname(x).slice(1) === 'py');
-    pythonFiles = pythonFiles.filter(x => !x.toLowerCase().endsWith('__.py'));
-    return pythonFiles;
-};
+export function isPythonModuleFile(x: string) {
+    return path.extname(x) === '.py' && !x.toLowerCase().endsWith('__.py') && !ignoreThisFile(x);
+}
 
-export async function createDataDir() {
+export function getExcludeGlob() {
+    const filesExclude = vscode.workspace.getConfiguration('files').get<{ [glob: string]: boolean }>('exclude') ?? {};
+    const userExcludes = Object.keys(filesExclude).filter(glob => filesExclude[glob] === true);
+    const folderExcludes = config.excludeFolders.map(folder => `**/${folder}/**`);
+    return `{${[...userExcludes, ...folderExcludes].join(',')}}`;
+}
+
+export function resetSourceRoots() {
+    sourceRootsCache = undefined;
+}
+
+export function getSourceRoots(): string[] {
+    if (sourceRootsCache) {
+        return sourceRootsCache;
+    }
+    const configured = vscode.workspace.getConfiguration(config.settingsSection).get<string[]>('sourceRoots') ?? [];
+    const roots = [...configured, ...detectPyprojectSourceRoots()]
+        .map(root => root.replace(/\\/g, '/').replace(/^\.\//, '').replace(/\/+$/, ''))
+        .filter(root => root && root !== '.');
+    sourceRootsCache = [...new Set(roots)].sort((a, b) => b.length - a.length);
+    return sourceRootsCache;
+}
+
+function detectPyprojectSourceRoots(): string[] {
+    const pyprojectPath = path.join(getWorkspacePath(), config.pyprojectFileName);
+    if (!fs.existsSync(pyprojectPath)) {
+        return [];
+    }
     try {
-        const cacheFilepath = getCompletionFilePath();
-        const dir = path.dirname(cacheFilepath);
-        if (fs.existsSync(dir)) {
-            return;
-        }
-        console.log(`creating ${dir}`);
-        await makeDir(dir).catch(e => console.error(e));
-        try {
-            fs.mkdirSync(dir);
-        } catch (e) {
-            console.error(`createDataDir error ${e}`);
-        }
-    } catch (ex) {
-        console.error(`createDataDir error ${ex}`);
+        const text = fs.readFileSync(pyprojectPath, 'utf8');
+        return pyprojectSourceRootPatterns.map(pattern => text.match(pattern)?.[1]).filter((root): root is string => !!root);
+    } catch (err) {
+        console.error(`detectPyprojectSourceRoots error ${err instanceof Error ? err.message : err}`);
+        return [];
     }
 }
 
 export function getFilepathKey(filepath: string) {
-    return filepath.slice(getWorkspacePath().length + 1);
+    const relativePath = path.relative(getWorkspacePath(), filepath).replace(/\\/g, '/');
+    const sourceRoot = getSourceRoots().find(root => relativePath.startsWith(root + '/'));
+    return sourceRoot ? relativePath.slice(sourceRoot.length + 1) : relativePath;
+}
+
+export function filepathKeyToModulePath(filepathKey: string) {
+    return filepathKey.replace(/\.py$/, '').replace(/[\\/]/g, '.');
+}
+
+export function getModulePath(filepath: string) {
+    return filepathKeyToModulePath(getFilepathKey(filepath));
 }
 
 export function isPathPackage(importPath: string) {
@@ -176,21 +187,9 @@ export function addNamesAndRenames(imports: string[], names: string[], renamed: 
     }
 }
 
-export function doesImportExist(imports: string[], newImport: string, renamed: Renamed) {
-    const parts = newImport.split(' as ');
-    const newImportName = parts[0].trim();
-    const newImportRename = parts[1] ? parts[1].trim() : null;
-
-    if (!imports.includes(newImportName)) {
-        return false;
-    }
-
-    const existingImportRename = renamed[newImportName];
-    if (newImportRename !== existingImportRename) {
-        window.showWarningMessage(`Already imported as \`${existingImportRename || newImportName}\`.`);
-    }
-
-    return true;
+export function doesImportExist(imports: string[], newImport: string) {
+    const newImportName = newImport.split(' as ')[0].trim();
+    return imports.includes(newImportName);
 }
 
 export function preserveRenamedImports(imports: string[], renamed: Renamed) {

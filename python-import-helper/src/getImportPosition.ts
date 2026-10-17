@@ -1,7 +1,7 @@
 import { ParsedImport } from './models/ParsedImport';
 import * as path from 'path';
 import { TextEditor, window } from 'vscode';
-import { getLastInitialComment, last, isPathPackage, getWorkspacePath } from './utils';
+import { getLastInitialComment, last, isPathPackage, getModulePath } from './utils';
 import { commentRegex } from './regex';
 import { ImportPositionPy } from './models/ImportPositionPy';
 
@@ -25,8 +25,7 @@ export function getImportPosition(importPath: string, isExtraImport: boolean | u
             // relative path
             if (!dirDotPath) {
                 const filepath = (window.activeTextEditor as TextEditor).document.fileName;
-                const relativeDirPath = path.relative(getWorkspacePath(), path.dirname(filepath));
-                dirDotPath = relativeDirPath.replace(/\//g, '.');
+                dirDotPath = getModulePath(path.dirname(filepath));
             }
             existingImportPath = `${dirDotPath}${existingImportPath}`;
         }

@@ -5,48 +5,9 @@
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
         "gitBeforePublish": "npm version patch && git add . && git commit -m \"version\" --allow-empty && git push",
-        "publish": "npm run gitBeforePublish && vsce publish",
-        "removeUnusedImports": "tslint --config tslint-imports.json --fix --project ."
+        "publish": "npm run gitBeforePublish && vsce publish"
     },
-    "activationEvents": [
-        "onCommand:extension.addColorsFile",
-        "onCommand:extension.addPylintrcFile",
-        "onCommand:extension.addDocker",
-        "onCommand:extension.addDockerK8sAndJenkins",
-        "onCommand:extension.addJenkins",
-        "onCommand:extension.addK8s",
-        "onCommand:extension.addNodemon",
-        "onCommand:extension.addPrettierFile",
-        "onCommand:extension.dockerDev",
-        "onCommand:extension.dockerRemoveAll",
-        "onCommand:extension.dockerStopAll",
-        "onCommand:extension.gitCleanCache",
-        "onCommand:extension.gitFirstInit",
-        "onCommand:extension.gitDeleteLocalTags",
-        "onCommand:extension.stringArrayToText",
-        "onCommand:extension.stringToText",
-        "onCommand:extension.textToString",
-        "onCommand:extension.textToStringArray",
-        "onCommand:extension.updatePackageJson",
-        "onCommand:extension.installDocker",
-        "onCommand:extension.installMinikube",
-        "onCommand:extension.exportK8sConfig",
-        "onCommand:extension.typescriptAddRemoveUnusedImportsScript",
-        "onCommand:extension.addNewCommand",
-        "onCommand:extension.convertToCR",
-        "onCommand:extension.convertToCRLF",
-        "onCommand:extension.convertToLF",
-        "onCommand:extension.convertFilesTypes",
-        "onCommand:extension.nameTemplateForFileType",
-        "onCommand:extension.convertAllFilesToLF",
-        "onCommand:extension.convertAllFilesToCRLF",
-        "onCommand:extension.convertAllFilesToCR",
-        "onCommand:extension.installKubeadmFlannelWithHelmWithIngress",
-        "onCommand:extension.InstallKubeadm",
-        "onCommand:extension.addPyproject",
-        "onCommand:extension.jsonToC#FormattedString",
-        "onCommand:extension.c#FormattedStringToJson"
-    ],
+    "activationEvents": [],
     "contributes": {
         "commands": [
             {
@@ -304,32 +265,26 @@
     },
     "main": "./out/extension.js",
     "dependencies": {
-        "@types/extract-zip": "^1.6.2",
-        "@types/rimraf": "^3.0.0",
-        "axios": "^0.19.2",
-        "extract-zip": "^2.0.1",
-        "open": "^7.1.0",
-        "rimraf": "^3.0.2"
+        "axios": "^1.20.0",
+        "open": "^11.0.4",
+        "rimraf": "^6.1.3"
     },
     "devDependencies": {
-        "@types/glob": "^7.1.3",
-        "@types/mocha": "^8.0.3",
-        "@types/node": "^14.6.0",
-        "@types/vscode": "^1.33.0",
-        "glob": "^7.1.6",
-        "mocha": "^8.1.1",
-        "tslint": "^6.1.3",
-        "tslint-etc": "^1.13.1",
-        "typescript": "^3.9.7",
-        "vsce": "^1.78.0",
-        "vscode-test": "^1.4.0"
+        "@types/mocha": "^10.0.10",
+        "@types/node": "^26.6.5",
+        "@types/vscode": "~1.75.1",
+        "@vscode/test-electron": "^3.1.0",
+        "@vscode/vsce": "^4.0.0",
+        "glob": "^13.0.6",
+        "mocha": "^12.0.3",
+        "typescript": "^7.0.2"
     },
     "repository": {
         "type": "git",
         "url": "https://github.com/barnuri/vscode-extensions"
     },
     "engines": {
-        "vscode": "^1.33.0"
+        "vscode": "^1.75.0"
     },
     "categories": [
         "Snippets",

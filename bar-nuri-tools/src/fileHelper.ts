@@ -62,10 +62,17 @@ export function setFullPermission(path: string) {
 
 /** Retrieve file paths from a given folder and its subfolders. */
 export function getFilePaths(folderPath: string): string[] {
-    const entryPaths: string[] = readdirSync(folderPath).map(entry => join(folderPath, entry));
-    const filePaths: string[] = entryPaths.filter(entryPath => statSync(entryPath).isFile());
-    const dirPaths: string[] = entryPaths.filter(entryPath => !filePaths.includes(entryPath));
-    const dirFiles: string[] = dirPaths.reduce((prev: string[], curr: string) => prev.concat(getFilePaths(curr)), []);
+    const filePaths: string[] = [];
+    const dirFiles: string[] = [];
+    for (const entryPath of readdirSync(folderPath).map(entry => join(folderPath, entry))) {
+        if (statSync(entryPath).isFile()) {
+            filePaths.push(entryPath);
+            continue;
+        }
+        for (const dirFile of getFilePaths(entryPath)) {
+            dirFiles.push(dirFile);
+        }
+    }
     return [...filePaths, ...dirFiles];
 }
 
