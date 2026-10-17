@@ -3,7 +3,7 @@
     "displayName": "Python Import Helper",
     "description": "Automatically generate import statements for Python.",
     "publisher": "Bar",
-    "version": "1.0.34",
+    "version": "1.0.35",
     "scripts": {
         "vscode:prepublish": "npm run typecheck && npm run build -- --minify",
         "build": "esbuild src/extension.ts --bundle --platform=node --format=cjs --external:vscode --outfile=dist/extension.js --sourcemap",
