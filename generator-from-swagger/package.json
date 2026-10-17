@@ -3,7 +3,7 @@
     "description": "Generator From Swagger",
     "displayName": "Generator From Swagger",
     "publisher": "Bar",
-    "version": "1.1.39",
+    "version": "1.1.40",
     "scripts": {
         "vscode:prepublish": "npm run package",
         "package": "npm run typecheck && esbuild src/extension.ts --bundle --platform=node --format=cjs --external:vscode --outfile=dist/extension.js --minify --sourcemap=external",
